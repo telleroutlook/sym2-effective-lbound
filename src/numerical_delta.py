@@ -1,16 +1,24 @@
 """
-numerical_delta.py -- Certified lower bound for L(1, sym^2 Delta).
+numerical_delta.py -- Certified computation for L(1, sym^2 Delta).
 
-Computes L(1, sym^2 Delta) for the Ramanujan Delta function Delta in S_{12}(SL_2(Z))
-using the truncated Euler product with a certified tail bound.
+Computes partial Euler products for the symmetric square L-function of the
+Ramanujan Delta function Delta in S_{12}(SL_2(Z)).
 
-Proof-tier certification requires python-flint (Arb interval arithmetic).
-Discovery-tier uses mpmath with high precision.
+NOTE: The naive truncated Euler product prod_{p<=P} L_p(1)^{-1} does NOT
+converge to L(1, sym^2 Delta).  The product diverges because the local factors
+L_p(1) satisfy L_p(1) < 1 for most small primes (the (1-p^{-1}) factor pulls
+it below 1), so the partial product drifts toward 0, not toward L(1).
 
-Current certified result (Theorem F-3):
-    L(1, sym^2 Delta) in [2.405, 2.407]
+CORRECT RESULT (discovery tier, via Rankin-Selberg):
+  sum_{n<=N} tau(n)^2 / n^11 / N  ->  L(1, sym^2 Delta) ~ 0.384
+(see discovery/rs_estimate.py for the computation).
 
-Status: [THM F-3] -- certified by Arb interval arithmetic at 128 bits.
+Certified proof-tier computation requires the approximate functional equation
+[OBL E-2].  The produce_certificate() function below records the partial
+Euler product interval but does NOT certify L(1, sym^2 Delta) >= 2.405
+(that bound was erroneous and has been retracted).
+
+Status: [OBL] -- certification via AFE is still required.
 """
 
 import json
@@ -33,17 +41,17 @@ TAU_PRIMES = {
     37: -182213314,
     41: 308120442,
     43: -17125708,
-    47: -134722488,
-    53: 1842173332,
-    59: -1977283948,
-    61: 1500514612,
-    67: -5765760028,
-    71: -4219961640,
-    73: -5765760028,
-    79: 2540736264,
-    83: 7426741828,
-    89: 4752041736,
-    97: 8530880534,
+    47: 2687348496,
+    53: -1596055698,
+    59: -5189203740,
+    61: 6956478662,
+    67: -15481826884,
+    71: 9791485272,
+    73: 1463791322,
+    79: 38116845680,
+    83: -29335099668,
+    89: -24992917110,
+    97: 75013568546,
 }
 
 # Small primes list for the Euler product
@@ -179,7 +187,7 @@ def compute_L1_sym2_delta_certified(precision_bits: int = 128) -> dict:
             "label": "1.12.1.a (Ramanujan Delta)",
             "hecke_coefficients": {str(p): TAU_PRIMES[p] for p in primes_used},
         },
-        "bound": 2.405,
+        "bound": None,
         "euler_product_cutoff": p_max,
         "tail_bound": {
             "method": "ramanujan-deligne",
@@ -191,8 +199,6 @@ def compute_L1_sym2_delta_certified(precision_bits: int = 128) -> dict:
         "arb_precision_bits": precision_bits,
         "checker_version": "1.0.0",
     }
-
-    assert lower >= 2.405, f"Certified lower bound {lower} < 2.405 (using {len(primes_used)} primes)"
 
     return certificate
 
@@ -314,7 +320,7 @@ def produce_certificate(cutoff: int = 97, precision_bits: int = 128) -> dict:
             "label": "1.12.1.a (Ramanujan Delta)",
             "hecke_coefficients": {str(p): TAU_PRIMES[p] for p in primes_used},
         },
-        "bound": 2.405,
+        "bound": None,
         "euler_product_cutoff": p_max,
         "tail_bound": {
             "method": "ramanujan-deligne",

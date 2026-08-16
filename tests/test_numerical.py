@@ -1,7 +1,10 @@
 """
-Tests for src/numerical_delta.py: certification of L(1, sym^2 Delta).
+Tests for src/numerical_delta.py: partial Euler product computations.
 
-Theorem F-3: L(1, sym^2 Delta) in [2.405, 2.407].
+NOTE: Theorem F-3 (L(1,sym^2 Delta) in [2.405,2.407]) has been retracted.
+The Euler product does not converge to L(1) for GL3 L-functions at s=1.
+The correct RS estimate gives L(1, sym^2 Delta) ~ 0.384 (see discovery/rs_estimate.py).
+Certification requires the approximate functional equation [OBL E-2].
 """
 import pytest
 from src.numerical_delta import (
@@ -55,7 +58,7 @@ class TestCertificate:
             assert key in cert
 
     def test_certificate_bound(self):
-        assert produce_certificate(cutoff=50)["bound"] == 2.405
+        assert produce_certificate(cutoff=50)["bound"] is None
 
     def test_interval_valid(self):
         lower, upper = produce_certificate(cutoff=50)["euler_product_interval"]
