@@ -60,6 +60,9 @@ The theorem is [OBL].  The following are [THM] and available:
 \end{itemize}
 The following remain [OBL]:
 \begin{itemize}
+  \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \in [L_{\mathrm{lo}}, L_{\mathrm{hi}}]$ certified):
+        the prior value 2.405 was retracted (wrong RS identity); correct value $\approx 0.631$
+        pending AFE + Arb certification via \texttt{src/numerical\_delta.py}.
   \item Mollifier mean value estimate (proof/03-mollifier.tex, Prop.~M-1)
   \item Zero-free region with explicit constant (proof/03-mollifier.tex, Prop.~M-2)
   \item Explicit contour integral constant (this document, Section~3)
@@ -156,16 +159,31 @@ To compute $c_{\mathrm{eff}}$ explicitly, we need:
         will certify the numerical values with outward-rounded interval arithmetic.
 \end{enumerate}
 
-\section{Numerical Grounding: $N=1$ (Ramanujan $\Delta$)}
+\section{Numerical Grounding: $N=1$ (Ramanujan $\Delta$) [OBL]}
 
-For $f = \Delta \in S_{12}(SL_2(\mathbb{Z}))$ (level $N=1$), the main theorem
-is already verified by a direct computation ([THM F-3]):
+For $f = \Delta \in S_{12}(SL_2(\mathbb{Z}))$ (level $N=1$), Theorem~F-3 is [OBL].
+
+\textbf{Prior claim retracted.}  An earlier computation reported
+$L(1, \mathrm{sym}^2 \Delta) \approx 2.406$ and certified a lower bound of $2.405$.
+This result was erroneous: the Rankin--Selberg identity used was
+$\sum_n \tau(n)^2/n^{11+s} = \zeta(s) \cdot L(s, \mathrm{sym}^2\Delta)$
+(missing the $\zeta(2s)^{-1}$ denominator), and the $\tau(47)$ table entry was wrong.
+The retraction is recorded in \texttt{src/numerical\_delta.py} and \texttt{tests/test\_numerical.py}.
+
+\textbf{Correct value (discovery tier).}  Three independent methods converge to
 \[
-  L(1, \mathrm{sym}^2 \Delta) \approx 2.40578 \geq 2.405.
+  L(1, \mathrm{sym}^2 \Delta) \approx 0.631,
 \]
-Since $N = 1$, the bound $c_{\mathrm{eff}}/\log 1 = +\infty$ is vacuously satisfied.
-The certification in \texttt{src/numerical\_delta.py} serves as a proof-of-concept
-for the interval arithmetic infrastructure.
+specifically: RS Tauberian (N=5000): $0.6314$; Dirichlet series ($s=1.01$, N=3000): $0.634$;
+GL$_3$ AFE partial sum: $0.631$.  None of these is a certified bound.
+
+\textbf{Certification path.}  A certified interval requires:
+\begin{enumerate}
+  \item Certified $S_1 = \sum_{n=1}^{670} a(n)/n \cdot W_{\mathrm{afe}}(n/12)$ via Arb
+        (tail $< 10^{-10}$ since $W_{\mathrm{afe}}(670/12) \approx 5\times10^{-4}$).
+  \item Certified $J$ via GL$_3$ Voronoi summation formula or explicit zero-free region
+        for $L(s, \mathrm{sym}^2\Delta)$ [OBL M-3].
+\end{enumerate}
 
 \begin{thebibliography}{9}
 \bibitem{GHL94} D.~Goldfeld, J.~Hoffstein, and D.~Lieman, Appendix: An effective
