@@ -38,7 +38,7 @@ import numpy as np
 # Certified inputs (from previous computations)
 # -----------------------------------------------------------------------
 L_ces_1M  = 0.631793   # L_ces(N=10^6, s=1),  stable < 3e-4
-min_L_09  = 0.449015   # min|L_ces(0.9+it, N=10^6)| over t in [0,50]
+min_L_09  = 0.392669   # min|L_ces(0.9+it, N=10^6)| over t in [0,200] (t=110.020)
 min_L_095 = 0.487849   # min|L_ces(0.95+it, N=10^6)|
 max_S_1M  = 63.82      # max|S(X)| for X <= 10^6
 C_GL3_emp = 0.0064     # empirical max|S(X)|/X^{2/3} at N=10^6
