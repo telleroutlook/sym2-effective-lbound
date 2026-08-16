@@ -21,7 +21,7 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
-    "slow: tests requiring high-precision Arb computation (>30s); exclude with -m 'not slow'",
+    "slow: tests requiring high-precision Arb computation (>30s)",
     "certified: tests that verify interval-arithmetic certificates",
     "negative: tamper tests that must be rejected by the checker",
 ]
