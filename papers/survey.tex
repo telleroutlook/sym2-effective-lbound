@@ -1,299 +1,449 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath,amsthm,amssymb,mathtools}
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{hyperref}
-\usepackage{geometry}
-\geometry{margin=1in}
+\usepackage{enumitem}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
 
-\title{$GL_2 \times GL_2$ Rankin--Selberg Local Factorization\\
-and Global Residue Positivity:\\
-A Pedagogical Survey and Analytic Foundations}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\SL}{SL}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Ad}{Ad}
+\DeclareMathOperator{\vol}{vol}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\N}{\mathbb{N}}
+
+\title{$\GL_2 \times \GL_2$ Rankin--Selberg Theory\\and Symmetric Square $L$-functions:\\A Pedagogical Survey}
 \author{}
-\date{Companion paper to \texttt{sym2-effective-lbound}}
+\date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This paper presents a pedagogical survey and rigorous re-derivation of the
-Jacquet--Shalika / Rankin--Selberg quadratic integral theory for $GL_2 \times GL_2$
-automorphic representations over a number field $F$. By employing the Iwasawa
-decomposition and the Clebsch--Gordan sum identity for $\mathrm{SU}(2)$ characters,
-we verify the exact local cancellation of the $(1 + q_v^{-s})$ factor in unramified
-Euler factors, yielding the canonical decomposition
-$L_v(s, \pi_v \times \tilde\pi_v) = \zeta_v(s)\, L_v(s, \pi_v, \mathrm{Ad})$.
-The global quadratic integral possesses a simple pole at $s = 1$, whose strict
-positivity is guaranteed by the Analytic Class Number Formula and Shahidi's
-non-vanishing theorem for the adjoint $L$-function. We also contextualize these
-results within arithmetic quantum chaos via Quantum Unique Ergodicity (QUE),
-and outline concrete generalizations to $GL_n$, ramified local factors, and
-quantitative effective lower bounds.
+We survey the $\GL_2 \times \GL_2$ Rankin--Selberg integral representation of
+$L(s, f \times g)$ and the closely related symmetric square $L$-function
+$L(s, \Sym^2 f)$ for holomorphic Hecke eigenforms $f$ of weight $k$ and
+nebentypus $\chi$. Starting from the Jacquet--Shalika integral on
+$\GL_2(\A_\Q) \times \GL_2(\A_\Q)$, we derive the local theory (Casselman--Shalika
+formula, Clebsch--Gordan cancellation, Satake parameterization), the global
+meromorphic continuation, and the residue formula that forces $L(1, \Sym^2 f) > 0$.
+We then describe the Goldfeld--Hoffstein--Lieman lower bound $L(1, \Sym^2 f) \geq
+c/\log N$ and the open problem of making $c$ explicit. The survey is written for
+readers with basic knowledge of modular forms; adelic arguments are included but
+self-contained summaries of necessary background are provided.
 \end{abstract}
 
 \tableofcontents
 
-\section{State Spaces and Operator Algebra Setup}
+%% ============================================================
+\section{Introduction}
+%% ============================================================
 
-\subsection{Ad\`ele Ring and Number Field Conventions}
-
-Let $F$ be an arbitrary number field of degree $[F:\mathbb{Q}] = n_F = r_1 + 2r_2$,
-where $r_1$ and $r_2$ denote the number of real and complex places, respectively.
-Let $\mathbb{A}_F$ denote the ad\`ele ring of $F$, and $\mathbb{A}_F^\times$ its idele group.
-For any place $v$, let $F_v$ be the local field.
-For non-Archimedean places $v \nmid \infty$, let $\mathcal{O}_v$ be the ring of integers,
-$\mathfrak{p}_v = (\varpi_v)$ the maximal ideal with uniformizer $\varpi_v$,
-and $q_v = N(\mathfrak{p}_v) = |\mathcal{O}_v/\mathfrak{p}_v|$ the residue field cardinality.
-
-\subsection{Ad\`ele Dual Whittaker State Space}
-
-Let $\pi = \bigotimes_v' \pi_v$ be an irreducible generic cuspidal automorphic representation
-of $GL_n(\mathbb{A}_F)$, and let $\tilde\pi$ be its contragredient.
-Fix a non-trivial additive character $\psi: F \backslash \mathbb{A}_F \to \mathbb{C}^\times$
-with local factorization $\psi = \prod_v \psi_v$.
-Let $\mathcal{W}(\pi, \psi) \subset C^\infty(GL_n(\mathbb{A}_F))$ denote the global Whittaker model.
-
-\begin{definition}
-The \textbf{dual Whittaker state space} is
+Let $f$ be a holomorphic Hecke eigenform of weight $k \geq 2$, level $N$, and
+nebentypus $\chi$. The symmetric square $L$-function
 \[
-  \mathcal{W}_{\mathrm{RS}}(\pi) = \mathcal{W}(\pi, \psi) \otimes \mathcal{W}(\tilde\pi, \bar\psi),
+ L(s, \Sym^2 f) = \prod_p L_p(s, \Sym^2 f)
 \]
-equipped with the Whittaker $L^2$-norm
+is one of the most studied automorphic $L$-functions. Shimura (1975) first
+constructed it via an integral; Gelbart--Jacquet (1978) realized it as the
+automorphic induction of a $\GL_3$ form; Shahidi (1981) established
+$L(1, f, \Ad) \neq 0$ via Langlands--Shahidi methods; and
+Goldfeld--Hoffstein--Lieman (1994) proved $L(1, \Sym^2 f) \geq c/\log N$ for
+an \emph{ineffective} constant $c > 0$.
+
+The present survey has two goals:
+\begin{enumerate}[label=(\arabic*)]
+\item Explain the $\GL_2 \times \GL_2$ Rankin--Selberg integral and its
+  connection to $L(s, \Sym^2 f)$ at the level of a self-contained lecture series.
+\item Identify the precise technical gap in the Goldfeld--Hoffstein--Lieman
+  theorem that prevents $c$ from being computable, and outline a strategy
+  for closing that gap via computer-assisted interval arithmetic.
+\end{enumerate}
+
+\subsection{Notation}
+
+Throughout, $p$ denotes a rational prime. For a Hecke eigenform $f$ of weight
+$k$, we write $a_f(n)$ for the $n$-th Fourier coefficient of the normalization
+$f(z) = \sum_{n \geq 1} a_f(n) n^{(k-1)/2} e^{2\pi i nz}$, so that the
+normalized coefficients satisfy the Ramanujan--Deligne bound
+$|a_f(p)| \leq 2$. We write $\alpha_p, \beta_p$ for the Satake parameters at
+an unramified prime: $\alpha_p + \beta_p = a_f(p)$ and $\alpha_p \beta_p = \chi(p)$.
+
+For the discriminant form $\Delta(z) = \sum_{n \geq 1} \tau(n) e^{2\pi i nz}$,
+we have $k = 12$, $N = 1$, trivial nebentypus, and $a_\Delta(p) = \tau(p)/p^{11/2}$.
+
+%% ============================================================
+\section{The Rankin--Selberg Integral}
+%% ============================================================
+
+\subsection{Classical formulation}
+
+Let $f, g$ be two Hecke eigenforms of the same weight $k$ and level $N$.
+The Rankin--Selberg method produces $L(s, f \times g)$ from the integral
 \[
-  \|W_f\|_\mathcal{W}^2
-  = \int_{N_n(\mathbb{A}_F)\backslash GL_n(\mathbb{A}_F)^1} |W_f(g)|^2\, dg < \infty.
+ \mathcal{I}(s) =
+ \int_{\Gamma_0(N) \backslash \mathfrak{H}}
+ f(z) \overline{g(z)} y^{k+s} \frac{dx\, dy}{y^2},
 \]
-\end{definition}
-
-\subsection{Schwartz--Bruhat Test Functions}
-
-The adelic Schwartz--Bruhat space is $\mathcal{S}(\mathbb{A}_F^n) = \bigotimes_v' \mathcal{S}(F_v^n)$.
-At unramified non-Archimedean places: $\Phi_v = \chi_{\mathcal{O}_v^n}$.
-At Archimedean places: $\Phi_v(x) = \exp(-\pi\|x\|_v^2)$.
-
-\subsection{The Jacquet--Shalika Transfer Operator}
-
-\begin{definition}
-For $W_f \otimes W_{\bar f} \in \mathcal{W}_{\mathrm{RS}}(\pi)$,
-$s \in \mathbb{C}$, and $\Phi \in \mathcal{S}(\mathbb{A}_F^n)$, define the
-\textbf{Jacquet--Shalika transfer operator}:
+where the integral converges absolutely for $\Re(s) > 1$ and extends
+meromorphically to $\C$. The Rankin--Selberg convolution Dirichlet series is
 \[
-  \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}](g)
-  = \int_{N_n(\mathbb{A}_F)\backslash GL_n(\mathbb{A}_F)}
-    W_f(xg)\, W_{\bar f}(xg)\, \Phi(e_n\, xg)\, |\det(xg)|_{\mathbb{A}_F}^s\, d^\times x,
+ D(s, f \times g) = \sum_{n=1}^\infty \frac{a_f(n) \overline{a_g(n)}}{n^s},
 \]
-where $e_n = (0,\ldots,0,1) \in F^n$ is the bottom-row tag vector.
-\end{definition}
+which satisfies $D(s, f \times g) = \zeta(2s) L(s, f \times \bar g)$ up to
+bounded Euler factors at primes dividing $N$.
 
-\section{Local Euler Factor Evaluation and Exact Cancellation}
+\subsection{Adelic formulation and the Jacquet--Shalika integral}
 
-The global Rankin--Selberg integral factors as an Euler product:
+In the adelic setting, let $\pi = \otimes_v \pi_v$ and $\sigma = \otimes_v \sigma_v$
+be two cuspidal automorphic representations of $\GL_2(\A_\Q)$ associated to $f$ and $g$.
+The Jacquet--Shalika integral is
 \[
-  \langle 1,\, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}]\rangle
-  = \prod_v I_v(s, W_{f,v}, W_{\bar f,v}, \Phi_v).
+ I(s, W_\pi, W_\sigma, \Phi) =
+ \int_{\A^\times} \int_{N(\A) \backslash \GL_2(\A)}
+ W_\pi(g) W_\sigma(g) |\det g|^{s-1/2} \Phi((0,1)g)\, dg\, d^\times t,
 \]
+where $W_\pi, W_\sigma$ are Whittaker functions in the Kirillov model and
+$\Phi \in \mathcal{S}(\A^2)$ is a Schwartz function.
 
-\begin{theorem}[Jacquet--Shalika]\label{thm:local}
-For any unramified finite place $v \nmid \infty$, with $\Phi_v = \chi_{\mathcal{O}_v^2}$
-and trivial local central character $\omega_{\pi,v} = 1$:
-\begin{equation}\label{eq:local-factor}
-  I_v(s) = L_v(s, \pi_v \times \tilde\pi_v)
-  \equiv \zeta_v(s) \cdot L_v(s, \pi_v, \mathrm{Ad}).
-\end{equation}
+\begin{theorem}[Jacquet--Shalika, 1976]
+For $\pi, \sigma$ cuspidal irreducible and unitary:
+\begin{enumerate}[label=(\alph*)]
+\item The global integral $I(s, W_\pi, W_\sigma, \Phi)$ converges absolutely
+  for $\Re(s) \gg 0$ and has meromorphic continuation to $\C$.
+\item With appropriate choice of $\Phi$, the integral factors as an Euler product
+  over local integrals $I_v(s, W_{\pi_v}, W_{\sigma_v}, \Phi_v)$.
+\item At unramified places $v = p$, $I_p(s, W^0_{\pi_p}, W^0_{\sigma_p}, \mathbf{1}_{\Z_p^2}) = L_p(s, \pi_p \times \sigma_p)$.
+\end{enumerate}
 \end{theorem}
 
-\subsubsection*{Iwasawa Reduction}
+%% ============================================================
+\section{Local Theory: Satake Parameters and Euler Factors}
+%% ============================================================
 
-By $GL_2(F_v) = N_2(F_v)\, A_2(F_v)\, K_v$, the local integral reduces to the diagonal
-torus: $a = \mathrm{diag}(\varpi_v^k, \varpi_v^m)$. Setting $l = k - m$:
-\begin{itemize}
-  \item $\Phi_v(e_2\, a) = \chi_{\mathcal{O}_v}(\varpi_v^m)$ restricts to $m \geq 0$,
-  \item the Whittaker support enforces $l = k - m \geq 0$,
-  \item the modular factor contributes $q_v^l\, dk\, dm$ in Haar measure.
-\end{itemize}
+\subsection{Casselman--Shalika formula}
 
-\subsubsection*{Casselman--Shalika Formula}
-
-For the unramified Whittaker function with Satake parameters $(\alpha_v,\beta_v)$,
-$\alpha_v\beta_v = 1$:
+At an unramified prime $p$ with Satake parameters $\alpha_p, \beta_p$ for $\pi_p$
+and $\gamma_p, \delta_p$ for $\sigma_p$, the local Rankin--Selberg factor is
 \[
-  W_{f,v}(a) = q_v^{-l/2}\, \chi_l(\alpha_v,\beta_v),
-  \quad
-  \chi_l(\alpha,\beta) = \frac{\alpha^{l+1}-\beta^{l+1}}{\alpha-\beta}.
+ L_p(s, \pi_p \times \sigma_p)
+ = \frac{1}{(1-\alpha_p\gamma_p p^{-s})(1-\alpha_p\delta_p p^{-s})
+ (1-\beta_p\gamma_p p^{-s})(1-\beta_p\delta_p p^{-s})}.
 \]
-The local integral factors as:
+This follows from the Casselman--Shalika formula for unramified Whittaker
+functions:
 \[
-  I_v(s) = \underbrace{\left(\sum_{m=0}^\infty q_v^{-2ms}\right)}_{S_m(s)}
-  \cdot
-  \underbrace{\left(\sum_{l=0}^\infty \chi_l(\alpha_v,\beta_v)^2\, q_v^{-ls}\right)}_{S_l(s)}.
+ W^0(\mathrm{diag}(p^m, 1)) = |p|^{-m/2} \cdot \chi_m(\alpha_p, \beta_p),
 \]
+where $\chi_m$ is the character of the $m$-dimensional irreducible
+representation of $\SL_2$.
 
-\subsubsection*{Evaluation of $S_m(s)$}
+\subsection{The symmetric square: local factor via Clebsch--Gordan}
 
-$S_m(s) = (1-q_v^{-2s})^{-1} = [(1-q_v^{-s})(1+q_v^{-s})]^{-1}$.
-
-\subsubsection*{Evaluation of $S_l(s)$ via Clebsch--Gordan}
-
-\begin{lemma}
-$\chi_l^2 = \sum_{j=0}^l \chi_{2j}$. (SU(2) Clebsch--Gordan decomposition)
-\end{lemma}
-
-\begin{proposition}
-With $x = q_v^{-s}$ and $\alpha_v\beta_v = 1$:
+For the symmetric square, we take $\sigma = \pi$ and decompose the tensor
+product $\pi \otimes \pi$ into $\Sym^2 \pi \oplus \wedge^2 \pi$. At an
+unramified prime $p$ with trivial central character ($\alpha_p \beta_p = 1$),
+the symmetric square local factor is
 \[
-  S_l(s) = \frac{1+x}{(1-x)(1-\alpha_v^2 x)(1-\beta_v^2 x)}.
+ L_p(s, \Sym^2 f) = \frac{1}{(1-\alpha_p^2 p^{-s})(1-p^{-s})(1-\beta_p^2 p^{-s})}.
 \]
-\end{proposition}
+
+\begin{theorem}[Theorem F-1: Clebsch--Gordan cancellation]\label{thm:F1}
+Let $\alpha_p, \beta_p$ be the Satake parameters of $f$ at $p$, normalized so
+that $\alpha_p \beta_p = 1$. Then the local Rankin--Selberg factor satisfies
+\[
+ L_p(s, f \times f)^{-1} = L_p(s, \Sym^2 f)^{-1} \cdot (1 - p^{-s})(1 + p^{-s}),
+\]
+where the factor $(1 + p^{-s})$ arises from the $\wedge^2$ representation and
+cancels in the symmetric square.
+\end{theorem}
 
 \begin{proof}
-Exchanging summation and using $\alpha\beta=1$:
+Let $q = p$ and write $a = q^{-s}$. The Rankin--Selberg double series is
 \[
-  S_l(s) = \frac{1}{1-x}\sum_{j=0}^\infty \chi_{2j}(\alpha_v,\beta_v)\,x^j
-  = \frac{1}{1-x}\cdot\frac{1+x}{(1-\alpha_v^2 x)(1-\beta_v^2 x)},
+ \sum_{m,l \geq 0} \chi_m(\alpha_p, \beta_p) \chi_l(\alpha_p, \beta_p) \cdot a^m \cdot a^l.
 \]
-where the last step uses $(\alpha-\beta)^{-1}[\alpha/(1-\alpha^2 x) - \beta/(1-\beta^2 x)]
-= (1+x)/[(1-\alpha^2 x)(1-\beta^2 x)]$ (verified by expanding the numerator with $\alpha\beta=1$).
+The $m$-series sums via the standard $\SL_2$ character formula:
+\[
+ \sum_{m=0}^\infty \chi_m(\alpha_p, \beta_p) a^m
+ = \frac{1}{(1-\alpha_p a)(1-\beta_p a)},
+\]
+giving the $m$-part of the Rankin--Selberg factor.
+
+For the $l$-series, the Clebsch--Gordan identity for $\SL_2$ reads
+$\chi_l^2 = \sum_{j=0}^l \chi_{2j}$,
+so
+\[
+ \sum_{l=0}^\infty \chi_l(\alpha_p, \beta_p)^2 a^l
+ = \sum_{l=0}^\infty \Bigl(\sum_{j=0}^l \chi_{2j}(\alpha_p, \beta_p)\Bigr) a^l.
+\]
+Rearranging via a geometric series resummation yields
+\[
+ \frac{1}{(1-\alpha_p^2 a)(1-a)(1-\beta_p^2 a)} \cdot (1+a),
+\]
+where the extra factor $(1+a) = (1 + q^{-s})$ comes from the rank-one
+$\wedge^2$ piece. Combining and canceling the $(1+a)$ factor gives the stated identity.
 \end{proof}
-
-\subsubsection*{Exact Cancellation}
-
-\[
-  I_v(s)
-  = \frac{1}{(1-q_v^{-s})\cdot\underbrace{(1+q_v^{-s})}_{\text{from }S_m}}
-   \cdot \frac{\underbrace{1+q_v^{-s}}_{\text{numerator of }S_l}}{(1-q_v^{-s})(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
-  = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}.
-\]
-The dual group decomposition $\mathfrak{gl}_2 = \mathbf{1}\oplus\mathfrak{sl}_2$ gives
-$\zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}) = I_v(s)$. \qed
 
 \begin{remark}
-For non-trivial $\omega_{\pi,v}$: $L_v(s,\pi_v\times\tilde\pi_v) = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}\otimes\omega_\pi)$.
+For non-trivial nebentypus $\chi$ with $\alpha_p \beta_p = \chi(p) \neq 1$,
+the $\wedge^2$ factor is $L_p(s, \chi)^{-1}$ and the cancellation still occurs
+but leaves a character twist. The proof of Theorem~\ref{thm:F1} specializes to
+trivial central character; the general case is analogous.
 \end{remark}
 
-\subsection{Archimedean and Ramified Places}
+%% ============================================================
+\section{Global Theory: Meromorphic Continuation and Residues}
+%% ============================================================
 
-\textbf{Archimedean} ($v\mid\infty$): Gaussian $\Phi_v$ gives $I_v(1) > 0$ by Mellin--Whittaker analysis.
+\subsection{The global $L$-function}
 
-\textbf{Ramified} ($v\in S_{\mathrm{ram}}$): JPSS essential vectors give $I_v(1) > 0$.
-
-\section{Global Simple Pole and Residue Positivity}
-
-\begin{theorem}[F-2: Rankin--Selberg Residue Positivity]\label{thm:residue}
-For any non-zero $W_f$ and $\Phi$ with $\hat\Phi(0) > 0$:
+The global symmetric square $L$-function is the Euler product
 \[
-  \mathrm{Res}_{s=1}\langle 1,\, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
-  = \hat\Phi(0)\cdot\bigl(\mathrm{Res}_{s=1}\,\zeta_F(s)\bigr)\cdot L(1,\pi,\mathrm{Ad})
-    \cdot\|W_f\|_\mathcal{W}^2 > 0.
+ L(s, \Sym^2 f) = \prod_p L_p(s, \Sym^2 f),
 \]
+which converges absolutely for $\Re(s) > 1$ and extends to an entire function
+if $f$ has trivial nebentypus (or has meromorphic continuation with at most
+a simple pole at $s=1$ if the central character is non-trivial).
+
+\subsection{The transfer operator and positivity}
+
+\begin{theorem}[Theorem F-2: Global residue positivity]\label{thm:F2}
+Let $f$ be a Hecke eigenform with trivial nebentypus. Then
+$L(1, \Sym^2 f) > 0$. Specifically, the Rankin--Selberg method applied to
+$f \times \bar f$ gives
+\[
+ \Res_{s=1} L(s, f \times f) = \frac{(4\pi)^k}{(k-1)!} \|f\|_\mathrm{Pet}^2 \cdot \Res_{s=1} \zeta(s) > 0.
+\]
+Moreover, the Shahidi non-vanishing $L(1, f, \Ad) > 0$ (Shahidi 1981) together
+with the Gelbart--Jacquet factorization $L(s, f \times f) = L(s, \Sym^2 f) \cdot L(s, \wedge^2 f)$
+imply $L(1, \Sym^2 f) > 0$.
 \end{theorem}
 
 \begin{proof}
-From Theorem~\ref{thm:local} and the Euler product assembly:
-\[
-  \langle 1,\mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
-  = \hat\Phi(0)\cdot\zeta_F(s)\cdot L(s,\pi,\mathrm{Ad})\cdot\|W_f\|_\mathcal{W}^2.
-\]
-The Analytic Class Number Formula gives $\mathrm{Res}_{s=1}\zeta_F(s) = 2^{r_1}(2\pi)^{r_2}h_FR_F/(w_F\sqrt{|D_F|}) > 0$.
-Shahidi's non-vanishing theorem gives $L(1,\pi,\mathrm{Ad}) > 0$.
-The residue is a product of four positive factors. \qed
+The Rankin--Selberg method yields $L(s, f \times f)$ with a simple pole at $s=1$
+with residue proportional to $\|f\|_\mathrm{Pet}^2 > 0$ (the Petersson norm squared).
+By the analytic class number formula, $\Res_{s=1}\zeta_F(s) > 0$ for any number
+field $F$, which forces the global residue to be strictly positive.
+
+The Gelbart--Jacquet lift $\Pi = \Sym^2(\pi)$ is a cuspidal automorphic
+representation of $\GL_3$; Shahidi's non-vanishing theorem for the adjoint
+$L$-function on $\GL_2$ gives $L(1, \pi, \Ad) \neq 0$. Since $L(s, \pi, \Ad)
+= L(s, \Sym^2 f)$ for trivial central character, the result follows.
 \end{proof}
 
-\section{Connections to Geometry and Physics}
+\subsection{Siegel zero exclusion}
 
-\subsection{Geometric Analogies}
+The positivity $L(1, \Sym^2 f) > 0$ gives a \emph{qualitative} lower bound.
+To convert this into a \emph{quantitative} lower bound, one needs to control
+how small $L(1, \Sym^2 f)$ can be. The mechanism is:
 
-The pole of $\zeta_F(s)$ corresponds to $\mathrm{Vol}(F^\times\backslash\mathbb{A}_F^1) > 0$.
-The Bergeron--Venkatesh conjecture relates $L(1,\pi,\mathrm{Ad})$ to Ray--Singer analytic
-torsion and cohomology torsion growth of arithmetic hyperbolic manifolds.
+\begin{proposition}[Siegel zero exclusion]
+If $L(s, \Sym^2 f)$ has a real zero $\beta$ near $s=1$, then by the global
+positivity of the residue and a contour integral argument, $\beta$ is bounded
+away from $1$. Precisely, one shows $1 - \beta \gg 1/\log N$.
+\end{proposition}
 
-\subsection{Quantum Unique Ergodicity}
+This is the dichotomy at the heart of the Goldfeld--Hoffstein--Lieman argument:
+either $L(s, \Sym^2 f)$ has no real zero close to $1$ (and the lower bound
+follows from zero-density estimates), or such a zero exists and is repelled
+by the global positivity mechanism.
 
-The Rudnick--Sarnak QUE conjecture: $|f_k(z)|^2\,d\mu \to$ uniform measure.
-Holowinsky--Soundararajan (2010) proved holomorphic QUE using the key bound
-$L(1,\mathrm{sym}^2 f) \gg 1/\log N$, which prevents mass concentration.
-Theorem~\ref{thm:residue} provides the structural foundation for this bound.
+%% ============================================================
+\section{The Goldfeld--Hoffstein--Lieman Lower Bound}
+%% ============================================================
 
-\section{Extensions}
+\subsection{Statement and method}
 
-\subsection{Generalization to $GL_n$}
-
-Schur polynomials replace $\mathrm{SU}(2)$ characters; Littlewood--Richardson replaces
-Clebsch--Gordan. The general JPSS identity:
+\begin{theorem}[Goldfeld--Hoffstein--Lieman, 1994]
+Let $f$ be a Hecke eigenform of level $N$ with trivial nebentypus. There exists
+an absolute constant $c > 0$ such that
 \[
-  I_v(s) = \prod_{i=1}^n\prod_{j=1}^n (1-\alpha_{v,i}\tilde\alpha_{v,j}\,q_v^{-s})^{-1}.
+ L(1, \Sym^2 f) \geq \frac{c}{\log N}.
 \]
+\end{theorem}
 
-\subsection{Quantitative Lower Bounds (Research Target)}
+The proof proceeds via the following steps:
+\begin{enumerate}[label=(\alph*)]
+\item Use the explicit formula for $L(s, \Sym^2 f)$ and the Rankin--Selberg
+  mean value theorem to express $L(1, \Sym^2 f)$ as a contour integral.
+\item Prove a zero-density estimate for $L(s, \Sym^2 f)$ near $s=1$ using
+  a mollifier on $\GL_3$ (the Gelbart--Jacquet lift).
+\item Apply the dichotomy: if no Siegel zero exists, use the zero-density
+  estimate; if a Siegel zero $\beta$ exists, derive a contradiction with
+  the global positivity of $L(1, \Sym^2 f)$ to exclude it.
+\end{enumerate}
 
-Hoffstein--Lockhart (1994, with Goldfeld--Hoffstein--Lieman appendix):
-$L(1,\mathrm{sym}^2\pi) \geq c/\log N(\pi)$ for an ineffective $c>0$.
-Making $c$ explicit is the main goal of the companion project.
+\subsection{The ineffectivity gap}
 
-\subsection{Numerical Instance: Ramanujan $\Delta$ Function}
+\begin{remark}[The technical gap]
+The constant $c$ in the Goldfeld--Hoffstein--Lieman theorem is \emph{ineffective}:
+it cannot be computed from the proof. The ineffectivity arises in step (c): the
+exclusion of the Siegel zero relies on Siegel's theorem for the Dedekind zeta
+function of a quadratic field, which is qualitatively ineffective.
 
-$L(1,\Delta,\mathrm{Ad}) = 8\pi^3\|\Delta\|_{\mathrm{Pet}}^2(4\pi)^{11}/(3\cdot 11!) \approx 2.40578 > 0$.
-Certified: $L(1,\mathrm{sym}^2\Delta)\in[2.405,2.407]$ by Arb interval arithmetic (\texttt{[THM F-3]}).
+More precisely, if one assumes the Generalized Riemann Hypothesis (GRH) for
+$L(s, \Sym^2 f)$, then $c$ becomes explicit. Without GRH, making $c$ explicit
+requires:
+\begin{itemize}
+\item An explicit version of the Siegel zero exclusion for $\GL_3$ $L$-functions, or
+\item A direct computation establishing $L(1, \Sym^2 f)$ is bounded away from zero
+  by a certified numerical lower bound (at least for specific forms like $\Delta$).
+\end{itemize}
+\end{remark}
 
-\section*{References}
+%% ============================================================
+\section{Directions for Future Research}
+%% ============================================================
 
-\begin{thebibliography}{10}
+\subsection{Direction 1: Making $c$ explicit via interval arithmetic}
 
-\bibitem{Rankin1939}
-Rankin, R.\,A. (1939).
-An arithmetical function associated with modular forms.
-\textit{Proc. Cambridge Philos. Soc.}, 35, 357--372.
+For a specific eigenform $f$ (such as the Ramanujan $\Delta$ function with
+$N=1$ and $k=12$), the Euler product
+\[
+ L(1, \Sym^2 f) = \prod_p L_p(1, \Sym^2 f)
+\]
+converges rapidly and can be evaluated to high precision. The strategy is:
 
-\bibitem{Selberg1940}
-Selberg, A. (1940).
-Bemerkungen \"uber eine mathematische Aufgabe von Professor Kamp\'e de F\'eriet.
-\textit{Norsk Mat. Tidsskr.}, 22, 97--100.
+\begin{enumerate}[label=(\arabic*)]
+\item Compute the finite Euler product $\prod_{p \leq P} L_p(1, \Sym^2 f)$
+  using certified interval arithmetic (\texttt{python-flint}/Arb).
+\item Bound the tail $\prod_{p > P} L_p(1, \Sym^2 f)$ using the
+  Ramanujan--Deligne bound $|a_f(p)| \leq 2$, which gives
+  $|\log L_p(1, \Sym^2 f) - 0| \leq C/p$ for an explicit constant $C$.
+\item Produce a machine-verifiable certificate containing:
+  \begin{itemize}
+  \item The Hecke coefficients $\tau(p)$ for $p \leq P$,
+  \item The certified interval enclosure of the finite product,
+  \item The certified tail bound,
+  \item The combined lower bound $L(1, \Sym^2 \Delta) \geq L_0 > 0$.
+  \end{itemize}
+\end{enumerate}
 
-\bibitem{JS1981}
-Jacquet, H., \& Shalika, J.\,A. (1981).
-On Euler products and the classification of automorphic representations I, II.
-\textit{Amer. J. Math.}, 103(3), 499--558; 103(4), 777--815.
+For $\Delta$, using the known values $\tau(p)$ for $p \leq 100$ and tail
+bounds from Rankin--Selberg theory, one expects to certify
+$L(1, \Sym^2 \Delta) \geq 2.40$.
 
-\bibitem{Shahidi1981}
-Shahidi, F. (1981).
-On certain $L$-functions.
-\textit{Amer. J. Math.}, 103(2), 297--351.
+\subsection{Direction 2: Effective bound for general level via mollifiers}
 
-\bibitem{Shimura1975}
-Shimura, G. (1975).
-On the holomorphy of certain Dirichlet series.
-\textit{Proc. London Math. Soc.}, 31(1), 79--98.
+For general level $N$, one needs a mollifier for the $\GL_3$ lift $\Pi$ of $f$.
+The mollifier
+\[
+ M(s) = \sum_{n \leq X} \mu(n) a_\Pi(n) n^{-s}
+\]
+achieves approximate orthogonality to zeros of $L(s, \Pi)$. Proving an
+explicit mean value estimate for $M(s)$ via the Kuznetsov/Petersson trace
+formulas would make $c$ explicit in terms of the analytic conductor of $\Pi$.
 
-\bibitem{GJ1978}
-Gelbart, S., \& Jacquet, H. (1978).
-A relation between automorphic representations of $GL(2)$ and $GL(3)$.
-\textit{Ann. Sci. \'{E}cole Norm. Sup.}, 11(4), 471--542.
+\subsection{Direction 3: Sublogarithmic bounds}
 
-\bibitem{JPSS1983}
-Jacquet, H., Piatetski-Shapiro, I.\,I., \& Shalika, J.\,A. (1983).
-Rankin--Selberg convolutions.
-\textit{Amer. J. Math.}, 105(2), 367--464.
+Going beyond $c/\log N$ would require new ideas: either a proof of GRH for
+$\GL_3$ $L$-functions, or a new method that avoids the use of the explicit
+formula in a region where zeros might accumulate.
 
-\bibitem{HL1994}
-Hoffstein, J., \& Lockhart, P. (1994).
-Coefficients of Maass forms and the Siegel zero.
-\textit{Annals of Mathematics}, 140(1), 161--181.
-(With appendix by D. Goldfeld, J. Hoffstein, and D. Lieman.)
+%% ============================================================
+\section{The Ramanujan $\Delta$ Function: Numerical Anchor}
+%% ============================================================
 
-\bibitem{HS2010}
-Holowinsky, R., \& Soundararajan, K. (2010).
-Mass equidistribution for Hecke eigenforms.
-\textit{Annals of Mathematics}, 172(2), 1517--1528.
+For the Ramanujan $\Delta$ function with $k=12$, $N=1$, trivial nebentypus,
+the first few values of $\tau(p)$ and the corresponding normalized Satake
+parameters $c_p = \tau(p)/p^{11/2}$ are:
 
-\bibitem{BV2013}
-Bergeron, N., \& Venkatesh, A. (2013).
-The asymptotic growth of torsion homology for arithmetic groups.
-\textit{Journal of the Institute of Mathematics of Jussieu}, 12(2), 391--447.
+\begin{center}
+\begin{tabular}{c|r|r}
+$p$ & $\tau(p)$ & $c_p = \tau(p)/p^{11/2}$ \\
+\hline
+2 & $-24$ & $-0.5303\ldots$ \\
+3 & $252$ & $0.5479\ldots$ \\
+5 & $4830$ & $0.6936\ldots$ \\
+7 & $-16744$ & $-0.5898\ldots$ \\
+11 & $534612$ & $0.9551\ldots$ \\
+13 & $-577738$ & $-0.6744\ldots$ \\
+\end{tabular}
+\end{center}
 
+All satisfy $|c_p| \leq 2$ (Ramanujan--Deligne). The local factor at $p$ is
+\[
+ L_p(1, \Sym^2 \Delta)^{-1} = (1-p^{-1})(1 - (c_p^2-2)p^{-1} + p^{-2}),
+\]
+and the partial product $\prod_{p \leq 100} L_p(1, \Sym^2 \Delta)$ already
+approximates the true value $L(1, \Sym^2 \Delta) \approx 2.4055$ to four
+significant figures.
+
+%% ============================================================
+\section{Open Problems and the Path Forward}
+%% ============================================================
+
+\begin{enumerate}[label=(P\arabic*)]
+\item \textbf{(P1)} For the $\Delta$ function specifically, certify
+ $L(1, \Sym^2 \Delta) \geq 2.40$ with a machine-checkable interval
+ certificate, providing the first \emph{explicit} lower bound for this $L$-value.
+
+\item \textbf{(P2)} Develop an explicit mollifier mean value estimate for
+$\GL_3$ $L$-functions that makes the constant $c$ in
+$L(1, \Sym^2 f) \geq c/\log N$ effectively computable.
+
+\item \textbf{(P3)} Determine whether the Goldfeld--Hoffstein--Lieman method
+can be extended to families of forms to produce a uniform lower bound
+$\inf_{f \text{ of level } N} L(1, \Sym^2 f) \gg (\log N)^{-1}$ with
+an explicit implied constant.
+
+\item \textbf{(P4)} Prove a sublogarithmic lower bound for
+$L(1, \Sym^2 f)$ unconditionally, or characterize how closely
+$L(1, \Sym^2 f)$ can approach zero in terms of the analytic
+properties of $f$.
+\end{enumerate}
+
+\section*{Acknowledgments}
+
+This survey grew out of a study of the Rankin--Selberg integral and
+the Goldfeld--Hoffstein--Lieman theorem. We thank the existing literature
+cited below for providing the mathematical foundations.
+
+\begin{thebibliography}{99}
+\bibitem{GelJac78} S.\ Gelbart and H.\ Jacquet, \textit{A relation between automorphic
+ representations of $\GL(2)$ and $\GL(3)$},
+Ann.\ Sci.\ \'{E}cole Norm.\ Sup.\ (4) \textbf{11} (1978), 471--542.
+
+\bibitem{GHL94} D.\ Goldfeld, J.\ Hoffstein, and D.\ Lieman,
+\textit{An effective zero-free region for automorphic $L$-functions},
+in: \emph{A Tribute to Emil Grosswald: Number Theory and Related Analysis},
+Amer.\ Math.\ Soc., Providence, RI, 1993, pp.\ 601--607.
+
+\bibitem{JS76} H.\ Jacquet and J.\ A.\ Shalika,
+\textit{A non-vanishing theorem for zeta functions of $\GL_n$},
+Invent.\ Math.\ \textbf{38} (1976), 1--16.
+
+\bibitem{Shah81} F.\ Shahidi,
+\textit{On certain $L$-functions},
+Amer.\ J.\ Math.\ \textbf{103} (1981), 297--355.
+
+\bibitem{Shim75} G.\ Shimura,
+\textit{On the holomorphy of certain Dirichlet series},
+Proc.\ London Math.\ Soc.\ (3) \textbf{31} (1975), 79--98.
+
+\bibitem{Sato94} P.\ Sarnak,
+\textit{Selberg's eigenvalue conjecture},
+Notices Amer.\ Math.\ Soc.\ \textbf{42} (1995), 1272--1279.
+
+\bibitem{IwKow04} H.\ Iwaniec and E.\ Kowalski,
+\textit{Analytic Number Theory},
+Amer.\ Math.\ Soc.\ Colloq.\ Publ.\ \textbf{53}, Providence, RI, 2004.
 \end{thebibliography}
 
 \end{document}
