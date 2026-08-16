@@ -4,19 +4,28 @@ numerical_delta.py -- Certified computation for L(1, sym^2 Delta).
 Computes partial Euler products for the symmetric square L-function of the
 Ramanujan Delta function Delta in S_{12}(SL_2(Z)).
 
-NOTE: The naive truncated Euler product prod_{p<=P} L_p(1)^{-1} does NOT
-converge to L(1, sym^2 Delta).  The product diverges because the local factors
-L_p(1) satisfy L_p(1) < 1 for most small primes (the (1-p^{-1}) factor pulls
-it below 1), so the partial product drifts toward 0, not toward L(1).
+MATHEMATICAL STATUS (2026-08-16):
+The Euler product prod_{p<=P} L_p(1, sym^2 Delta) CONDITIONALLY converges
+toward L(1, sym^2 Delta) as P -> infinity, because the terms (c_p^2 - 1)/p
+have zero Sato-Tate mean and partial sums stay bounded.  Over 25 primes
+(p <= 97) the partial product is ~0.641.
 
-CORRECT RESULT (discovery tier, via Rankin-Selberg):
-  sum_{n<=N} tau(n)^2 / n^11 / N  ->  L(1, sym^2 Delta) ~ 0.384
+However, the simple tail bound |sum_{p>P} log L_p| <= sum_{p>P} 3/p
+DIVERGES, so this product cannot be certified via that bound.
+
+CORRECT VALUE (discovery tier, via Rankin-Selberg Tauberian):
+  sum_{n<=N} tau(n)^2 / n^{11+s} = [zeta(s)/zeta(2s)] * L(s, sym^2 Delta)
+  L(1, sym^2 Delta) = zeta(2) * lim_{N->inf} (sum_{n<=N} tau(n)^2/n^11) / N
+                    ~ (pi^2/6) * 0.3839  ~  0.631
 (see discovery/rs_estimate.py for the computation).
+Consistent with Dirichlet partial sum sum a_{sym^2}(n)/n^{1.01} ~ 0.634
+at N=3000.
 
 Certified proof-tier computation requires the approximate functional equation
 [OBL E-2].  The produce_certificate() function below records the partial
 Euler product interval but does NOT certify L(1, sym^2 Delta) >= 2.405
-(that bound was erroneous and has been retracted).
+(that bound was erroneous and has been retracted: the result 2.405 arose
+from incorrect TAU_PRIMES entries and a wrong normalisation).
 
 Status: [OBL] -- certification via AFE is still required.
 """
