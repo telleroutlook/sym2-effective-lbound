@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "sym2-effective-lbound"
+version = "0.1.0"
+description = "Effective lower bounds for symmetric square L-functions at s=1"
+requires-python = ">=3.12"
+dependencies = [
+    "python-flint>=0.7",
+    "mpmath>=1.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: tests requiring high-precision Arb computation (>30s); exclude with -m 'not slow'",
+    "certified: tests that verify interval-arithmetic certificates",
+    "negative: tamper tests that must be rejected by the checker",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "checker*"]
