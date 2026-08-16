@@ -73,6 +73,10 @@
   4. 最终认证 J，完成 [OBL E-2]
   技术要点：需要 GL₃ approximate functional equation 在临界带内的 Arb 实现（Goldfeld-Li 2006 Riemann-Siegel 型公式）。每个 (σ,t) 处的计算误差可被认证。
 - **[OBL M-Voronoi] 路径**：实现 Miller-Schmid (2006) 带 Kloosterman 和的完整 GL₃ Voronoi；数学上正确但工程量巨大（需要 Kloosterman 求和、导子结构、振荡相位）
+- **两侧 Gaussian AFE（2026-08-16，`discovery/_m3_afe_sigma.py`，失败）**：L(σ+it) = S_main(Gaussian) + ε×chi×S_dual(Gaussian) 公式在 σ=0.7 时与 Cesaro(N=2000) 最大偏差达 1.04。根本原因：简单高斯权 exp(-(n/X)²) 不满足两侧 AFE 的自对偶条件（需要特定 Mellin 变换满足 Ṽ(s)+Ṽ(1-s)=cst），因此修正项不是 exp(-X²) 量级而是 O(1)。
+- **Rankin-Selberg 直接计算（2026-08-16，`discovery/_L1_rankin_selberg.py`，失败）**：L(1+δ) = (ζ(2+2δ)/ζ(1+δ)) × Σ τ(n)²/n^{12+δ}。部分和 N=5000、δ=0.5 给出 L=0.726，δ=0.05 给出 L=0.262，远未收敛到目标 0.632。根本原因：需要先 N→∞ 再 δ→0，收敛指数仅 N^{-δ}；对于 δ=0.05 和 N=5000，尾项约 25。
+- **轮廓移动至 Re(u)=ε>0（2026-08-16 分析，无代码，结论不可行）**：思路：J = ∮_{Re=-1/2} → 移到 ∮_{Re=ε}，避开临界线。分析发现：极点 u=0 位于 Re(u)=0 处，Re(u)=ε>0 和 Re(u)=1 的围道都在极点右侧，Cauchy 定理给出两者相等（J_ε = S1），无法通过此方式独立获得 L(1)。J 项必须来自极点左侧（Re(u)<0），即 L(1+u) 在 Re(1+u)<1 处——临界带内，条件收敛。
+- **[OBL E-2] 认证的根本障碍（最终结论）**：J 的认证与以下三者等价：(a) GL₃ Voronoi 求和公式（Miller-Schmid 2006）；(b) 显式无零区域 [OBL M-3]；(c) 数值验证 L(s)≠0 on {Re(s)≥σ₀, |Im(s)|≤T} 加 Arb 误差界。所有"绕道"（Gaussian AFE、RS 极限、轮廓移动）均失败，均因 Dirichlet 级数在临界带条件收敛而受阻。
 - **S1 数值收敛**（2026-08-16，`src/afe_s1.py`）：
   - S1(N=100) = 0.54785263，W_afe(100/12)=0.0365
   - S1(N=500) = 0.54830922，W_afe(500/12)=0.00248
