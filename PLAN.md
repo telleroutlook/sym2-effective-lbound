@@ -149,6 +149,11 @@
   - **尝试 2**（`discovery/_voronoi_mellin_barnes.py`）：R(s)=Γ_GL3(1-s)/Γ_GL3(s) 的 1D Mellin-Barnes，即 Φ(n)=(1/n)·(1/2π)∫R(1/2+it)·(nX)^{1/2+it}·Γ(1/2+it)dt。验证：|R(1/2+it)|=1（幺正 ✓），R(s)·R(1-s)=1（✓）。结果：Φ(n)≈0.556/n（代数衰减 O(1/n)），对偶级数收敛速度与原始级数相同。
   - **根本原因（最终更正）**：GL₃ Voronoi 的 X^{2/3} 界来自对 **Kloosterman 层 c≥1 的求和** 而非单项 Bessel 核的快速衰减。c=1 项（主项）给出条件收敛 O(1/n)；c≥2 项通过 GL₃ Kloosterman 界 S(0,n;c)~c^{2/3+ε} 提供对消，使总和 O(X^{2/3})。正确实现需要：(1) 各 c 的 Kloosterman 和计算；(2) 对每个 c 计算 Bessel 核 J_{GL3}(nX/c^3)；(3) 对 c 求和并利用 Weil 界。
 - **[OBL M-Voronoi] 路径**：实现 Miller-Schmid (2006) 完整 GL₃ Voronoi（含 c≥1 Kloosterman 求和）
+- **GL₃ Voronoi 定性结论（2026-08-16 会话 5，最终）**：
+  - **三次数值尝试均失败**：(1) Whittaker 积分（常数 I≈0）；(2) 1D Mellin-Barnes Φ(n)（O(1/n) 代数衰减）；(3) J-Bessel J_{11}(4π(nX/c)^{1/3})（比值随机，X=5,10,20 分别为 3.94, -0.18, -5.09）；(4) K-Bessel K_{10.5}(2π(n/X)^{1/3})（K_GL3(0.1)=2.7×10^7，发散）。
+  - **根本原因（最终版本）**：GL₃ Voronoi **是理论界估计工具，不是数值恒等式**。对于自对偶形式（A(n,1)=A(1,n)=a(n)），光滑测试函数的 Voronoi 公式是同义反复（dual = primal），不提供新信息。|S(X)| ≤ C×X^{2/3} 的界来自**估计振荡和的大小**（通过 Kloosterman 和对消），而非数值计算 Voronoi 和。"验证 Voronoi 和 = S(X)" 在数学上不可能，因为等式本身不成立（不是等式，是不等式的来源）。
+  - **正确的 C_GL3 提取路径**：从 Miller-Schmid (2006) Theorem 1.1 的 Kloosterman sum 界 + GL₃ Bessel 估计直接得出常数（理论分析，非数值计算）。Rankin-Selberg 均值：Σ|a(n)|²/n^{1.01}≈5.79（N=10^5），暗示 Res_{s=1}L(s, sym²×sym²)≈O(1)，理论 C_GL3 应远小于阈值 2.63。
+  - **[OBL M-Voronoi] 内容修正**：任务不是"数值验证"，而是"从 Miller-Schmid 提取显式常数 C_GL3"（理论分析）。
 - **两侧 Gaussian AFE（2026-08-16，`discovery/_m3_afe_sigma.py`，失败）**：L(σ+it) = S_main(Gaussian) + ε×chi×S_dual(Gaussian) 公式在 σ=0.7 时与 Cesaro(N=2000) 最大偏差达 1.04。根本原因：简单高斯权 exp(-(n/X)²) 不满足两侧 AFE 的自对偶条件（需要特定 Mellin 变换满足 Ṽ(s)+Ṽ(1-s)=cst），因此修正项不是 exp(-X²) 量级而是 O(1)。
 - **Rankin-Selberg 直接计算（2026-08-16，`discovery/_L1_rankin_selberg.py`，失败）**：L(1+δ) = (ζ(2+2δ)/ζ(1+δ)) × Σ τ(n)²/n^{12+δ}。部分和 N=5000、δ=0.5 给出 L=0.726，δ=0.05 给出 L=0.262，远未收敛到目标 0.632。根本原因：需要先 N→∞ 再 δ→0，收敛指数仅 N^{-δ}；对于 δ=0.05 和 N=5000，尾项约 25。
 - **轮廓移动至 Re(u)=ε>0（2026-08-16 分析，无代码，结论不可行）**：思路：J = ∮_{Re=-1/2} → 移到 ∮_{Re=ε}，避开临界线。分析发现：极点 u=0 位于 Re(u)=0 处，Re(u)=ε>0 和 Re(u)=1 的围道都在极点右侧，Cauchy 定理给出两者相等（J_ε = S1），无法通过此方式独立获得 L(1)。J 项必须来自极点左侧（Re(u)<0），即 L(1+u) 在 Re(1+u)<1 处——临界带内，条件收敛。
