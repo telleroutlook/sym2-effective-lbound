@@ -5,77 +5,158 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
 
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
 \title{Mollifier Construction for Symmetric Square $L$-Functions\\
-\large \texttt{M-1, M-2 Deliverables --- sym2-effective-lbound}}
+\large Proof Document 03 --- sym2-effective-lbound\\
+\normalsize \textbf{Status: [OBL] --- Proof obligations not yet closed}}
 \author{}
-\date{Status: \texttt{[OBL]} --- proof obligations open}
+\date{}
 
 \begin{document}
 \maketitle
 
+\noindent\textbf{Warning.}  This document contains proof sketches and obligations
+([OBL]).  No result here may be used downstream until the corresponding obligation
+is closed and the status updated to [THM] in spec/SPECIFICATION.md.
+
 \begin{abstract}
-This document lays out the mollifier construction for $L(s,\mathrm{sym}^2 f)$,
-following the Goldfeld--Hoffstein--Lieman approach. We define an explicit mollifier
-$M(s)$ of length $X = N^\theta$, state the required mean value theorem (M-2),
-and connect nonvanishing at $s=1$ to the effective lower bound goal (E-1).
-The proof of M-2 requires the GL$_3$ Rankin--Selberg mean value theorem: \texttt{[OBL]}.
+We outline the mollifier construction needed to establish the effective lower bound
+$L(1, \mathrm{sym}^2 f) \geq c_{\mathrm{eff}}/\log N$.  The approach follows the strategy
+of Goldfeld--Hoffstein--Lieman (1994), adapted to make the implicit constants explicit.
+The key inputs are: (a) a mean value theorem for $GL_3$ $L$-functions, (b) Hecke
+multiplicativity for symmetric square coefficients, and (c) the large sieve on $GL_3$.
+All three are currently [OBL].
 \end{abstract}
 
 \tableofcontents
 
-\section{The Symmetric Square as a GL$_3$ Object}
+\section{The Symmetric Square $L$-Function as a $GL_3$ Automorphic Form}
 
-\begin{theorem}[Gelbart--Jacquet 1978, \texttt{[BASE]}]\label{thm:GJ}
-For a cuspidal $\pi$ of $GL_2(\mathbb{A})$, there exists a cuspidal or isobaric
-$\Pi = \mathrm{sym}^2(\pi)$ of $GL_3(\mathbb{A})$ with $L(s,\Pi) = L(s,\mathrm{sym}^2 f)$.
-\end{theorem}
+By the theorem of Gelbart--Jacquet \cite{GJ78}, the symmetric square lift
+$\Pi = \mathrm{sym}^2 \pi$ is an automorphic representation of $GL_3(\A_Q)$.
+The $L$-function $L(s, \Pi)$ equals $L(s, \mathrm{sym}^2 f)$ defined by the Euler product.
 
-The Dirichlet series is $L(s,\mathrm{sym}^2 f) = \sum_{n=1}^\infty a_{\mathrm{sym}^2}(n)/n^s$,
-where $a_{\mathrm{sym}^2}(p) = \tilde\alpha_p^2 + 1 + \tilde\beta_p^2 = a_f(p)^2/p^{k-1} - 1$
-at unramified $p$.
-
-\section{The Mollifier}
-
-\begin{definition}\label{def:mollifier}
-For length parameter $X \geq 1$:
+\begin{definition}[Symmetric square Fourier coefficients]
+The $n$-th Dirichlet coefficient of $L(s, \mathrm{sym}^2 f)$ is
 \[
-  M(s) = \sum_{n \leq X} \frac{\mu(n)\,a_{\mathrm{sym}^2}(n)}{n^s}.
+  a_{\Pi}(n) = \sum_{d^2 \mid n} \mu\Bigl(\frac{n}{d^2}\Bigr)
+               a_f\Bigl(\frac{n}{d^2}\Bigr)\, a_f(n/d)\cdot (\text{local correction at bad primes})
 \]
+for squarefree $n$, with the full formula given by the Hecke multiplicativity relations
+for $GL_3$.
 \end{definition}
 
-The heuristic: $M(s)\cdot L(s,\mathrm{sym}^2 f) \approx 1$ near $s=1$
-since $M(s) \approx L(s,\mathrm{sym}^2 f)^{-1}$ via M\"obius inversion.
-
-\section{Mean Value Theorem \texttt{[OBL]}}
-
-\begin{theorem}[M-2, \texttt{[OBL]}]\label{thm:M2}
-For $T \geq 1$ and $X = N^\theta$ ($\theta > 0$ to be optimized):
+\begin{remark}
+The key Hecke relation at unramified primes $p \nmid N$ is:
 \[
-  \int_T^{2T} \bigl|M(\tfrac12+it)\,L(\tfrac12+it,\mathrm{sym}^2 f)\bigr|^2\,dt \gg T.
+  a_\Pi(p^k) = \tilde\alpha_p^{2k} + \tilde\alpha_p^{2k-2} + \cdots + \tilde\beta_p^{2k}
+  = \chi_{2k}(\tilde\alpha_p, \tilde\beta_p) + \chi_{2k-2} + \cdots + \chi_0,
 \]
-The implied constant is effective, depending on $\theta$, $k$, and $N$.
-\end{theorem}
-
-\begin{remark}[Proof strategy]
-Requires: (a) GL$_3$ Rankin--Selberg mean value theorem via Theorem~\ref{thm:GJ};
-(b) mollifier mean value via GL$_3$ large sieve;
-(c) parameter optimization.
-The main gap is the GL$_3$ large sieve with an explicit constant: \texttt{[OBL]}.
+where $\tilde\alpha_p \tilde\beta_p = 1$.  In particular $a_\Pi(p) = a_f(p)^2/p^{k-1} - 1$.
 \end{remark}
 
-\section{Connection to the Effective Bound (E-1)}
+\section{Mollifier Definition}
 
-The effective lower bound $L(1,\mathrm{sym}^2 f) \geq c_{\mathrm{eff}}/\log N$ follows from:
+\begin{definition}[Mollifier]\label{def:mollifier}
+Fix a mollifier length $X = N^\theta$ for some $\theta \in (0, 1/2)$ to be optimized.
+Define the Dirichlet polynomial
+\[
+  M(s) = \sum_{n \leq X} \mu(n)\, a_\Pi(n)\, n^{-s}.
+\]
+Here $\mu$ is the Mobius function and $a_\Pi(n)$ are the Hecke eigenvalues of
+$\Pi = \mathrm{sym}^2 f$.
+\end{definition}
+
+\begin{remark}
+The mollifier $M(s)$ is designed so that $M(s) L(s, \Pi)$ is approximately 1
+for $s$ near $1/2 + iT$: the partial sums truncate the Euler product, removing
+the oscillation from $L$.
+\end{remark}
+
+\section{Mean Value Estimate [OBL]}
+
+\begin{proposition}[Mean value, [OBL]]\label{prop:mean-value}
+There exist absolute constants $c_0, T_0 > 0$ such that for all $T \geq T_0$:
+\[
+  \int_T^{2T} |M(\tfrac12+it)\, L(\tfrac12+it, \mathrm{sym}^2 f)|^2\, dt \geq c_0 T.
+\]
+\end{proposition}
+
+\begin{remark}[What is needed to close this obligation]
+This requires:
 \begin{enumerate}
-  \item[Step 1] Zero-free region (M-3): $L(s,\mathrm{sym}^2 f)\neq 0$ for
-    $\mathrm{Re}(s) > 1 - c_0/\log N$ with explicit $c_0$.
-  \item[Step 2] Contour integral: zero-free region $\Rightarrow$
-    $L(1,\cdot) \geq c_1/\log N$ with $c_1$ explicitly computable from $c_0$.
-  \item[Step 3] Mollifier (M-2) certifies Case~2 (Siegel zero) cannot arise.
+  \item A $GL_3$ Rankin--Selberg mean value: $\int_T^{2T} |L(1/2+it, \Pi)|^2 dt \sim cT$
+        for $T \to \infty$ with explicit constant $c$.
+  \item Hecke multiplicativity: the cross-term $\sum_{m,n \leq X} \mu(m)\mu(n)
+        a_\Pi(m) \overline{a_\Pi(n)} (mn)^{-1/2}$ can be evaluated using
+        $GL_3$ large sieve inequalities.
+  \item Explicit constant tracking throughout.
 \end{enumerate}
-The explicit value of $c_1$ is the core research deliverable (E-1).
+The key reference is Luo--Rudnick--Sarnak \cite{LRS95} for $GL_3$ mean values,
+and Bruggeman--Motohashi or Blomer--Khan for explicit forms.
+\end{remark}
+
+\section{Zero-Density Estimate [OBL]}
+
+\begin{proposition}[Zero density near $s=1$, [OBL]]\label{prop:zero-density}
+There exists an explicit $c_1 > 0$ such that $L(s, \mathrm{sym}^2 f)$ has at most
+one real zero $\beta$ with $\beta > 1 - c_1/\log(N q_\infty)$, where $q_\infty$
+is the Archimedean conductor.  Moreover, if such a $\beta$ (Siegel zero) exists, then
+$L(1, \mathrm{sym}^2 f) > L(1, \mathrm{sym}^2 f) - L'(\beta, \cdot)(1-\beta) + O((1-\beta)^2)$,
+which contradicts Theorem~F-2 as $\beta \to 1$.
+\end{proposition}
+
+\begin{remark}[What is needed to close this obligation]
+This requires:
+\begin{enumerate}
+  \item The Hadamard product representation for $L(s, \mathrm{sym}^2 f)$,
+        giving $\log L'/L(s,\cdot) = \sum_\rho (s-\rho)^{-1} + \text{entire}$.
+  \item An explicit bound on the analytic conductor $q(\Pi, s)$ for $\Pi = \mathrm{sym}^2 f$,
+        needed to control the sum over zeros.
+  \item Explicit constants (not just order-of-magnitude) in the standard
+        log-free zero-free region.
+\end{enumerate}
+\end{remark}
+
+\section{Connection to Lower Bound at $s=1$ [OBL]}
+
+\begin{proposition}[Lower bound from mollifier, [OBL]]\label{prop:lbound-from-mollifier}
+Assume Propositions \ref{prop:mean-value} and \ref{prop:zero-density}.  Then
+for any primitive Hecke eigenform $f$ of prime level $p$ with no Siegel zero:
+\[
+  L(1, \mathrm{sym}^2 f) \geq \frac{c_2}{\log p}
+\]
+for an explicit constant $c_2 > 0$.
+\end{proposition}
+
+\begin{remark}[Proof sketch]
+Using the zero-free region of width $\delta = c_1/\log p$ around $s=1$, standard
+contour integration of $\log L(s, \mathrm{sym}^2 f)$ along the rectangle with
+$\mathrm{Re}(s) \in [1-\delta, 1+\delta]$ and $|\mathrm{Im}(s)| \leq 2$ gives
+\[
+  \log L(1, \cdot) \geq -\frac{1}{\delta}\cdot C \log\log p + O(1)
+                  \geq -C' \log\log p.
+\]
+This gives $L(1, \cdot) \geq p^{-\varepsilon}$ for any $\varepsilon > 0$, but the
+logarithmic bound $c_2/\log p$ requires a sharper contour argument tracking
+explicit constants.  The core research contribution is making $c_2$ explicit.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{GHL94} D.~Goldfeld, J.~Hoffstein, and D.~Lieman, Appendix: An effective
+  zero-free region, Ann.\ Math.\ \textbf{140} (1994), 177--181.
+\bibitem{GJ78} S.~Gelbart and H.~Jacquet, A relation between automorphic
+  representations of $GL(2)$ and $GL(3)$, Ann.\ Sci.\ ENS \textbf{11} (1978), 471--542.
+\bibitem{LRS95} W.~Luo, Z.~Rudnick, and P.~Sarnak, On Selberg's eigenvalue conjecture,
+  Geom.\ Funct.\ Anal.\ \textbf{5} (1995), 387--401.
+\end{thebibliography}
 
 \end{document}

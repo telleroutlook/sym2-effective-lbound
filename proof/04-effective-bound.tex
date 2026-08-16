@@ -4,110 +4,180 @@
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
 
-\title{Explicit Lower Bound for $L(1, \mathrm{sym}^2 f)$\\
-\large \texttt{E-1 Deliverable --- sym2-effective-lbound}}
+\newcommand{\A}{\mathbb{A}}
+\DeclareMathOperator{\Res}{Res}
+
+\title{Explicit Lower Bound: $L(1, \mathrm{sym}^2 f) \geq c_{\mathrm{eff}}/\log N$\\
+\large Proof Document 04 --- sym2-effective-lbound\\
+\normalsize \textbf{Status: [OBL] --- Proof obligations not yet closed}}
 \author{}
-\date{Status: \texttt{[OBL]} --- proof strategy complete, constants open}
+\date{}
 
 \begin{document}
 \maketitle
 
+\noindent\textbf{Warning.}  This document contains the main theorem statement and
+proof strategy.  The result is [OBL] pending the closure of proof/03-mollifier.tex
+obligations.  Do not use this as a proved theorem.
+
 \begin{abstract}
-We state the main theorem (E-1) and present the complete
-Goldfeld--Hoffstein--Lieman two-case proof strategy.
-Case~2 (Siegel zero) is eliminated by \texttt{[THM F-2]}.
-Case~1 reduces to an explicit contour integral whose constant
-depends on the zero-free region (M-3): \texttt{[OBL]}.
-The $\Delta$-function instance ($N=1$) is certified by \texttt{[THM F-3]}.
+This document states the main research goal and its proof strategy:
+for any normalized primitive Hecke eigenform $f$ of prime level $p$ with trivial
+nebentypus, prove
+\[
+  L(1, \mathrm{sym}^2 f) \geq \frac{c_{\mathrm{eff}}}{\log p}
+\]
+with an explicit, computable constant $c_{\mathrm{eff}} > 0$.
+The proof follows Goldfeld--Hoffstein--Lieman (1994), but with all implicit constants
+made explicit via rigorous interval arithmetic.  The key novelty is a computer-certified
+value of $c_{\mathrm{eff}}$.
 \end{abstract}
 
 \tableofcontents
 
-\section{Main Theorem}
+\section{Main Theorem Statement [OBL]}
 
-\begin{theorem}[E-1: Explicit Lower Bound, \texttt{[OBL]}]\label{thm:E1}
-There exists an explicitly computable constant $c_{\mathrm{eff}} > 0$ such that
-for all normalized primitive Hecke eigenforms $f$ of prime level $p$:
+\begin{theorem}[Main, [OBL]]\label{thm:main}
+Let $f \in S_k(p)$ be a normalized primitive Hecke eigenform of weight $k \geq 2$
+and prime level $p$.  Then
 \[
-  L(1, \mathrm{sym}^2 f) \geq \frac{c_{\mathrm{eff}}}{\log p}.
+  L(1, \mathrm{sym}^2 f) \geq \frac{c_{\mathrm{eff}}}{\log p},
 \]
+where $c_{\mathrm{eff}}$ is an explicit positive constant, independent of $f$ and $p$,
+certified by interval arithmetic in \texttt{src/numerical\_delta.py}.
 \end{theorem}
 
-\begin{remark}
-Existence of $c>0$ (ineffective) is Goldfeld--Hoffstein--Lieman (1994).
-The explicit value $c_{\mathrm{eff}}$ is \texttt{[OBL]}; it requires
-closing the zero-free region estimate in \S\ref{sec:zero-free}.
+\begin{remark}[Current status]
+The theorem is [OBL].  The following are [THM] and available:
+\begin{itemize}
+  \item Theorem~F-1 (local Euler factor factorization): [THM]
+  \item Theorem~F-2 (global residue positivity): [THM]
+  \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \geq 2.405$): [THM]
+\end{itemize}
+The following remain [OBL]:
+\begin{itemize}
+  \item Mollifier mean value estimate (proof/03-mollifier.tex, Prop.~M-1)
+  \item Zero-free region with explicit constant (proof/03-mollifier.tex, Prop.~M-2)
+  \item Explicit contour integral constant (this document, Section~3)
+\end{itemize}
 \end{remark}
 
-\section{Two-Case Argument}
+\section{Proof Strategy: Goldfeld--Hoffstein--Lieman Dichotomy}
 
-\begin{definition}
-A \textbf{Siegel zero} for $L(s,\mathrm{sym}^2 f)$ is a real zero
-$\beta\in(0,1)$ with $\beta > 1 - c_0/\log p$.
+\begin{definition}[Siegel zero]
+A Siegel zero for $L(s, \mathrm{sym}^2 f)$ is a real zero $\beta$ satisfying
+\[
+  \beta > 1 - \frac{c_0}{\log(p(2+|t|))}
+\]
+for a constant $c_0 > 0$ to be made explicit.
 \end{definition}
 
-\begin{proposition}[Case 2 is vacuous]\label{prop:case2}
-$L(s,\mathrm{sym}^2 f)$ has no Siegel zero.
+\subsection{Case 1: No Siegel Zero}
+
+\begin{proposition}[Case 1: explicit bound from zero-free region, [OBL]]\label{prop:case1}
+Assume $L(s, \mathrm{sym}^2 f)$ has no Siegel zero.  Then for an explicit $c_1 > 0$:
+\[
+  L(1, \mathrm{sym}^2 f) \geq \frac{c_1}{\log p}.
+\]
 \end{proposition}
-\begin{proof}
-A Siegel zero $\beta\approx 1$ forces $L(1,\mathrm{sym}^2 f)\to 0$,
-contradicting \texttt{[THM F-2]} (Corollary~\ref{cor:sym2-positive}).
+
+\begin{proof}[Proof strategy]
+From the zero-free region of width $\delta = c_0/\log p$, the Hadamard product
+representation of $L(s, \mathrm{sym}^2 f)$ near $s = 1$ gives
+\[
+  -\frac{L'}{L}(s, \mathrm{sym}^2 f) = \sum_\rho \frac{1}{s-\rho} + O(\log p)
+\]
+with the sum over zeros controlled by the zero-free region.  Integrating along the
+segment $[1-\delta, 1]$ and exponentiating yields
+\[
+  \log L(1, \mathrm{sym}^2 f) \geq -C \log\log p
+\]
+for an explicit $C$, giving $L(1, \cdot) \geq (\log p)^{-C}$.  The stronger bound
+$c_1/\log p$ (with explicit $c_1$) follows from the full Goldfeld--Hoffstein--Lieman
+calculation, which requires tracing the constant in the log-free zero-free region.
+\textbf{[OBL: close this argument with explicit $c_1$.]}
 \end{proof}
 
-Proposition~\ref{prop:case2} reduces the proof entirely to Case~1.
+\subsection{Case 2: Siegel Zero Exists -- Excluded by Theorem F-2}
 
-\section{Zero-Free Region \texttt{[OBL]}}\label{sec:zero-free}
-
-\begin{theorem}[M-3: Zero-Free Region, \texttt{[OBL]}]\label{thm:M3}
-There exists an explicit $c_0 > 0$ such that $L(s,\mathrm{sym}^2 f)\neq 0$ for
-\[
-  \mathrm{Re}(s) > 1 - \frac{c_0}{\log(p\cdot|\mathrm{Im}(s)|+2)}.
-\]
-\end{theorem}
-
-\begin{remark}[Proof strategy]
-Standard $3$-$4$-$3$ trigonometric inequality via the Hadamard product:
-$3\mathrm{Re}(-L'/L)(\sigma) + 4\mathrm{Re}(-L'/L)(\sigma+it)
-+ \mathrm{Re}(-L'/L)(\sigma+2it) \geq 0$.
-The analytic conductor is $q(f,t)\asymp p^3(|t|+k)^3$.
-Making $c_0$ explicit requires bounding the log-conductor: \texttt{[OBL]}.
-\end{remark}
-
-\section{Contour Integral \texttt{[OBL]}}
-
-\begin{proposition}[Conditional on M-3, \texttt{[OBL]}]
-Assuming Theorem~\ref{thm:M3} with explicit $c_0$,
-there exists explicit $c_1 > 0$ with $L(1,\mathrm{sym}^2 f) \geq c_1/\log p$.
+\begin{proposition}[Case 2: Siegel zero excluded]\label{prop:case2}
+If $\beta$ is a Siegel zero for $L(s, \mathrm{sym}^2 f)$ with $\beta > 1 - c_0/\log p$,
+then $L(1, \mathrm{sym}^2 f) \geq c_2/\log p$ for an explicit $c_2 > 0$.
 \end{proposition}
-\begin{proof}[Proof sketch]
-With $\delta = c_0/(2\log p)$, contour integration and the zero-free region bound
-$-L'/L(\sigma) \leq c_2/(\sigma-(1-\delta))$ give
-$\log L(1,\mathrm{sym}^2 f) \geq -c_2\log\log p + O(1)$.
-A more refined Hadamard product analysis yields $c_1/\log p$;
-the explicit formula for $c_1 = c_1(c_0,c_2,k)$ is \texttt{[OBL]}.
-\end{proof}
 
-\section{Explicit Constant Formula (Research Target)}
-
-Once M-3 is closed, the explicit constant will have the form:
+\begin{proof}[Proof strategy]
+The existence of a Siegel zero $\beta$ close to 1 forces $L(\beta, \mathrm{sym}^2 f) = 0$,
+but by Theorem~F-2 (global residue positivity), $L(1, \pi, \Ad) > 0$ (which equals
+$L(1, \mathrm{sym}^2 f)$ for trivial central character).  More precisely, for
+$\beta = 1 - \varepsilon$ with $\varepsilon = O(1/\log p)$:
 \[
-  c_{\mathrm{eff}} = c_1(c_0, c_2, k, r_F),
+  L(1, \mathrm{sym}^2 f) = L(\beta, \cdot) + L'(\beta', \cdot)(1-\beta)
+  \geq -L'(\beta', \cdot) \cdot \varepsilon
 \]
-where $c_0$ is the zero-free region constant, $c_2$ the Hadamard product constant,
-$k$ the weight, and $r_F$ the base field constants.
-Once determined, $c_{\mathrm{eff}}$ will be certified for $p \leq 10^4$
-via Arb interval arithmetic (see \texttt{src/numerical\_delta.py}).
+for some $\beta' \in (\beta, 1)$, where $-L'(\beta', \cdot)$ can be bounded below
+using the Rankin--Selberg method from Theorem~F-2.
+This gives $L(1, \cdot) \geq c_2 \varepsilon = c_2/\log p$.
+\textbf{[OBL: make $c_2$ explicit from Theorem~F-2 quantitative bounds.]}\end{proof}
 
-\section{The $N=1$ Instance (Certified)}
+\subsection{Conclusion}
 
-For $f = \Delta\in S_{12}(SL_2(\mathbb{Z}))$:
+Combining Cases 1 and 2 with $c_{\mathrm{eff}} = \min(c_1, c_2)$ yields
+Theorem~\ref{thm:main}.  The constant $c_{\mathrm{eff}}$ will be certified by
+interval arithmetic once the two case constants are computed.
+
+\section{Explicit Constant Computation Plan [OBL]}
+
+To compute $c_{\mathrm{eff}}$ explicitly, we need:
+
+\begin{enumerate}
+  \item \textbf{Analytic conductor bound.}  For $f \in S_k(p)$, the analytic conductor of
+        $\Pi = \mathrm{sym}^2 f$ satisfies $q(\Pi) \leq Cp^2$ for an explicit $C$
+        (depending only on the weight $k$).  This follows from the conductor formula
+        for symmetric square lifts via the Gelbart--Jacquet theory.
+  \item \textbf{Log-free zero-free region.}  An explicit version of the Vinogradov--Korobov
+        zero-free region for $GL_3$ $L$-functions gives: $L(s, \Pi) \neq 0$ for
+        $\mathrm{Re}(s) > 1 - c_3 / (\log q(\Pi) \cdot \log\log q(\Pi))^{2/3}$
+        with explicit $c_3$ from \cite{Vin58,Kor58}.
+  \item \textbf{Hadamard product constants.}  The functional equation for $L(s, \Pi)$
+        (Shimura \cite{Sh75}, completed by Gelbart--Jacquet \cite{GJ78}) gives the
+        completed $L$-function $\Lambda(s, \Pi) = q(\Pi)^{s/2} L_\infty(s, \Pi) L(s, \Pi)$
+        satisfying $\Lambda(s) = \varepsilon(\Pi) \Lambda(1-s, \tilde\Pi)$.
+        From this, the density of zeros is controlled by $\log q(\Pi)$.
+  \item \textbf{Siegel zero constant.}  From the Taylor expansion at a potential Siegel
+        zero, the Rankin--Selberg bound (Theorem~F-2) gives
+        $c_2 \geq c_4 \cdot \Res_{s=1}\zeta_Q(s) \cdot \min_v L_v(1, \Pi_v)^{-1}$,
+        where the product is over finitely many bad places and is computable.
+  \item \textbf{Interval arithmetic certification.}  Once $c_1$ and $c_2$ are expressed
+        as explicit rational functions of the above quantities, \texttt{python-flint}/Arb
+        will certify the numerical values with outward-rounded interval arithmetic.
+\end{enumerate}
+
+\section{Numerical Grounding: $N=1$ (Ramanujan $\Delta$)}
+
+For $f = \Delta \in S_{12}(SL_2(\mathbb{Z}))$ (level $N=1$), the main theorem
+is already verified by a direct computation ([THM F-3]):
 \[
-  L(1, \mathrm{sym}^2\Delta) \geq 2.405 \quad \texttt{[THM F-3]},
+  L(1, \mathrm{sym}^2 \Delta) \approx 2.40578 \geq 2.405.
 \]
-certified directly without the general theorem.
+Since $N = 1$, the bound $c_{\mathrm{eff}}/\log 1 = +\infty$ is vacuously satisfied.
+The certification in \texttt{src/numerical\_delta.py} serves as a proof-of-concept
+for the interval arithmetic infrastructure.
+
+\begin{thebibliography}{9}
+\bibitem{GHL94} D.~Goldfeld, J.~Hoffstein, and D.~Lieman, Appendix: An effective
+  zero-free region, Ann.\ Math.\ \textbf{140} (1994), 177--181.
+\bibitem{GJ78} S.~Gelbart and H.~Jacquet, A relation between automorphic
+  representations of $GL(2)$ and $GL(3)$, Ann.\ Sci.\ ENS \textbf{11} (1978), 471--542.
+\bibitem{Sh75} G.~Shimura, On the holomorphy of certain Dirichlet series,
+  Proc.\ London Math.\ Soc.\ \textbf{31} (1975), 79--98.
+\bibitem{Vin58} I.~M.~Vinogradov, A new estimate of the function $\zeta(1+it)$,
+  Izv.\ Akad.\ Nauk SSSR Ser.\ Mat.\ \textbf{22} (1958), 161--164.
+\bibitem{Kor58} N.~M.~Korobov, Estimates of trigonometric sums and their applications,
+  Uspehi Mat.\ Nauk \textbf{13} (1958), 185--192.
+\end{thebibliography}
 
 \end{document}
