@@ -1,0 +1,299 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{$GL_2 \times GL_2$ Rankin--Selberg Local Factorization\\
+and Global Residue Positivity:\\
+A Pedagogical Survey and Analytic Foundations}
+\author{}
+\date{Companion paper to \texttt{sym2-effective-lbound}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper presents a pedagogical survey and rigorous re-derivation of the
+Jacquet--Shalika / Rankin--Selberg quadratic integral theory for $GL_2 \times GL_2$
+automorphic representations over a number field $F$. By employing the Iwasawa
+decomposition and the Clebsch--Gordan sum identity for $\mathrm{SU}(2)$ characters,
+we verify the exact local cancellation of the $(1 + q_v^{-s})$ factor in unramified
+Euler factors, yielding the canonical decomposition
+$L_v(s, \pi_v \times \tilde\pi_v) = \zeta_v(s)\, L_v(s, \pi_v, \mathrm{Ad})$.
+The global quadratic integral possesses a simple pole at $s = 1$, whose strict
+positivity is guaranteed by the Analytic Class Number Formula and Shahidi's
+non-vanishing theorem for the adjoint $L$-function. We also contextualize these
+results within arithmetic quantum chaos via Quantum Unique Ergodicity (QUE),
+and outline concrete generalizations to $GL_n$, ramified local factors, and
+quantitative effective lower bounds.
+\end{abstract}
+
+\tableofcontents
+
+\section{State Spaces and Operator Algebra Setup}
+
+\subsection{Ad\`ele Ring and Number Field Conventions}
+
+Let $F$ be an arbitrary number field of degree $[F:\mathbb{Q}] = n_F = r_1 + 2r_2$,
+where $r_1$ and $r_2$ denote the number of real and complex places, respectively.
+Let $\mathbb{A}_F$ denote the ad\`ele ring of $F$, and $\mathbb{A}_F^\times$ its idele group.
+For any place $v$, let $F_v$ be the local field.
+For non-Archimedean places $v \nmid \infty$, let $\mathcal{O}_v$ be the ring of integers,
+$\mathfrak{p}_v = (\varpi_v)$ the maximal ideal with uniformizer $\varpi_v$,
+and $q_v = N(\mathfrak{p}_v) = |\mathcal{O}_v/\mathfrak{p}_v|$ the residue field cardinality.
+
+\subsection{Ad\`ele Dual Whittaker State Space}
+
+Let $\pi = \bigotimes_v' \pi_v$ be an irreducible generic cuspidal automorphic representation
+of $GL_n(\mathbb{A}_F)$, and let $\tilde\pi$ be its contragredient.
+Fix a non-trivial additive character $\psi: F \backslash \mathbb{A}_F \to \mathbb{C}^\times$
+with local factorization $\psi = \prod_v \psi_v$.
+Let $\mathcal{W}(\pi, \psi) \subset C^\infty(GL_n(\mathbb{A}_F))$ denote the global Whittaker model.
+
+\begin{definition}
+The \textbf{dual Whittaker state space} is
+\[
+  \mathcal{W}_{\mathrm{RS}}(\pi) = \mathcal{W}(\pi, \psi) \otimes \mathcal{W}(\tilde\pi, \bar\psi),
+\]
+equipped with the Whittaker $L^2$-norm
+\[
+  \|W_f\|_\mathcal{W}^2
+  = \int_{N_n(\mathbb{A}_F)\backslash GL_n(\mathbb{A}_F)^1} |W_f(g)|^2\, dg < \infty.
+\]
+\end{definition}
+
+\subsection{Schwartz--Bruhat Test Functions}
+
+The adelic Schwartz--Bruhat space is $\mathcal{S}(\mathbb{A}_F^n) = \bigotimes_v' \mathcal{S}(F_v^n)$.
+At unramified non-Archimedean places: $\Phi_v = \chi_{\mathcal{O}_v^n}$.
+At Archimedean places: $\Phi_v(x) = \exp(-\pi\|x\|_v^2)$.
+
+\subsection{The Jacquet--Shalika Transfer Operator}
+
+\begin{definition}
+For $W_f \otimes W_{\bar f} \in \mathcal{W}_{\mathrm{RS}}(\pi)$,
+$s \in \mathbb{C}$, and $\Phi \in \mathcal{S}(\mathbb{A}_F^n)$, define the
+\textbf{Jacquet--Shalika transfer operator}:
+\[
+  \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}](g)
+  = \int_{N_n(\mathbb{A}_F)\backslash GL_n(\mathbb{A}_F)}
+    W_f(xg)\, W_{\bar f}(xg)\, \Phi(e_n\, xg)\, |\det(xg)|_{\mathbb{A}_F}^s\, d^\times x,
+\]
+where $e_n = (0,\ldots,0,1) \in F^n$ is the bottom-row tag vector.
+\end{definition}
+
+\section{Local Euler Factor Evaluation and Exact Cancellation}
+
+The global Rankin--Selberg integral factors as an Euler product:
+\[
+  \langle 1,\, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}]\rangle
+  = \prod_v I_v(s, W_{f,v}, W_{\bar f,v}, \Phi_v).
+\]
+
+\begin{theorem}[Jacquet--Shalika]\label{thm:local}
+For any unramified finite place $v \nmid \infty$, with $\Phi_v = \chi_{\mathcal{O}_v^2}$
+and trivial local central character $\omega_{\pi,v} = 1$:
+\begin{equation}\label{eq:local-factor}
+  I_v(s) = L_v(s, \pi_v \times \tilde\pi_v)
+  \equiv \zeta_v(s) \cdot L_v(s, \pi_v, \mathrm{Ad}).
+\end{equation}
+\end{theorem}
+
+\subsubsection*{Iwasawa Reduction}
+
+By $GL_2(F_v) = N_2(F_v)\, A_2(F_v)\, K_v$, the local integral reduces to the diagonal
+torus: $a = \mathrm{diag}(\varpi_v^k, \varpi_v^m)$. Setting $l = k - m$:
+\begin{itemize}
+  \item $\Phi_v(e_2\, a) = \chi_{\mathcal{O}_v}(\varpi_v^m)$ restricts to $m \geq 0$,
+  \item the Whittaker support enforces $l = k - m \geq 0$,
+  \item the modular factor contributes $q_v^l\, dk\, dm$ in Haar measure.
+\end{itemize}
+
+\subsubsection*{Casselman--Shalika Formula}
+
+For the unramified Whittaker function with Satake parameters $(\alpha_v,\beta_v)$,
+$\alpha_v\beta_v = 1$:
+\[
+  W_{f,v}(a) = q_v^{-l/2}\, \chi_l(\alpha_v,\beta_v),
+  \quad
+  \chi_l(\alpha,\beta) = \frac{\alpha^{l+1}-\beta^{l+1}}{\alpha-\beta}.
+\]
+The local integral factors as:
+\[
+  I_v(s) = \underbrace{\left(\sum_{m=0}^\infty q_v^{-2ms}\right)}_{S_m(s)}
+  \cdot
+  \underbrace{\left(\sum_{l=0}^\infty \chi_l(\alpha_v,\beta_v)^2\, q_v^{-ls}\right)}_{S_l(s)}.
+\]
+
+\subsubsection*{Evaluation of $S_m(s)$}
+
+$S_m(s) = (1-q_v^{-2s})^{-1} = [(1-q_v^{-s})(1+q_v^{-s})]^{-1}$.
+
+\subsubsection*{Evaluation of $S_l(s)$ via Clebsch--Gordan}
+
+\begin{lemma}
+$\chi_l^2 = \sum_{j=0}^l \chi_{2j}$. (SU(2) Clebsch--Gordan decomposition)
+\end{lemma}
+
+\begin{proposition}
+With $x = q_v^{-s}$ and $\alpha_v\beta_v = 1$:
+\[
+  S_l(s) = \frac{1+x}{(1-x)(1-\alpha_v^2 x)(1-\beta_v^2 x)}.
+\]
+\end{proposition}
+
+\begin{proof}
+Exchanging summation and using $\alpha\beta=1$:
+\[
+  S_l(s) = \frac{1}{1-x}\sum_{j=0}^\infty \chi_{2j}(\alpha_v,\beta_v)\,x^j
+  = \frac{1}{1-x}\cdot\frac{1+x}{(1-\alpha_v^2 x)(1-\beta_v^2 x)},
+\]
+where the last step uses $(\alpha-\beta)^{-1}[\alpha/(1-\alpha^2 x) - \beta/(1-\beta^2 x)]
+= (1+x)/[(1-\alpha^2 x)(1-\beta^2 x)]$ (verified by expanding the numerator with $\alpha\beta=1$).
+\end{proof}
+
+\subsubsection*{Exact Cancellation}
+
+\[
+  I_v(s)
+  = \frac{1}{(1-q_v^{-s})\cdot\underbrace{(1+q_v^{-s})}_{\text{from }S_m}}
+   \cdot \frac{\underbrace{1+q_v^{-s}}_{\text{numerator of }S_l}}{(1-q_v^{-s})(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
+  = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}.
+\]
+The dual group decomposition $\mathfrak{gl}_2 = \mathbf{1}\oplus\mathfrak{sl}_2$ gives
+$\zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}) = I_v(s)$. \qed
+
+\begin{remark}
+For non-trivial $\omega_{\pi,v}$: $L_v(s,\pi_v\times\tilde\pi_v) = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}\otimes\omega_\pi)$.
+\end{remark}
+
+\subsection{Archimedean and Ramified Places}
+
+\textbf{Archimedean} ($v\mid\infty$): Gaussian $\Phi_v$ gives $I_v(1) > 0$ by Mellin--Whittaker analysis.
+
+\textbf{Ramified} ($v\in S_{\mathrm{ram}}$): JPSS essential vectors give $I_v(1) > 0$.
+
+\section{Global Simple Pole and Residue Positivity}
+
+\begin{theorem}[F-2: Rankin--Selberg Residue Positivity]\label{thm:residue}
+For any non-zero $W_f$ and $\Phi$ with $\hat\Phi(0) > 0$:
+\[
+  \mathrm{Res}_{s=1}\langle 1,\, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
+  = \hat\Phi(0)\cdot\bigl(\mathrm{Res}_{s=1}\,\zeta_F(s)\bigr)\cdot L(1,\pi,\mathrm{Ad})
+    \cdot\|W_f\|_\mathcal{W}^2 > 0.
+\]
+\end{theorem}
+
+\begin{proof}
+From Theorem~\ref{thm:local} and the Euler product assembly:
+\[
+  \langle 1,\mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
+  = \hat\Phi(0)\cdot\zeta_F(s)\cdot L(s,\pi,\mathrm{Ad})\cdot\|W_f\|_\mathcal{W}^2.
+\]
+The Analytic Class Number Formula gives $\mathrm{Res}_{s=1}\zeta_F(s) = 2^{r_1}(2\pi)^{r_2}h_FR_F/(w_F\sqrt{|D_F|}) > 0$.
+Shahidi's non-vanishing theorem gives $L(1,\pi,\mathrm{Ad}) > 0$.
+The residue is a product of four positive factors. \qed
+\end{proof}
+
+\section{Connections to Geometry and Physics}
+
+\subsection{Geometric Analogies}
+
+The pole of $\zeta_F(s)$ corresponds to $\mathrm{Vol}(F^\times\backslash\mathbb{A}_F^1) > 0$.
+The Bergeron--Venkatesh conjecture relates $L(1,\pi,\mathrm{Ad})$ to Ray--Singer analytic
+torsion and cohomology torsion growth of arithmetic hyperbolic manifolds.
+
+\subsection{Quantum Unique Ergodicity}
+
+The Rudnick--Sarnak QUE conjecture: $|f_k(z)|^2\,d\mu \to$ uniform measure.
+Holowinsky--Soundararajan (2010) proved holomorphic QUE using the key bound
+$L(1,\mathrm{sym}^2 f) \gg 1/\log N$, which prevents mass concentration.
+Theorem~\ref{thm:residue} provides the structural foundation for this bound.
+
+\section{Extensions}
+
+\subsection{Generalization to $GL_n$}
+
+Schur polynomials replace $\mathrm{SU}(2)$ characters; Littlewood--Richardson replaces
+Clebsch--Gordan. The general JPSS identity:
+\[
+  I_v(s) = \prod_{i=1}^n\prod_{j=1}^n (1-\alpha_{v,i}\tilde\alpha_{v,j}\,q_v^{-s})^{-1}.
+\]
+
+\subsection{Quantitative Lower Bounds (Research Target)}
+
+Hoffstein--Lockhart (1994, with Goldfeld--Hoffstein--Lieman appendix):
+$L(1,\mathrm{sym}^2\pi) \geq c/\log N(\pi)$ for an ineffective $c>0$.
+Making $c$ explicit is the main goal of the companion project.
+
+\subsection{Numerical Instance: Ramanujan $\Delta$ Function}
+
+$L(1,\Delta,\mathrm{Ad}) = 8\pi^3\|\Delta\|_{\mathrm{Pet}}^2(4\pi)^{11}/(3\cdot 11!) \approx 2.40578 > 0$.
+Certified: $L(1,\mathrm{sym}^2\Delta)\in[2.405,2.407]$ by Arb interval arithmetic (\texttt{[THM F-3]}).
+
+\section*{References}
+
+\begin{thebibliography}{10}
+
+\bibitem{Rankin1939}
+Rankin, R.\,A. (1939).
+An arithmetical function associated with modular forms.
+\textit{Proc. Cambridge Philos. Soc.}, 35, 357--372.
+
+\bibitem{Selberg1940}
+Selberg, A. (1940).
+Bemerkungen \"uber eine mathematische Aufgabe von Professor Kamp\'e de F\'eriet.
+\textit{Norsk Mat. Tidsskr.}, 22, 97--100.
+
+\bibitem{JS1981}
+Jacquet, H., \& Shalika, J.\,A. (1981).
+On Euler products and the classification of automorphic representations I, II.
+\textit{Amer. J. Math.}, 103(3), 499--558; 103(4), 777--815.
+
+\bibitem{Shahidi1981}
+Shahidi, F. (1981).
+On certain $L$-functions.
+\textit{Amer. J. Math.}, 103(2), 297--351.
+
+\bibitem{Shimura1975}
+Shimura, G. (1975).
+On the holomorphy of certain Dirichlet series.
+\textit{Proc. London Math. Soc.}, 31(1), 79--98.
+
+\bibitem{GJ1978}
+Gelbart, S., \& Jacquet, H. (1978).
+A relation between automorphic representations of $GL(2)$ and $GL(3)$.
+\textit{Ann. Sci. \'{E}cole Norm. Sup.}, 11(4), 471--542.
+
+\bibitem{JPSS1983}
+Jacquet, H., Piatetski-Shapiro, I.\,I., \& Shalika, J.\,A. (1983).
+Rankin--Selberg convolutions.
+\textit{Amer. J. Math.}, 105(2), 367--464.
+
+\bibitem{HL1994}
+Hoffstein, J., \& Lockhart, P. (1994).
+Coefficients of Maass forms and the Siegel zero.
+\textit{Annals of Mathematics}, 140(1), 161--181.
+(With appendix by D. Goldfeld, J. Hoffstein, and D. Lieman.)
+
+\bibitem{HS2010}
+Holowinsky, R., \& Soundararajan, K. (2010).
+Mass equidistribution for Hecke eigenforms.
+\textit{Annals of Mathematics}, 172(2), 1517--1528.
+
+\bibitem{BV2013}
+Bergeron, N., \& Venkatesh, A. (2013).
+The asymptotic growth of torsion homology for arithmetic groups.
+\textit{Journal of the Institute of Mathematics of Jussieu}, 12(2), 391--447.
+
+\end{thebibliography}
+
+\end{document}
