@@ -50,6 +50,13 @@
   - **朴素 Mellin 卷积失败**：B_dual(n) = ∫ w(y) K(yn/Q) dy/y 的衰减比率为 ~0.97/步（代数衰减），而非 exp(-c×n^{2/3})。原因：朴素核缺少 Miller-Schmid GL₃ Voronoi 公式中的振荡 Kloosterman 相位；只有这些相位才能提供使对偶级数绝对收敛的抵消。
   - **正确 GL₃ Voronoi**：需要完整的 Miller-Schmid (2006) 公式，包含 Kloosterman 和、导子结构和振荡 GL₃ Bessel 核。这是一个重大技术障碍（新子任务 [OBL M-Voronoi]）。
 - **唯一剩余路径**：实现完整 Miller-Schmid GL₃ Voronoi 公式 [OBL M-Voronoi]，或显式无零区域 [OBL M-3]
+- **[OBL M-3] 数值路径（可行方案）**：对特定形式 sym²Δ，可通过 *数值零点自由区域* 实现认证：
+  1. 用 Arb 在矩形 {Re(s) ∈ [0.6, 1], |Im(s)| ≤ 20} 上计算 L(σ+it, sym²Δ) 并验证非零
+  2. 这给出该特定形式的显式零点自由区域（非一般形式定理）
+  3. 进而通过 Abel 求和给出 |Σ_{n>N} a(n)/n^{1/2+it}| 的显式界
+  4. 最终认证 J，完成 [OBL E-2]
+  技术要点：需要 GL₃ approximate functional equation 在临界带内的 Arb 实现（Goldfeld-Li 2006 Riemann-Siegel 型公式）。每个 (σ,t) 处的计算误差可被认证。
+- **[OBL M-Voronoi] 路径**：实现 Miller-Schmid (2006) 带 Kloosterman 和的完整 GL₃ Voronoi；数学上正确但工程量巨大（需要 Kloosterman 求和、导子结构、振荡相位）
 - **S1 数值收敛**（2026-08-16，`src/afe_s1.py`）：
   - S1(N=100) = 0.54785263，W_afe(100/12)=0.0365
   - S1(N=500) = 0.54830922，W_afe(500/12)=0.00248
