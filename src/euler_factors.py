@@ -137,6 +137,93 @@ def cg_series_vs_formula(alpha: complex, beta: complex, n_terms: int = 40) -> di
     }
 
 
+# ---------------------------------------------------------------------------
+# Public API aliases and convenience functions (test-expected names)
+# ---------------------------------------------------------------------------
+
+def l_series_exact(alpha: complex, beta: complex, x: float,
+                   n_terms: int = 51) -> complex:
+    """
+    Compute sum_{l=0}^{n_terms-1} chi_l(alpha,beta)^2 * x^l (series form).
+
+    This is the "l-series" side of the Clebsch-Gordan identity — evaluated
+    by direct summation.  Converges when |x| < 1/max(|alpha|^2, |beta|^2).
+    For |x| outside the convergence disk this returns the partial sum, which
+    is still positive for real alpha, beta, x > 0.
+    """
+    return sum(chi_l(alpha, beta, l) ** 2 * x ** l for l in range(n_terms))
+
+
+def local_euler_factor(alpha: complex, beta: complex, q: float,
+                       s: complex) -> complex:
+    """Alias for local_factor_closed."""
+    return local_factor_closed(alpha, beta, q, s)
+
+
+def adjoint_local_factor(alpha: complex, beta: complex, q: float,
+                         s: complex) -> complex:
+    """Alias for local_adjoint_factor."""
+    return local_adjoint_factor(alpha, beta, q, s)
+
+
+def zeta_local(q: float, s: complex) -> complex:
+    """Alias for zeta_v."""
+    return zeta_v(q, s)
+
+
+def verify_cancellation(alpha: complex, beta: complex, q: float,
+                        s: complex, tol: float = 1e-8) -> dict:
+    """
+    Verify Theorem F-1 cancellation with test-friendly key names.
+
+    cancellation_verified -- True iff closed_value == factored_value (within tol)
+    rel_error_factored    -- |closed - factored| / |factored|
+
+    Note: series_value may differ from closed_value when |alpha^2 * q^{-s}| > 1
+    (series diverges); cancellation_verified tests only the algebraic identity
+    between the closed form and the factored form.
+    """
+    r = verify_f1_cancellation(alpha, beta, q, s, tol)
+    denom = abs(r["factored_value"])
+    rel_err = r["closed_vs_factored_error"] / max(denom, 1e-300)
+    return {
+        **r,
+        "cancellation_verified": r["closed_vs_factored_error"] < tol,
+        "rel_error_factored": rel_err,
+    }
+
+
+def delta_satake_params(p: int) -> tuple:
+    """
+    Return normalized Satake parameters (alpha, beta) for Ramanujan Delta
+    (weight 12, level 1) at prime p, with alpha*beta = 1.
+
+    Uses Deligne's theorem: |alpha| = |beta| = 1 (unit circle).
+    """
+    from src.numerical_delta import TAU_PRIMES
+    tau_p = TAU_PRIMES[p]
+    c = tau_p / p ** 5.5  # alpha + beta (real)
+    disc = c * c - 4.0
+    if disc < 0:
+        im = math.sqrt(-disc) / 2.0
+        return complex(c / 2.0, im), complex(c / 2.0, -im)
+    else:
+        a = (c + math.sqrt(disc)) / 2.0
+        return a, c - a
+
+
+def delta_local_sym2_factor(p: int, s: complex = 1.0) -> complex:
+    """
+    Local factor L_p(s, sym^2 Delta)^{-1} for Ramanujan Delta.
+
+    Equals (1-p^{-s}) * (1-alpha^2*p^{-s}) * (1-beta^2*p^{-s})
+    where alpha, beta are the unit-circle Satake parameters.
+    """
+    alpha, beta = delta_satake_params(p)
+    qms = p ** (-s)
+    return (1 - qms) * (1 - alpha**2 * qms) * (1 - beta**2 * qms)
+
+
 if __name__ == "__main__":
     # Quick sanity check with random Satake parameters on the unit circle
     import cmath

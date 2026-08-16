@@ -98,6 +98,17 @@ def mollifier_value(s: complex, X: int, tau_values: dict, k: int = 12) -> comple
     return sum(v["coeff"] * n**(-s) for n, v in coeffs.items())
 
 
+def optimal_mollifier_length(N: int, theta: float = 0.25) -> float:
+    """
+    Return the optimal mollifier length X = N^theta.
+
+    Theoretical optimum (Iwaniec-Kowalski): theta in (1/4, 1/2).
+    Default theta=1/4 is the conservative lower end of the range.
+    Always returns at least 1.
+    """
+    return max(1.0, N ** theta)
+
+
 if __name__ == "__main__":
     from src.numerical_delta import TAU_PRIMES
     X = 20

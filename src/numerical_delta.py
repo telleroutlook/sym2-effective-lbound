@@ -167,8 +167,10 @@ def compute_L1_sym2_delta_certified(precision_bits: int = 128) -> dict:
     p_max = primes_used[-1]
     tail_bound = arb(3) / arb(p_max)
 
-    lower = float(str(arb.exp(arb.log(product) - tail_bound).lower()))
-    upper = float(str(arb.exp(arb.log(product) + tail_bound).upper()))
+    product_lo = arb.exp(arb.log(product) - tail_bound)
+    product_hi = arb.exp(arb.log(product) + tail_bound)
+    lower = float(product_lo.mid()) - float(product_lo.rad())
+    upper = float(product_hi.mid()) + float(product_hi.rad())
 
     certificate = {
         "form": {
@@ -190,9 +192,140 @@ def compute_L1_sym2_delta_certified(precision_bits: int = 128) -> dict:
         "checker_version": "1.0.0",
     }
 
-    assert lower >= 2.405, f"Certified lower bound {lower} < 2.405"
+    assert lower >= 2.405, f"Certified lower bound {lower} < 2.405 (using {len(primes_used)} primes)"
 
     return certificate
+
+
+# ---------------------------------------------------------------------------
+# Public API additions (test-expected names)
+# ---------------------------------------------------------------------------
+
+def sieve_primes(limit: int) -> list:
+    """Return list of primes p with 2 <= p < limit (Sieve of Eratosthenes)."""
+    if limit < 2:
+        return []
+    sieve = [True] * limit
+    sieve[0] = sieve[1] = False
+    for i in range(2, int(limit ** 0.5) + 1):
+        if sieve[i]:
+            for j in range(i * i, limit, i):
+                sieve[j] = False
+    return [i for i in range(limit) if sieve[i]]
+
+
+def local_sym2_factor_mpmath(p: int, tau_p: int, s: float = 1.0) -> float:
+    """
+    Compute L_p(s, sym^2 Delta)^{-1} for general s (discovery tier, real output).
+
+    Formula (alpha*beta=1, c = alpha+beta real):
+        L_p(s)^{-1} = (1-p^{-s}) * (1-(c^2-2)*p^{-s} + p^{-2s})
+    """
+    c = tau_p / p ** 5.5
+    qms = p ** (-s)
+    return float((1 - qms) * (1 - (c * c - 2) * qms + qms * qms))
+
+
+def compute_l1_sym2_delta_mpmath(cutoff: int = 200, extra_bits: int = 53) -> dict:
+    """
+    Compute L(1, sym^2 Delta) using mpmath over primes up to cutoff (discovery tier).
+
+    Uses only primes available in TAU_PRIMES; primes beyond the table are
+    absorbed into the tail bound.
+
+    Returns dict with keys: lower_bound, upper_bound, product, tail_bound,
+    primes_used, last_prime, log_product.
+    """
+    try:
+        import mpmath
+        mpmath.mp.prec = 53 + extra_bits
+    except ImportError:
+        raise ImportError("mpmath required for discovery-tier computation")
+
+    primes_used = [p for p in SMALL_PRIMES if p <= cutoff]
+    if not primes_used:
+        primes_used = SMALL_PRIMES[:1]
+
+    last_p = primes_used[-1]
+    log_product = mpmath.mpf(0)
+
+    for p in primes_used:
+        tau_p = TAU_PRIMES[p]
+        inv_lp = local_factor_inv_real(p, tau_p, k=12)
+        log_product += mpmath.log(mpmath.mpf(1) / inv_lp)
+
+    product = mpmath.exp(log_product)
+    tail_bound_crude = mpmath.mpf(3) / last_p
+
+    return {
+        "primes_used": primes_used,
+        "last_prime": last_p,
+        "log_product": float(log_product),
+        "product": float(product),
+        "tail_bound": float(tail_bound_crude),
+        "lower_bound": float(product * mpmath.exp(-tail_bound_crude)),
+        "upper_bound": float(product * mpmath.exp(+tail_bound_crude)),
+    }
+
+
+def produce_certificate(cutoff: int = 97, precision_bits: int = 128) -> dict:
+    """
+    Produce a certified interval for L(1, sym^2 Delta) using primes up to cutoff.
+
+    Uses python-flint Arb interval arithmetic (proof tier).
+    cutoff is a prime bound; primes beyond TAU_PRIMES table are not included.
+    """
+    try:
+        from flint import arb, ctx
+        ctx.prec = precision_bits
+    except ImportError:
+        raise ImportError(
+            "python-flint required for certified computation. "
+            "Install with: pip install python-flint"
+        )
+
+    primes_used = [p for p in SMALL_PRIMES if p <= cutoff]
+    if not primes_used:
+        primes_used = SMALL_PRIMES[:1]
+
+    log_product = arb(0)
+
+    for p in primes_used:
+        tau_p = TAU_PRIMES[p]
+        c = arb(tau_p) / arb(p) ** arb("5.5")
+        re_a2 = c * c - arb(2)
+        mod_sq = arb(1) - re_a2 / arb(p) + arb(1) / arb(p) ** 2
+        inv_lp = (arb(1) - arb(1) / arb(p)) * mod_sq
+        log_product += -arb.log(inv_lp)
+
+    product = arb.exp(log_product)
+    p_max = primes_used[-1]
+    tail_bound = arb(3) / arb(p_max)
+
+    product_lo = arb.exp(arb.log(product) - tail_bound)
+    product_hi = arb.exp(arb.log(product) + tail_bound)
+    lower = float(product_lo.mid()) - float(product_lo.rad())
+    upper = float(product_hi.mid()) + float(product_hi.rad())
+
+    return {
+        "form": {
+            "weight": 12,
+            "level": 1,
+            "label": "1.12.1.a (Ramanujan Delta)",
+            "hecke_coefficients": {str(p): TAU_PRIMES[p] for p in primes_used},
+        },
+        "bound": 2.405,
+        "euler_product_cutoff": p_max,
+        "tail_bound": {
+            "method": "ramanujan-deligne",
+            "constant": 3.0,
+            "exponent": -1.0,
+            "bound_value": 3.0 / p_max,
+        },
+        "euler_product_interval": [lower, upper],
+        "arb_precision_bits": precision_bits,
+        "checker_version": "1.0.0",
+    }
 
 
 if __name__ == "__main__":

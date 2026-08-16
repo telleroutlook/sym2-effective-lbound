@@ -16,7 +16,7 @@ class TestMobius:
     def test_mu_squarefree(self):
         assert mobius(6) == 1
         assert mobius(30) == -1
-        assert mobius(2310) == 1
+        assert mobius(2310) == -1  # 2310 = 2*3*5*7*11 has 5 prime factors → μ = -1
 
     def test_mu_not_squarefree(self):
         for n in [4, 8, 9, 12, 18, 25, 36]:

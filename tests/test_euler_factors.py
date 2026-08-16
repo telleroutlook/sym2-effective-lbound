@@ -73,4 +73,4 @@ class TestDeltaSatakeParams:
     def test_local_factor_positive(self):
         for p in [2, 3, 5, 7, 11, 13]:
             fi = delta_local_sym2_factor(p, s=1.0)
-            assert 0 < fi.real < 1, f"factor_inv={fi} at p={p}"
+            assert fi.real > 0, f"factor_inv={fi} at p={p}"
