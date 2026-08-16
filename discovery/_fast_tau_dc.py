@@ -29,6 +29,9 @@ def _build_H(N: int) -> np.ndarray:
     return sig1[1:N].copy()   # length N-1, H[m]=sigma_1(m+1)
 
 
+_DIRECT_BLOCK = 512   # below this size, use O(B^2) direct pass (avoids tiny-FFT overhead)
+
+
 def compute_tau_dc(N: int) -> np.ndarray:
     """
     Compute f[0..N-1] where f[n] = tau(n+1), using DC-FFT online convolution.
@@ -43,10 +46,20 @@ def compute_tau_dc(N: int) -> np.ndarray:
     def dc(lo: int, hi: int) -> None:
         if hi <= lo:
             return
-        if hi == lo + 1:
-            if lo >= 1:
-                f[lo] = -24.0 * acc[lo] / lo
+        size = hi - lo
+        if size <= _DIRECT_BLOCK:
+            # Direct forward pass: compute f[n] then immediately push its contribution
+            # to future acc positions within [lo, hi).  Avoids millions of tiny FFT calls.
+            # Start at lo (not lo+1) so f[lo] (or f[0]=1) is propagated before f[lo+1] is computed.
+            for n in range(lo, hi):
+                if n >= 1:
+                    f[n] = -24.0 * acc[n] / n
+                # f[n] is now set; propagate to future slots within this block
+                length = hi - n - 1
+                if length > 0:
+                    acc[n + 1:hi] += f[n] * H[:length]
             return
+
         mid = (lo + hi) // 2
         dc(lo, mid)
 

@@ -35,7 +35,7 @@ del tau_f   # free memory
 print(f"  a_sym2 done in {time.time()-t0:.1f}s", flush=True)
 
 # Partial sums S(X) = cumsum(a)
-a = np.array([float(a_arr[i]) for i in range(N)], dtype=np.float64)
+a = np.asarray(a_arr, dtype=np.float64).copy()
 print(f"  Array cast done in {time.time()-t0:.1f}s", flush=True)
 S = np.cumsum(a)
 max_S_abs = float(np.max(np.abs(S)))
