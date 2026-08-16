@@ -79,6 +79,17 @@
   3. 进而通过 Abel 求和给出 |Σ_{n>N} a(n)/n^{1/2+it}| 的显式界
   4. 最终认证 J，完成 [OBL E-2]
   技术要点：需要 GL₃ approximate functional equation 在临界带内的 Arb 实现（Goldfeld-Li 2006 Riemann-Siegel 型公式）。每个 (σ,t) 处的计算误差可被认证。
+- **[OBL M-3] 精化路径（2026-08-16，discovery/_zero_free_scan.py + 偏和分析）**：
+  发现：对 sym²Δ，偏和 S(X) = Σ_{n≤X} a_{sym²}(n) 在 X ≤ 10000 时 max|S(X)| = 13.3（X=7925），
+  远优于 GL₃ Voronoi 理论界 X^{2/3} ≈ 435。
+  **核心等价**：若能认证 |S(X)| ≤ C_max（C_max ≈ 20）对所有 X ≥ 1，则：
+    - Abel 求和直接给出 Cesaro 误差界：σ=0.9, N=10000 时误差 ≤ 3×C_max/N^{0.9} ≈ 0.015
+    - 零点扫描：min|L_ces(0.9+it, N=10000)| = 0.447，margin = 0.432 >> 0.015 → 认证 {σ≥0.9} 无零点
+  **唯一缺口**：x > 10000 的 |S(x)| 界。选项：
+    (a) 继续计算 X ≤ 10^6 并验证（仍需 GL₃ PNT 认证尾部）
+    (b) 用 GL₃ Voronoi 给出显式常数 C_GL3 使 |S(X)| ≤ C_GL3 × X^{ε}
+    (c) 引用有效 GL₃ PNT（Molteni 2002 或类似）给出有效零点自由区域 → 证明 |S(X)| = O(X^{1-δ})
+  **重要性**：|S(X)| 的显式界是 [OBL M-3] → [OBL E-2] 链条中最薄弱也是最具体的缺口。
 - **[OBL M-Voronoi] 路径**：实现 Miller-Schmid (2006) 带 Kloosterman 和的完整 GL₃ Voronoi；数学上正确但工程量巨大（需要 Kloosterman 求和、导子结构、振荡相位）
 - **两侧 Gaussian AFE（2026-08-16，`discovery/_m3_afe_sigma.py`，失败）**：L(σ+it) = S_main(Gaussian) + ε×chi×S_dual(Gaussian) 公式在 σ=0.7 时与 Cesaro(N=2000) 最大偏差达 1.04。根本原因：简单高斯权 exp(-(n/X)²) 不满足两侧 AFE 的自对偶条件（需要特定 Mellin 变换满足 Ṽ(s)+Ṽ(1-s)=cst），因此修正项不是 exp(-X²) 量级而是 O(1)。
 - **Rankin-Selberg 直接计算（2026-08-16，`discovery/_L1_rankin_selberg.py`，失败）**：L(1+δ) = (ζ(2+2δ)/ζ(1+δ)) × Σ τ(n)²/n^{12+δ}。部分和 N=5000、δ=0.5 给出 L=0.726，δ=0.05 给出 L=0.262，远未收敛到目标 0.632。根本原因：需要先 N→∞ 再 δ→0，收敛指数仅 N^{-δ}；对于 δ=0.05 和 N=5000，尾项约 25。
