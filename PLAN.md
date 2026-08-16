@@ -65,7 +65,14 @@
 - **[OBL E-2] 认证路径**：
   1. 最优先：[OBL M-3] 数值无零区域（Arb 在矩形 {Re(s)≥0.6, |Im(s)|≤20} 内验证 L(s,sym²Δ)≠0），然后通过 Abel 求和认证 Cesaro 截断误差界
   2. 次选：实现完整 Miller-Schmid GL₃ Voronoi 公式 [OBL M-Voronoi]
-- **唯一剩余路径**：实现完整 Miller-Schmid GL₃ Voronoi 公式 [OBL M-Voronoi]，或显式无零区域 [OBL M-3]，或**标准 GL₃ AFE + 直接数值积分 J（最优先，见上）**
+- **中心值 AFE 不可行（2026-08-16 深入推导，最终结论）**：
+  GL₃ 两侧 AFE 的正确公式为 L(s) = S1_+(s; X) − chi(s) × S2_+(1−s; X_dual)，其中 X_dual = Q×X（通过严格推导确认：代入 v=−w 后函数方程给出 Q^v × X^{−v} = (Q/X)^v × ... 实际为 Q×X 尺度，非 Q²/X）。
+  - chi(s) = Q^{1/2−s} × G(1−s)/G(s)（注意：chi 含 Q^{−it} 因子而非 Q^{−2it}）
+  - 对 X = Q^{1/2} = 12：X_dual = Q × 12 = 1728，对偶级数需 n ≤ 200 × X_dual = 345,600 项收敛（V(y)→1 as y→0 来自极点留数，条件收敛）
+  - 任何 X 选择均无法解决：X_dual = Q × X，减少主级数项即增加对偶级数项，N=2000 始终不够
+  - **根本障碍（最终确认）**：GL₃ Voronoi-Kloosterman 公式（Miller-Schmid 2006）的唯一作用正是将此条件收敛对偶级数转化为绝对收敛——没有它，任何参数选择下的 GL₃ 两侧 AFE 均不可行
+  - 数值实验（2026-08-16）：X_main=12, X_dual=1728, N_main=73, N_dual=2000：最大误差 1.75（与 Cesaro 相比），确认对偶级数截断误差主导
+- **唯一剩余路径**：实现完整 Miller-Schmid GL₃ Voronoi 公式 [OBL M-Voronoi]，或显式无零区域 [OBL M-3]（数值零点计数 via 辐角原理）
 - **[OBL M-3] 数值路径（可行方案）**：对特定形式 sym²Δ，可通过 *数值零点自由区域* 实现认证：
   1. 用 Arb 在矩形 {Re(s) ∈ [0.6, 1], |Im(s)| ≤ 20} 上计算 L(σ+it, sym²Δ) 并验证非零
   2. 这给出该特定形式的显式零点自由区域（非一般形式定理）
