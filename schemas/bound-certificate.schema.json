@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/telleroutlook/sym2-effective-lbound/schemas/bound-certificate.schema.json",
+  "title": "BoundCertificate",
+  "description": "Certificate for a lower bound L(1, sym^2 f) >= L_0",
+  "type": "object",
+  "required": ["form", "bound", "euler_product_cutoff", "tail_bound",
+               "euler_product_interval", "arb_precision_bits", "checker_version"],
+  "properties": {
+    "form": {
+      "type": "object",
+      "required": ["weight", "level", "label"],
+      "properties": {
+        "weight": { "type": "integer", "minimum": 1 },
+        "level": { "type": "integer", "minimum": 1 },
+        "label": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "bound": { "type": "number", "exclusiveMinimum": 0 },
+    "euler_product_cutoff": { "type": "integer", "minimum": 2 },
+    "tail_bound": {
+      "type": "object",
+      "required": ["method", "constant"],
+      "properties": {
+        "method": { "type": "string", "enum": ["rankin-selberg-log-estimate", "arb-tail-integral"] },
+        "constant": { "type": "number", "exclusiveMinimum": 0 },
+        "exponent": { "type": "number" }
+      }
+    },
+    "euler_product_interval": {
+      "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2
+    },
+    "arb_precision_bits": { "type": "integer", "minimum": 53 },
+    "certified": { "type": "boolean" },
+    "checker_version": { "type": "string" }
+  },
+  "additionalProperties": false
+}
