@@ -1,0 +1,81 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Mollifier Construction for Symmetric Square $L$-Functions\\
+\large \texttt{M-1, M-2 Deliverables --- sym2-effective-lbound}}
+\author{}
+\date{Status: \texttt{[OBL]} --- proof obligations open}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document lays out the mollifier construction for $L(s,\mathrm{sym}^2 f)$,
+following the Goldfeld--Hoffstein--Lieman approach. We define an explicit mollifier
+$M(s)$ of length $X = N^\theta$, state the required mean value theorem (M-2),
+and connect nonvanishing at $s=1$ to the effective lower bound goal (E-1).
+The proof of M-2 requires the GL$_3$ Rankin--Selberg mean value theorem: \texttt{[OBL]}.
+\end{abstract}
+
+\tableofcontents
+
+\section{The Symmetric Square as a GL$_3$ Object}
+
+\begin{theorem}[Gelbart--Jacquet 1978, \texttt{[BASE]}]\label{thm:GJ}
+For a cuspidal $\pi$ of $GL_2(\mathbb{A})$, there exists a cuspidal or isobaric
+$\Pi = \mathrm{sym}^2(\pi)$ of $GL_3(\mathbb{A})$ with $L(s,\Pi) = L(s,\mathrm{sym}^2 f)$.
+\end{theorem}
+
+The Dirichlet series is $L(s,\mathrm{sym}^2 f) = \sum_{n=1}^\infty a_{\mathrm{sym}^2}(n)/n^s$,
+where $a_{\mathrm{sym}^2}(p) = \tilde\alpha_p^2 + 1 + \tilde\beta_p^2 = a_f(p)^2/p^{k-1} - 1$
+at unramified $p$.
+
+\section{The Mollifier}
+
+\begin{definition}\label{def:mollifier}
+For length parameter $X \geq 1$:
+\[
+  M(s) = \sum_{n \leq X} \frac{\mu(n)\,a_{\mathrm{sym}^2}(n)}{n^s}.
+\]
+\end{definition}
+
+The heuristic: $M(s)\cdot L(s,\mathrm{sym}^2 f) \approx 1$ near $s=1$
+since $M(s) \approx L(s,\mathrm{sym}^2 f)^{-1}$ via M\"obius inversion.
+
+\section{Mean Value Theorem \texttt{[OBL]}}
+
+\begin{theorem}[M-2, \texttt{[OBL]}]\label{thm:M2}
+For $T \geq 1$ and $X = N^\theta$ ($\theta > 0$ to be optimized):
+\[
+  \int_T^{2T} \bigl|M(\tfrac12+it)\,L(\tfrac12+it,\mathrm{sym}^2 f)\bigr|^2\,dt \gg T.
+\]
+The implied constant is effective, depending on $\theta$, $k$, and $N$.
+\end{theorem}
+
+\begin{remark}[Proof strategy]
+Requires: (a) GL$_3$ Rankin--Selberg mean value theorem via Theorem~\ref{thm:GJ};
+(b) mollifier mean value via GL$_3$ large sieve;
+(c) parameter optimization.
+The main gap is the GL$_3$ large sieve with an explicit constant: \texttt{[OBL]}.
+\end{remark}
+
+\section{Connection to the Effective Bound (E-1)}
+
+The effective lower bound $L(1,\mathrm{sym}^2 f) \geq c_{\mathrm{eff}}/\log N$ follows from:
+\begin{enumerate}
+  \item[Step 1] Zero-free region (M-3): $L(s,\mathrm{sym}^2 f)\neq 0$ for
+    $\mathrm{Re}(s) > 1 - c_0/\log N$ with explicit $c_0$.
+  \item[Step 2] Contour integral: zero-free region $\Rightarrow$
+    $L(1,\cdot) \geq c_1/\log N$ with $c_1$ explicitly computable from $c_0$.
+  \item[Step 3] Mollifier (M-2) certifies Case~2 (Siegel zero) cannot arise.
+\end{enumerate}
+The explicit value of $c_1$ is the core research deliverable (E-1).
+
+\end{document}

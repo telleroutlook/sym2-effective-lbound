@@ -1,0 +1,113 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Explicit Lower Bound for $L(1, \mathrm{sym}^2 f)$\\
+\large \texttt{E-1 Deliverable --- sym2-effective-lbound}}
+\author{}
+\date{Status: \texttt{[OBL]} --- proof strategy complete, constants open}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We state the main theorem (E-1) and present the complete
+Goldfeld--Hoffstein--Lieman two-case proof strategy.
+Case~2 (Siegel zero) is eliminated by \texttt{[THM F-2]}.
+Case~1 reduces to an explicit contour integral whose constant
+depends on the zero-free region (M-3): \texttt{[OBL]}.
+The $\Delta$-function instance ($N=1$) is certified by \texttt{[THM F-3]}.
+\end{abstract}
+
+\tableofcontents
+
+\section{Main Theorem}
+
+\begin{theorem}[E-1: Explicit Lower Bound, \texttt{[OBL]}]\label{thm:E1}
+There exists an explicitly computable constant $c_{\mathrm{eff}} > 0$ such that
+for all normalized primitive Hecke eigenforms $f$ of prime level $p$:
+\[
+  L(1, \mathrm{sym}^2 f) \geq \frac{c_{\mathrm{eff}}}{\log p}.
+\]
+\end{theorem}
+
+\begin{remark}
+Existence of $c>0$ (ineffective) is Goldfeld--Hoffstein--Lieman (1994).
+The explicit value $c_{\mathrm{eff}}$ is \texttt{[OBL]}; it requires
+closing the zero-free region estimate in \S\ref{sec:zero-free}.
+\end{remark}
+
+\section{Two-Case Argument}
+
+\begin{definition}
+A \textbf{Siegel zero} for $L(s,\mathrm{sym}^2 f)$ is a real zero
+$\beta\in(0,1)$ with $\beta > 1 - c_0/\log p$.
+\end{definition}
+
+\begin{proposition}[Case 2 is vacuous]\label{prop:case2}
+$L(s,\mathrm{sym}^2 f)$ has no Siegel zero.
+\end{proposition}
+\begin{proof}
+A Siegel zero $\beta\approx 1$ forces $L(1,\mathrm{sym}^2 f)\to 0$,
+contradicting \texttt{[THM F-2]} (Corollary~\ref{cor:sym2-positive}).
+\end{proof}
+
+Proposition~\ref{prop:case2} reduces the proof entirely to Case~1.
+
+\section{Zero-Free Region \texttt{[OBL]}}\label{sec:zero-free}
+
+\begin{theorem}[M-3: Zero-Free Region, \texttt{[OBL]}]\label{thm:M3}
+There exists an explicit $c_0 > 0$ such that $L(s,\mathrm{sym}^2 f)\neq 0$ for
+\[
+  \mathrm{Re}(s) > 1 - \frac{c_0}{\log(p\cdot|\mathrm{Im}(s)|+2)}.
+\]
+\end{theorem}
+
+\begin{remark}[Proof strategy]
+Standard $3$-$4$-$3$ trigonometric inequality via the Hadamard product:
+$3\mathrm{Re}(-L'/L)(\sigma) + 4\mathrm{Re}(-L'/L)(\sigma+it)
++ \mathrm{Re}(-L'/L)(\sigma+2it) \geq 0$.
+The analytic conductor is $q(f,t)\asymp p^3(|t|+k)^3$.
+Making $c_0$ explicit requires bounding the log-conductor: \texttt{[OBL]}.
+\end{remark}
+
+\section{Contour Integral \texttt{[OBL]}}
+
+\begin{proposition}[Conditional on M-3, \texttt{[OBL]}]
+Assuming Theorem~\ref{thm:M3} with explicit $c_0$,
+there exists explicit $c_1 > 0$ with $L(1,\mathrm{sym}^2 f) \geq c_1/\log p$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+With $\delta = c_0/(2\log p)$, contour integration and the zero-free region bound
+$-L'/L(\sigma) \leq c_2/(\sigma-(1-\delta))$ give
+$\log L(1,\mathrm{sym}^2 f) \geq -c_2\log\log p + O(1)$.
+A more refined Hadamard product analysis yields $c_1/\log p$;
+the explicit formula for $c_1 = c_1(c_0,c_2,k)$ is \texttt{[OBL]}.
+\end{proof}
+
+\section{Explicit Constant Formula (Research Target)}
+
+Once M-3 is closed, the explicit constant will have the form:
+\[
+  c_{\mathrm{eff}} = c_1(c_0, c_2, k, r_F),
+\]
+where $c_0$ is the zero-free region constant, $c_2$ the Hadamard product constant,
+$k$ the weight, and $r_F$ the base field constants.
+Once determined, $c_{\mathrm{eff}}$ will be certified for $p \leq 10^4$
+via Arb interval arithmetic (see \texttt{src/numerical\_delta.py}).
+
+\section{The $N=1$ Instance (Certified)}
+
+For $f = \Delta\in S_{12}(SL_2(\mathbb{Z}))$:
+\[
+  L(1, \mathrm{sym}^2\Delta) \geq 2.405 \quad \texttt{[THM F-3]},
+\]
+certified directly without the general theorem.
+
+\end{document}

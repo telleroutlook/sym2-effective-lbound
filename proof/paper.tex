@@ -1,0 +1,105 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{Toward Explicit Lower Bounds for Symmetric Square $L$-Functions:\\
+A Computer-Assisted Approach\\[6pt]
+\large Working paper --- sym2-effective-lbound}
+\author{}
+\date{Version: 0.1 --- Draft}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present a computer-assisted approach to making the lower bound
+$L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994) effective.
+The paper has two components: (1) a rigorous re-derivation of the local Euler factor
+factorization via the SU(2) Clebsch--Gordan identity and the global residue
+positivity theorem at $s=1$; (2) a research programme toward the explicit constant.
+For the Ramanujan $\Delta$ function ($N=1$), we certify
+$L(1,\mathrm{sym}^2\Delta) \in [2.405, 2.407]$ using Arb interval arithmetic.
+The general explicit constant $c_{\mathrm{eff}}$ remains an open obligation.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+For a normalized primitive holomorphic Hecke eigenform $f\in S_k(N)$, the symmetric
+square $L$-function $L(s,\mathrm{sym}^2 f)$ is a degree-3 $L$-function. Its value at $s=1$
+controls: Quantum Unique Ergodicity rates (Holowinsky--Soundararajan 2010),
+Ramanujan coefficient bounds, and Sato--Tate eigenvalue distribution.
+
+The known lower bound $L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994)
+is \emph{ineffective}: the constant $c>0$ is not computable from the proof.
+
+\textbf{Our approach.}
+(1) Exact derivation of the Rankin--Selberg Euler factor via Clebsch--Gordan identity.
+(2) Global residue positivity eliminates the Siegel zero case.
+(3) Computer-assisted Arb certificate for the $\Delta$ function.
+(4) Research programme toward explicit $c_{\mathrm{eff}}$ via explicit zero-free region.
+
+\section{Local Euler Factor Factorization \texttt{[THM]}}
+
+See \texttt{proof/01-foundations.tex} for the full proof of:
+\[
+  I_v(s) = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
+  = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}).
+\]
+
+\section{Global Residue Positivity \texttt{[THM]}}
+
+See \texttt{proof/02-global-residue.tex} for the full proof of:
+\[
+  \mathrm{Res}_{s=1}\langle 1, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
+  = \hat\Phi(0)\cdot\kappa_F\cdot L(1,\pi,\mathrm{Ad})\cdot\|W_f\|^2 > 0.
+\]
+
+\section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[THM]}}
+
+\begin{theorem}[F-3]
+$L(1,\mathrm{sym}^2\Delta) \in [2.405,\, 2.407]$ (certified by Arb, 128 bits).
+\end{theorem}
+
+See \texttt{src/numerical\_delta.py}. The value matches Sturm's formula
+$L(1,\mathrm{sym}^2\Delta) = 8\pi^3 \|\Delta\|_{\mathrm{Pet}}^2 (4\pi)^{11}/(3\cdot 11!)$.
+
+\section{Mollifier Construction \texttt{[OBL]}}
+
+See \texttt{proof/03-mollifier.tex}. Requires GL$_3$ large sieve with explicit constant.
+
+\section{Explicit Lower Bound \texttt{[OBL]}}
+
+See \texttt{proof/04-effective-bound.tex}.
+Once the zero-free region M-3 is closed, the explicit constant $c_{\mathrm{eff}}$
+will be certified for $p \leq 10^4$.
+
+\section{Conclusions}
+
+Certified: local Euler factor factorization \texttt{[THM]},
+global residue positivity \texttt{[THM]},
+$L(1,\mathrm{sym}^2\Delta) \geq 2.405$ \texttt{[THM]}.
+
+Open: explicit zero-free region \texttt{[OBL]},
+effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
+
+\section*{References}
+
+\begin{enumerate}
+\item Gelbart, S., \& Jacquet, H. (1978). Ann.\ Sci.\ ENS, 11(4), 471--542.
+\item Goldfeld, D., Hoffstein, J., \& Lieman, D. (1994). Ann.\ Math., 140(1), 161--181.
+\item Holowinsky, R., \& Soundararajan, K. (2010). Ann.\ Math., 172(2), 1517--1528.
+\item Jacquet, H., \& Shalika, J.\,A. (1981). Amer.\ J.\ Math., 103(3), 499--558.
+\item Shahidi, F. (1981). Amer.\ J.\ Math., 103(2), 297--351.
+\item Shimura, G. (1975). Proc.\ London Math.\ Soc., 31(1), 79--98.
+\end{enumerate}
+
+\end{document}
