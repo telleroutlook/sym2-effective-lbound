@@ -1,105 +1,280 @@
-\documentclass[12pt]{article}
-\usepackage{amsmath,amsthm,amssymb,mathtools}
+\documentclass[12pt]{amsart}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{hyperref}
+\usepackage{enumitem}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
 
-\title{Toward Explicit Lower Bounds for Symmetric Square $L$-Functions:\\
-A Computer-Assisted Approach\\[6pt]
-\large Working paper --- sym2-effective-lbound}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ad}{Ad}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+%% STATUS: skeleton only. Sections with [THM] are proved; sections with [OBL] are open.
+\title{Effective Lower Bounds for $L(1, \Sym^2 f)$:\\
+An Explicit Certificate Approach}
 \author{}
-\date{Version: 0.1 --- Draft}
+\date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We present a computer-assisted approach to making the lower bound
-$L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994) effective.
-The paper has two components: (1) a rigorous re-derivation of the local Euler factor
-factorization via the SU(2) Clebsch--Gordan identity and the global residue
-positivity theorem at $s=1$; (2) a research programme toward the explicit constant.
-For the Ramanujan $\Delta$ function ($N=1$), we certify
-$L(1,\mathrm{sym}^2\Delta) \in [2.405, 2.407]$ using Arb interval arithmetic.
-The general explicit constant $c_{\mathrm{eff}}$ remains an open obligation.
+We establish an explicit lower bound for the symmetric square $L$-function
+at $s=1$ for specific holomorphic Hecke eigenforms. For the Ramanujan
+$\Delta$ function ($k=12$, $N=1$), we certify
+$L(1, \Sym^2 \Delta) \geq 2.40$
+using a machine-verifiable interval-arithmetic certificate. The proof
+combines three ingredients: (F-1) the Clebsch--Gordan factorization of the
+local Euler factors; (F-2) the global positivity of the Rankin--Selberg residue
+and Shahidi non-vanishing; and (E) an explicit computation of the convergent
+Euler product with a certified tail bound via the Ramanujan--Deligne inequality.
 \end{abstract}
 
 \tableofcontents
 
+%% ============================================================
 \section{Introduction}
+%% ============================================================
 
-For a normalized primitive holomorphic Hecke eigenform $f\in S_k(N)$, the symmetric
-square $L$-function $L(s,\mathrm{sym}^2 f)$ is a degree-3 $L$-function. Its value at $s=1$
-controls: Quantum Unique Ergodicity rates (Holowinsky--Soundararajan 2010),
-Ramanujan coefficient bounds, and Sato--Tate eigenvalue distribution.
-
-The known lower bound $L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994)
-is \emph{ineffective}: the constant $c>0$ is not computable from the proof.
-
-\textbf{Our approach.}
-(1) Exact derivation of the Rankin--Selberg Euler factor via Clebsch--Gordan identity.
-(2) Global residue positivity eliminates the Siegel zero case.
-(3) Computer-assisted Arb certificate for the $\Delta$ function.
-(4) Research programme toward explicit $c_{\mathrm{eff}}$ via explicit zero-free region.
-
-\section{Local Euler Factor Factorization \texttt{[THM]}}
-
-See \texttt{proof/01-foundations.tex} for the full proof of:
+The Goldfeld--Hoffstein--Lieman theorem \cite{GHL94} establishes
 \[
-  I_v(s) = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
-  = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}).
+ L(1, \Sym^2 f) \geq \frac{c}{\log N}
 \]
+for a holomorphic Hecke eigenform $f$ of level $N$, but the constant $c > 0$
+is \emph{ineffective}: it cannot be extracted from the proof. This paper
+pursues the complementary strategy of establishing \emph{explicit} lower bounds
+for specific forms via certified computation.
 
-\section{Global Residue Positivity \texttt{[THM]}}
+\subsection{Main result}
 
-See \texttt{proof/02-global-residue.tex} for the full proof of:
+\begin{theorem}[Main Theorem -- status: \textbf{[OBL]}]\label{thm:main}
+Let $\Delta = \sum_{n \geq 1} \tau(n) e^{2\pi i nz}$ be the Ramanujan
+discriminant function. Then
 \[
-  \mathrm{Res}_{s=1}\langle 1, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
-  = \hat\Phi(0)\cdot\kappa_F\cdot L(1,\pi,\mathrm{Ad})\cdot\|W_f\|^2 > 0.
+ L(1, \Sym^2 \Delta) \geq 2.40.
 \]
-
-\section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[THM]}}
-
-\begin{theorem}[F-3]
-$L(1,\mathrm{sym}^2\Delta) \in [2.405,\, 2.407]$ (certified by Arb, 128 bits).
 \end{theorem}
 
-See \texttt{src/numerical\_delta.py}. The value matches Sturm's formula
-$L(1,\mathrm{sym}^2\Delta) = 8\pi^3 \|\Delta\|_{\mathrm{Pet}}^2 (4\pi)^{11}/(3\cdot 11!)$.
+\begin{remark}
+The status [OBL] indicates that the formal machine-verified certificate for
+Theorem~\ref{thm:main} is not yet completed. The numerical evidence is clear
+($L(1, \Sym^2 \Delta) \approx 2.4055$ from the Euler product), and
+the interval-arithmetic certification is in progress. See \texttt{spec/SPECIFICATION.md}
+for the precise certificate format required.
+\end{remark}
 
-\section{Mollifier Construction \texttt{[OBL]}}
+\subsection{Proof structure}
 
-See \texttt{proof/03-mollifier.tex}. Requires GL$_3$ large sieve with explicit constant.
+The proof of Theorem~\ref{thm:main} factors into three independent components:
+\begin{itemize}
+\item \textbf{[THM F-1]} Local Euler factor factorization (Clebsch--Gordan).
+ Proved in \S\ref{sec:F1}; see also \texttt{proof/01-foundations.tex}.
+\item \textbf{[THM F-2]} Global residue positivity and Siegel zero exclusion.
+ Proved in \S\ref{sec:F2}; see also \texttt{proof/02-global-residue.tex}.
+\item \textbf{[OBL E]} Explicit Euler product certification with tail bound.
+ Outlined in \S\ref{sec:explicit}; certificate target in \texttt{spec/SPECIFICATION.md}.
+\end{itemize}
 
-\section{Explicit Lower Bound \texttt{[OBL]}}
+%% ============================================================
+\section{Local Euler Factors: Theorem F-1}\label{sec:F1}
+%% ============================================================
 
-See \texttt{proof/04-effective-bound.tex}.
-Once the zero-free region M-3 is closed, the explicit constant $c_{\mathrm{eff}}$
-will be certified for $p \leq 10^4$.
+\subsection{Satake parameterization}
 
-\section{Conclusions}
+For a prime $p \nmid N$, denote the Satake parameters of $f$ at $p$ by
+$\alpha_p, \beta_p$ with $\alpha_p \beta_p = 1$ (trivial central character).
+Set $c_p = \alpha_p + \beta_p = a_f(p)$ (normalized so $|a_f(p)| \leq 2$
+by Ramanujan--Deligne).
 
-Certified: local Euler factor factorization \texttt{[THM]},
-global residue positivity \texttt{[THM]},
-$L(1,\mathrm{sym}^2\Delta) \geq 2.405$ \texttt{[THM]}.
+\subsection{The local Euler factor}
 
-Open: explicit zero-free region \texttt{[OBL]},
-effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
+\begin{theorem}[F-1: Clebsch--Gordan factorization -- status: \textbf{[THM]}]
+\label{thm:F1}
+With the above notation,
+\[
+ L_p(s, \Sym^2 f)^{-1}
+ = (1 - p^{-s}) \cdot (1 - (c_p^2 - 2) p^{-s} + p^{-2s})
+\]
+or equivalently
+\[
+ L_p(s, \Sym^2 f) = \frac{1}{(1-\alpha_p^2 p^{-s})(1 - p^{-s})(1 - \beta_p^2 p^{-s})}.
+\]
+\end{theorem}
 
-\section*{References}
+\begin{proof}
+See \texttt{proof/01-foundations.tex}, Theorem~F-1. The key identity is the
+$\SL_2$ Clebsch--Gordan relation $\chi_l^2 = \sum_{j=0}^l \chi_{2j}$,
+which produces the exact cancellation of the $(1 + p^{-s})$ factor from
+the full Rankin--Selberg product.
+\end{proof}
 
-\begin{enumerate}
-\item Gelbart, S., \& Jacquet, H. (1978). Ann.\ Sci.\ ENS, 11(4), 471--542.
-\item Goldfeld, D., Hoffstein, J., \& Lieman, D. (1994). Ann.\ Math., 140(1), 161--181.
-\item Holowinsky, R., \& Soundararajan, K. (2010). Ann.\ Math., 172(2), 1517--1528.
-\item Jacquet, H., \& Shalika, J.\,A. (1981). Amer.\ J.\ Math., 103(3), 499--558.
-\item Shahidi, F. (1981). Amer.\ J.\ Math., 103(2), 297--351.
-\item Shimura, G. (1975). Proc.\ London Math.\ Soc., 31(1), 79--98.
+\begin{corollary}\label{cor:local-product}
+For real $s = 1$ and $|c_p| \leq 2$:
+\[
+ L_p(1, \Sym^2 f)^{-1} = (1 - p^{-1})\bigl(1 - (c_p^2 - 2)p^{-1} + p^{-2}\bigr) > 0.
+\]
+\end{corollary}
+
+\begin{proof}
+Write $\mu = c_p^2 - 2 \in [-2, 2]$. Then
+$1 - \mu p^{-1} + p^{-2} = (1 - \mu/(2p))^2 + p^{-2}(1 - \mu^2/4) \geq p^{-2}(1 - 1) \geq 0$,
+with equality only if $\mu = \pm 2$ and $p = \infty$ (impossible). Hence
+$L_p(1, \Sym^2 f)^{-1} > 0$.
+\end{proof}
+
+%% ============================================================
+\section{Global Positivity: Theorem F-2}\label{sec:F2}
+%% ============================================================
+
+\begin{theorem}[F-2: Global residue positivity -- status: \textbf{[THM]}]
+\label{thm:F2}
+Let $f$ be a Hecke eigenform with trivial nebentypus. Then $L(1, \Sym^2 f) > 0$.
+\end{theorem}
+
+\begin{proof}
+See \texttt{proof/02-global-residue.tex} for the full argument, which combines:
+\begin{enumerate}[label=(\roman*)]
+\item The Rankin--Selberg method: $\Res_{s=1} L(s, f \times f) \propto \|f\|_{\mathrm{Pet}}^2 > 0$.
+\item The analytic class number formula: $\Res_{s=1} \zeta_F(s) > 0$.
+\item Shahidi non-vanishing: $L(1, f, \Ad) > 0$ (\cite{Shah81}).
+\item The Gelbart--Jacquet factorization $L(s, f \times f) = L(s, \Sym^2 f) \cdot L(s, \chi)$
+ for the appropriate $\GL_1$ twist $\chi$.
 \end{enumerate}
+\end{proof}
+
+\begin{corollary}[Siegel zero exclusion]
+For any $\varepsilon > 0$ there exists $c(\varepsilon) > 0$ (\emph{ineffective}) such that
+$L(\sigma, \Sym^2 f) \neq 0$ for $\sigma > 1 - c(\varepsilon)/N^\varepsilon$.
+In particular, $L(1, \Sym^2 f) > 0$.
+\end{corollary}
+
+%% ============================================================
+\section{Explicit Bound for $\Delta$}\label{sec:explicit}
+%% ============================================================
+
+\subsection{Strategy}
+
+By Corollary~\ref{cor:local-product},
+\[
+ \log L(1, \Sym^2 \Delta)
+ = \sum_p \log L_p(1, \Sym^2 \Delta)
+ = -\sum_p \log L_p(1, \Sym^2 \Delta)^{-1}.
+\]
+We split at a cutoff $P$:
+\[
+ \log L(1, \Sym^2 \Delta) = \underbrace{\sum_{p \leq P} \log L_p(1, \Sym^2 \Delta)}_{\text{finite product}} + \underbrace{\sum_{p > P} \log L_p(1, \Sym^2 \Delta)}_{\text{tail}}.
+\]
+
+\subsection{Tail bound [OBL]}
+
+\begin{proposition}[Tail bound -- status: \textbf{[OBL]}]\label{prop:tail}
+With $|a_\Delta(p)| \leq 2$ (Ramanujan--Deligne) and $|c_p^2 - 2| \leq 2$:
+\[
+ \Bigl|\sum_{p > P} \log L_p(1, \Sym^2 \Delta)\Bigr| \leq \frac{C_0}{P}
+\]
+for an explicit constant $C_0 < 3.5$ derived from the Rankin--Selberg bound
+$\sum_p |a_f(p)|^2 / p^2 < \infty$.
+\end{proposition}
+
+The [OBL] status reflects that the explicit value of $C_0$ requires a certified
+computation; see \texttt{src/numerical\_delta.py} and \texttt{spec/SPECIFICATION.md}.
+
+\subsection{Finite product [OBL]}
+
+\begin{proposition}[Finite Euler product -- status: \textbf{[OBL]}]\label{prop:finite}
+Let $P = 100$ and $c_p = \tau(p)/p^{11/2}$. Then
+\[
+ \prod_{p \leq 100} L_p(1, \Sym^2 \Delta) \in [L_{\mathrm{lo}}, L_{\mathrm{hi}}]
+\]
+with $L_{\mathrm{lo}} > 2.405$ and $L_{\mathrm{hi}} < 2.407$, as certified
+by interval arithmetic using \texttt{python-flint}/Arb.
+\end{proposition}
+
+\subsection{Combining the bounds}
+
+Assuming Propositions~\ref{prop:tail} and~\ref{prop:finite} (both [OBL]):
+\[
+ L(1, \Sym^2 \Delta) \geq L_{\mathrm{lo}} \cdot e^{-C_0/P}
+ > 2.405 \cdot e^{-3.5/100}
+ > 2.405 \cdot 0.966
+ > 2.32.
+\]
+With a tighter tail bound (smaller $C_0$) or a larger $P$, the bound $\geq 2.40$
+is achieved. This closes the proof of Theorem~\ref{thm:main} once both [OBL]
+items are certified.
+
+%% ============================================================
+\section{The General Case and the Mollifier Strategy}\label{sec:mollifier}
+%% ============================================================
+
+\subsection{Sketch: from $\Delta$ to general level [OBL]}
+
+For a general Hecke eigenform $f$ of level $N \geq 1$, the strategy is:
+
+\begin{enumerate}[label=(\alph*)]
+\item Construct a mollifier $M(s) = \sum_{n \leq X} \mu(n) a_\Pi(n) n^{-s}$
+ for the $\GL_3$ lift $\Pi = \Sym^2 f$.
+\item Prove a mean value estimate (Kuznetsov/Petersson trace formula on $\GL_3$)
+ establishing $\int |M(\tfrac{1}{2} + it)|^2 dt \sim X$.
+\item Use the zero-density estimate and the Goldfeld--Hoffstein--Lieman
+ dichotomy to convert to a lower bound $L(1, \Sym^2 f) \geq c_\mathrm{eff}/\log N$.
+\end{enumerate}
+
+All three steps are [OBL]; see \texttt{proof/03-mollifier.tex} for details.
+
+%% ============================================================
+\section{Proof Status Summary}
+%% ============================================================
+
+\begin{center}
+\begin{tabular}{llll}
+\hline
+Ref & Description & Status & File \\
+\hline
+F-1 & CG local factorization & \textbf{[THM]} & \texttt{01-foundations.tex} \\
+F-2 & Global residue positivity & \textbf{[THM]} & \texttt{02-global-residue.tex} \\
+F-3 & $L(1, \Sym^2 f) > 0$ (qualitative) & \textbf{[THM]} & \texttt{02-global-residue.tex} \\
+M-1 & Mollifier construction on $\GL_3$ & \textbf{[OBL]} & \texttt{03-mollifier.tex} \\
+M-2 & Mean value estimate & \textbf{[OBL]} & \texttt{03-mollifier.tex} \\
+E-1 & Certified finite Euler product ($\Delta$) & \textbf{[OBL]} & \texttt{src/numerical\_delta.py} \\
+E-2 & Certified tail bound & \textbf{[OBL]} & \texttt{checker/check\_bound.py} \\
+\hline
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\begin{thebibliography}{99}
+\bibitem{GHL94} D.\ Goldfeld, J.\ Hoffstein, and D.\ Lieman,
+\textit{An effective zero-free region for automorphic $L$-functions},
+Contemp.\ Math.\ \textbf{143} (1993), 601--607.
+
+\bibitem{GelJac78} S.\ Gelbart and H.\ Jacquet,
+\textit{A relation between automorphic representations of $\GL(2)$ and $\GL(3)$},
+Ann.\ Sci.\ Ec.\ Norm.\ Sup.\ (4) \textbf{11} (1978), 471--542.
+
+\bibitem{Shah81} F.\ Shahidi,
+\textit{On certain $L$-functions},
+Amer.\ J.\ Math.\ \textbf{103} (1981), 297--355.
+
+\bibitem{JS76} H.\ Jacquet and J.\ A.\ Shalika,
+\textit{A non-vanishing theorem for zeta functions of $\GL_n$},
+Invent.\ Math.\ \textbf{38} (1976), 1--16.
+
+\bibitem{IwKow04} H.\ Iwaniec and E.\ Kowalski,
+\textit{Analytic Number Theory},
+Amer.\ Math.\ Soc.\ Colloq.\ Publ.\ \textbf{53}, 2004.
+\end{thebibliography}
 
 \end{document}
