@@ -144,7 +144,12 @@
   (a) Miller-Schmid (2006) GL₃ Voronoi 显式常数（SL(3,Z) 导子1，谱参数 ν=(11/2, 0, -11/2)）
   (b) 有效 GL₃ PNT：|S(X)| = O(X / exp(c√log X))（Molteni 2002 型，c 可显式）
   (c) 继续数值计算至 N=10^7 并外推（仍需理论尾项界）
-- **[OBL M-Voronoi] 路径**：实现 Miller-Schmid (2006) 带 Kloosterman 和的完整 GL₃ Voronoi；数学上正确但工程量巨大（需要 Kloosterman 求和、导子结构、振荡相位）
+- **GL₃ Voronoi 数值实现（2026-08-16 会话 4，两次尝试，均失败）**：
+  - **尝试 1**（`discovery/_voronoi_gl3_test.py`）：用简化 Whittaker 函数 W(y₂)=y₂^6·exp(-2π(1+y₂)) 计算 I(n;X)=∫W(u)/u du。结果：I(n;X)≈3.64×10⁻⁶ 对所有 n 相同（无 n 依赖性），Voronoi 和/S(X) 比值≈0（差 6 个量级）。
+  - **尝试 2**（`discovery/_voronoi_mellin_barnes.py`）：用 R(s)=Γ_GL3(1-s)/Γ_GL3(s) 的 1D Mellin-Barnes 积分 Φ(n)=(1/n)·(1/2π)∫R(1/2+it)·(nX)^{1/2+it}·Γ(1/2+it)dt。结果：Φ(n)≈0.556/n（代数衰减 O(1/n)），对偶级数 Σa(n)·Φ(n) 与原始 Dirichlet 级数收敛速度相同——未解决条件收敛问题。
+  - **根本原因（最终确认）**：GL₃ Voronoi 公式（Miller-Schmid 2006 Theorem 1.1）需要 **二维** Bessel 核 K_{GL3}(y; ν₁,ν₂)（双变量 Mellin-Barnes 积分），而非一维。二维核给出 Φ(n)~exp(-c·n^{1/3}) 的超多项式衰减（GL₃ 特征），1D 方法给出的 O(1/n) 衰减等价于 GL₁/GL₂ Voronoi。
+  - **唯一正确路径**：实现二维 Mellin-Barnes 积分 K_{GL3}(y; 11,0)（参数来自 sym²Δ 谱参数 μ=(11,0,-11)），提取显式常数 C_GL3，验证 C_GL3 < 2.63。
+- **[OBL M-Voronoi] 路径**：实现 Miller-Schmid (2006) 带 Kloosterman 和的完整 GL₃ Voronoi；需要二维 Bessel 核（不是一维）
 - **两侧 Gaussian AFE（2026-08-16，`discovery/_m3_afe_sigma.py`，失败）**：L(σ+it) = S_main(Gaussian) + ε×chi×S_dual(Gaussian) 公式在 σ=0.7 时与 Cesaro(N=2000) 最大偏差达 1.04。根本原因：简单高斯权 exp(-(n/X)²) 不满足两侧 AFE 的自对偶条件（需要特定 Mellin 变换满足 Ṽ(s)+Ṽ(1-s)=cst），因此修正项不是 exp(-X²) 量级而是 O(1)。
 - **Rankin-Selberg 直接计算（2026-08-16，`discovery/_L1_rankin_selberg.py`，失败）**：L(1+δ) = (ζ(2+2δ)/ζ(1+δ)) × Σ τ(n)²/n^{12+δ}。部分和 N=5000、δ=0.5 给出 L=0.726，δ=0.05 给出 L=0.262，远未收敛到目标 0.632。根本原因：需要先 N→∞ 再 δ→0，收敛指数仅 N^{-δ}；对于 δ=0.05 和 N=5000，尾项约 25。
 - **轮廓移动至 Re(u)=ε>0（2026-08-16 分析，无代码，结论不可行）**：思路：J = ∮_{Re=-1/2} → 移到 ∮_{Re=ε}，避开临界线。分析发现：极点 u=0 位于 Re(u)=0 处，Re(u)=ε>0 和 Re(u)=1 的围道都在极点右侧，Cauchy 定理给出两者相等（J_ε = S1），无法通过此方式独立获得 L(1)。J 项必须来自极点左侧（Re(u)<0），即 L(1+u) 在 Re(1+u)<1 处——临界带内，条件收敛。
