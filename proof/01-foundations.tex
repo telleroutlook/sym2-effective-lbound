@@ -9,180 +9,226 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
 
-\title{Local Euler Factor Factorization and\\the Clebsch--Gordan Cancellation\\
-\large \texttt{F-1 Deliverable --- sym2-effective-lbound}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ad}{Ad}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\calO}{\mathcal{O}}
+\newcommand{\calW}{\mathcal{W}}
+\newcommand{\varpi}{\varpi}
+
+\title{Foundations: Local Euler Factor Factorization and the Clebsch--Gordan Cancellation\\
+\large Proof Document 01 --- sym2-effective-lbound}
 \author{}
-\date{Status: \texttt{[THM]}}
+\date{}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We prove the local Euler factor factorization theorem (F-1) for the GL$_2\times$GL$_2$
-Rankin--Selberg integral at unramified places. The key step is the exact cancellation of
-the factor $(1+q_v^{-s})$ via the SU(2) Clebsch--Gordan identity
-$\chi_l^2 = \sum_{j=0}^l \chi_{2j}$. The result yields
-$I_v(s) = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad})$.
+We prove Theorem~F-1: for any unramified finite place $v$ of a number field $F$,
+with Satake parameters $(\alpha_v, \beta_v)$ satisfying $\alpha_v \beta_v = 1$,
+the unramified local Jacquet--Shalika integral equals
+\[
+  I_v(s) = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
+          = \zeta_v(s) \cdot L_v(s, \pi_v, \Ad).
+\]
+The key step is an exact cancellation of the $(1+q_v^{-s})$ factor, which follows
+from the $\mathrm{SU}(2)$ Clebsch--Gordan identity $\chi_l^2 = \sum_{j=0}^l \chi_{2j}$.
+This result is [THM F-1] in the project specification.
 \end{abstract}
 
 \tableofcontents
 
-\section{Setup and Conventions}
+\section{Setup and Notation}
 
-\subsection{Number Field and Ad\`eles}
+Let $F$ be a number field and $v$ a non-Archimedean place with residue field
+$\mathbf{F}_{q_v}$, ring of integers $\calO_v$, and uniformizer $\varpi_v$.
+Let $\pi_v$ be an unramified irreducible admissible representation of $GL_2(F_v)$
+with trivial central character and Satake parameters $(\alpha_v, \beta_v)$ satisfying
+\begin{equation}\label{eq:satake-unit}
+  \alpha_v \beta_v = 1.
+\end{equation}
 
-Let $F$ be a number field and $\mathbb{A}_F$ its ad\`ele ring.
-For a finite place $v\nmid\infty$, let $\mathcal{O}_v$ be the ring of integers,
-$\varpi_v$ a uniformizer, and $q_v = |\mathcal{O}_v/(\varpi_v)|$ the residue cardinality.
-
-\subsection{Unramified Local Representations}
-
-Let $\pi_v$ be an irreducible admissible unramified representation of $GL_2(F_v)$
-with trivial central character $\omega_{\pi_v} = 1$.
-The Satake parameters $(\alpha_v,\beta_v)\in\mathbb{C}^\times\times\mathbb{C}^\times$
-satisfy $\alpha_v\beta_v = 1$ (trivial central character).
-
-\subsection{Whittaker Model}
-
-Fix an unramified additive character $\psi_v: F_v\to\mathbb{C}^\times$.
-The Whittaker model $\mathcal{W}(\pi_v,\psi_v)$ consists of smooth functions
-$W_v: GL_2(F_v)\to\mathbb{C}$ transforming by
-\[
-  W_v\!\left(\begin{pmatrix}1 & x \\ 0 & 1\end{pmatrix}g\right)
-  = \psi_v(x) W_v(g), \quad x\in F_v.
-\]
-The normalized unramified vector $W_v^0$ satisfies $W_v^0(k) = 1$ for $k\in GL_2(\mathcal{O}_v)$.
+The local unramified Whittaker function $W_{f,v}^\circ \in \calW(\pi_v, \psi_v)$
+is normalized so that $W_{f,v}^\circ(I_2) = 1$.
 
 \section{Casselman--Shalika Formula}
 
-\begin{theorem}[Casselman--Shalika \texttt{[BASE]}]\label{thm:CS}
-For the normalized unramified Whittaker function $W_v^0$ and the diagonal element
-$a_l = \mathrm{diag}(\varpi_v^l, 1)$, $l\geq 0$:
+\begin{theorem}[Casselman--Shalika \cite{CS80}]\label{thm:CS}
+For $l \geq 0$,
 \[
-  W_v^0(a_l) = q_v^{-l/2}\,\chi_l(\alpha_v,\beta_v),
+  W_{f,v}^\circ\bigl(\diag(\varpi_v^l, 1)\bigr)
+  = q_v^{-l/2}\, \chi_l(\alpha_v, \beta_v),
 \]
-where $\chi_l(\alpha,\beta) = \dfrac{\alpha^{l+1}-\beta^{l+1}}{\alpha-\beta}$
+where
+\[
+  \chi_l(\alpha, \beta)
+  = \frac{\alpha^{l+1} - \beta^{l+1}}{\alpha - \beta}
+\]
 is the character of the $(l+1)$-dimensional irreducible representation of $\mathrm{SU}(2)$.
-For $l < 0$, $W_v^0(a_l) = 0$.
+For $l < 0$, $W_{f,v}^\circ(\diag(\varpi_v^l, 1)) = 0$.
 \end{theorem}
 
-\begin{remark}
-The characters $\chi_l$ satisfy $\chi_0 = 1$, $\chi_1 = \alpha+\beta$,
-and the recursion $\chi_{l+1} = (\alpha+\beta)\chi_l - \alpha\beta\,\chi_{l-1}$.
-Under $\alpha\beta=1$, they reduce to the Chebyshev polynomials of the second kind:
-$\chi_l = U_l((\alpha+\beta)/2)$.
-\end{remark}
+\section{Iwasawa Reduction of the Local Integral}
 
-\section{Iwasawa Decomposition and Local Integral}
+The local Jacquet--Shalika integral with test function $\Phi_v = \mathbf{1}_{\calO_v^2}$ is
+\[
+  I_v(s) = \int_{N_2(F_v) \backslash GL_2(F_v)}
+            W_{f,v}(g)\, W_{\tilde f,v}(g)\, \Phi_v(e_2 g)\, |\det g|_v^s\, d^\times g,
+\]
+where $e_2 = (0,1)$ is the second standard basis row vector.
 
-\subsection{The Local Jacquet--Shalika Integral}
+\begin{lemma}[Iwasawa reduction]\label{lem:iwasawa}
+Using the Iwasawa decomposition $GL_2(F_v) = N_2(F_v) A_2(F_v) K_v$ and the change of
+variables $a = \diag(\varpi_v^{k}, \varpi_v^{m})$ with $l = k - m$, the support
+conditions force $l \geq 0$ and $m \geq 0$, and
+\[
+  I_v(s) = \underbrace{\left(\sum_{m=0}^\infty q_v^{-2ms}\right)}_{=: S_m}
+            \cdot
+            \underbrace{\left(\sum_{l=0}^\infty
+              \chi_l(\alpha_v, \beta_v)^2\, q_v^{-ls}\right)}_{=: S_l}.
+\]
+\end{lemma}
 
-The local Rankin--Selberg / Jacquet--Shalika integral at $v$ is
-\begin{equation}\label{eq:local-integral}
-  I_v(s, W_v, \widetilde{W}_v, \Phi_v)
-  = \int_{N(F_v)\backslash GL_2(F_v)} W_v(g)\,\widetilde{W}_v(g)\,\Phi_v(e_2\,g)\,|\det g|_v^s\,d^\times g,
-\end{equation}
-where $e_2 = (0,1)\in F_v^2$, $\Phi_v = \chi_{\mathcal{O}_v^2}$ is the standard test function,
-and $\widetilde{W}_v\in\mathcal{W}(\tilde\pi_v,\bar\psi_v)$ is the contragredient Whittaker function.
-
-\subsection{Reduction via Iwasawa Decomposition}
-
-By the Iwasawa decomposition $GL_2(F_v) = N_2(F_v)\,A_2(F_v)\,K_v$ where
-$K_v = GL_2(\mathcal{O}_v)$, the integral \eqref{eq:local-integral} reduces to a sum
-over the diagonal torus $A_2(F_v)$.
-
-Write $a = \mathrm{diag}(\varpi_v^k, \varpi_v^m)$ with $k,m\in\mathbb{Z}$.
-Set $l = k - m$ and note:
-\begin{itemize}
-  \item The test function restricts to $\Phi_v(e_2\,a) = \chi_{\mathcal{O}_v}(\varpi_v^m) = \mathbf{1}_{m\geq 0}$.
-  \item The Whittaker support enforces $l = k-m \geq 0$.
-  \item The modular factor gives $|\det a|_v^s = q_v^{-(k+m)s}$ and
-        $d^\times a = (1-q_v^{-1})^{-2}\,dk\,dm$.
-\end{itemize}
-
-For the unramified vectors $W_v = \widetilde{W}_v = W_v^0$, Theorem~\ref{thm:CS} gives
-$W_v^0(a) = q_v^{-l/2}\,\chi_l(\alpha_v,\beta_v)$.
-The integral reduces to
-\begin{equation}\label{eq:factored}
-  I_v(s) = \underbrace{\left(\sum_{m=0}^\infty q_v^{-2ms}\right)}_{S_m(s)}
-  \cdot
-  \underbrace{\left(\sum_{l=0}^\infty \chi_l(\alpha_v,\beta_v)^2\,q_v^{-ls}\right)}_{S_l(s)}.
-\end{equation}
+\begin{proof}
+Standard Iwasawa integration: the modular character and Haar measure yield the
+normalization $d^\times a = q_v^l\, dk\, dm$ in the $(l, m)$ variables.  The test
+function $\Phi_v(e_2 a) = \mathbf{1}_{\calO_v}(\varpi_v^m)$ restricts to $m \geq 0$.
+The Whittaker pairing $W_{f,v}(a) W_{\tilde f,v}(a)$ evaluates via
+Theorem~\ref{thm:CS} and the unitarity $W_{\tilde f,v} = \overline{W_{f,v}}$, giving
+$\chi_l(\alpha_v,\beta_v)^2$ after noting $\alpha_v \beta_v = 1$ implies
+$\overline{\chi_l} = \chi_l$ on the unit circle.
+\end{proof}
 
 \section{Evaluation of the Two Series}
 
-\subsection{The $m$-Series}
+\subsection{The $m$-series}
 
 \begin{lemma}\label{lem:m-series}
-$S_m(s) = \dfrac{1}{1-q_v^{-2s}} = \dfrac{1}{(1-q_v^{-s})(1+q_v^{-s})}$.
+$S_m = \dfrac{1}{(1-q_v^{-s})(1+q_v^{-s})}$.
 \end{lemma}
+
 \begin{proof}
-Geometric series with ratio $q_v^{-2s}$.
+Geometric series: $S_m = \sum_{m=0}^\infty q_v^{-2ms} = (1 - q_v^{-2s})^{-1}
+= [(1-q_v^{-s})(1+q_v^{-s})]^{-1}$.
 \end{proof}
 
-\subsection{The SU(2) Clebsch--Gordan Identity}
+\subsection{The $l$-series via the Clebsch--Gordan Identity}
 
-\begin{lemma}[Clebsch--Gordan \texttt{[BASE]}]\label{lem:CG}
-For the irreducible characters of $\mathrm{SU}(2)$: $\chi_l^2 = \sum_{j=0}^l \chi_{2j}$.
-\end{lemma}
-\begin{proof}
-Tensor product decomposition $V_l \otimes V_l \cong V_{2l} \oplus V_{2l-2} \oplus \cdots \oplus V_0$;
-taking characters gives the identity.
-\end{proof}
+The fundamental identity we use is the $\mathrm{SU}(2)$ Clebsch--Gordan decomposition:
+\begin{equation}\label{eq:CG}
+  \chi_l^2 = \chi_l \cdot \chi_l = \sum_{j=0}^l \chi_{2j}.
+\end{equation}
 
-\subsection{The $l$-Series}
-
-\begin{proposition}\label{prop:l-series}
-With $x = q_v^{-s}$ and $\alpha_v\beta_v = 1$:
+\begin{lemma}[Even-character generating function]\label{lem:even-gen}
+With $x = q_v^{-s}$ and $\alpha_v \beta_v = 1$,
 \[
-  S_l(s) = \sum_{l=0}^\infty \chi_l(\alpha_v,\beta_v)^2\,x^l
+  \sum_{j=0}^\infty \chi_{2j}(\alpha_v, \beta_v)\, x^j
+  = \frac{1+x}{(1-\alpha_v^2 x)(1-\beta_v^2 x)}.
+\]
+\end{lemma}
+
+\begin{proof}
+Expand:
+\[
+  \sum_{j=0}^\infty \chi_{2j}(\alpha,\beta) x^j
+  = \frac{1}{\alpha-\beta}\left(
+      \frac{\alpha}{1-\alpha^2 x} - \frac{\beta}{1-\beta^2 x}\right).
+\]
+Computing the numerator of the combined fraction:
+\[
+  \alpha(1-\beta^2 x) - \beta(1-\alpha^2 x)
+  = (\alpha-\beta) + (\alpha^2 \beta - \alpha \beta^2) x
+  = (\alpha-\beta)(1 + \alpha\beta x)
+  = (\alpha-\beta)(1+x)
+\]
+using $\alpha\beta = 1$.  Dividing by $(\alpha-\beta)(1-\alpha^2 x)(1-\beta^2 x)$
+gives the claim.
+\end{proof}
+
+\begin{lemma}[$l$-series]\label{lem:l-series}
+With $x = q_v^{-s}$,
+\[
+  S_l = \sum_{l=0}^\infty \chi_l(\alpha_v,\beta_v)^2\, x^l
   = \frac{1+x}{(1-x)(1-\alpha_v^2 x)(1-\beta_v^2 x)}.
 \]
-\end{proposition}
+\end{lemma}
+
 \begin{proof}
-By Lemma~\ref{lem:CG}, exchanging summation:
-$\sum_{l=0}^\infty \chi_l^2 x^l = \frac{1}{1-x}\sum_{j=0}^\infty \chi_{2j} x^j$.
-For the inner sum with $\alpha\beta=1$:
+Apply \eqref{eq:CG} and swap the order of summation:
 \[
-  \sum_{j=0}^\infty \chi_{2j}(\alpha,\beta)\,x^j
-  = \frac{1}{\alpha-\beta}\left(\frac{\alpha}{1-\alpha^2 x} - \frac{\beta}{1-\beta^2 x}\right)
-  = \frac{(\alpha-\beta)(1+x)}{(\alpha-\beta)(1-\alpha^2 x)(1-\beta^2 x)}
-  = \frac{1+x}{(1-\alpha^2 x)(1-\beta^2 x)},
+  S_l = \sum_{l=0}^\infty \sum_{j=0}^l \chi_{2j} x^l
+  = \sum_{j=0}^\infty \chi_{2j} \sum_{l=j}^\infty x^l
+  = \frac{1}{1-x} \sum_{j=0}^\infty \chi_{2j} x^j.
 \]
-where the numerator simplification uses $\alpha\beta=1$: 
-$\alpha(1-\beta^2 x)-\beta(1-\alpha^2 x) = (\alpha-\beta)(1+\alpha\beta x) = (\alpha-\beta)(1+x)$.
-Combining: $S_l(s) = \frac{1+x}{(1-x)(1-\alpha^2 x)(1-\beta^2 x)}$.
+Apply Lemma~\ref{lem:even-gen} to obtain the result.
 \end{proof}
 
-\section{Main Theorem: Exact Factor Cancellation}
+\section{Exact Cancellation and Main Theorem}
 
-\begin{theorem}[F-1: Local Euler Factor Factorization \texttt{[THM]}]\label{thm:F1}
-For any unramified finite place $v$ with $\alpha_v\beta_v = 1$ and $\Phi_v = \chi_{\mathcal{O}_v^2}$:
-\begin{equation}\label{eq:F1-main}
-  I_v(s) = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
-  = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}).
-\end{equation}
-The factor $(1+q_v^{-s})$ from $S_m(s)$ cancels exactly against the numerator of $S_l(s)$.
-\end{theorem}
-\begin{proof}
-From \eqref{eq:factored} and Lemmas~\ref{lem:m-series}, \ref{prop:l-series}:
+\begin{theorem}[F-1: Local Euler Factor Factorization]\label{thm:F1}
+Under the hypotheses of Section~1,
 \[
   I_v(s)
-  = \frac{1}{(1-q_v^{-s})\cdot(1+q_v^{-s})}
-  \cdot
-  \frac{1+q_v^{-s}}{(1-q_v^{-s})(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
+  = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}
+  = \zeta_v(s) \cdot L_v(s, \pi_v, \Ad).
+\]
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:iwasawa}, $I_v(s) = S_m \cdot S_l$.  Multiplying
+Lemmas~\ref{lem:m-series} and \ref{lem:l-series}:
+\[
+  I_v(s)
+  = \frac{1}{(1-q_v^{-s})(1+q_v^{-s})}
+    \cdot
+    \frac{1+q_v^{-s}}{(1-q_v^{-s})(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}.
+\]
+The factor $(1+q_v^{-s})$ cancels exactly, yielding
+\[
+  I_v(s)
   = \frac{1}{(1-q_v^{-s})^2(1-\alpha_v^2 q_v^{-s})(1-\beta_v^2 q_v^{-s})}.
 \]
-The adjoint representation of $\widehat{GL_2}$ on $\mathfrak{gl}_2 \cong \mathbf{1}\oplus\mathfrak{sl}_2$
-has traceless part with Satake parameters $(\alpha_v^2, 1, \beta_v^2)$, giving
-$L_v(s,\pi_v,\mathrm{Ad}) = (1-q_v^{-s})^{-1}(1-\alpha_v^2 q_v^{-s})^{-1}(1-\beta_v^2 q_v^{-s})^{-1}$
-and $\zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}) = I_v(s)$. $\square$
+The identification with $\zeta_v(s) \cdot L_v(s,\pi_v,\Ad)$ follows from the
+dual group decomposition $\mathbf{1} \oplus \Ad$ of $\mathrm{std} \otimes \mathrm{std}^\vee$
+for $GL_2$: the adjoint representation has Satake parameters $(\alpha_v^2, 1, \beta_v^2)$
+(for $\alpha_v \beta_v = 1$), so
+\[
+  L_v(s,\pi_v,\Ad)
+  = (1-q_v^{-s})^{-1}(1-\alpha_v^2 q_v^{-s})^{-1}(1-\beta_v^2 q_v^{-s})^{-1},
+\]
+and $\zeta_v(s) = (1-q_v^{-s})^{-1}$.
 \end{proof}
 
-\begin{remark}[Non-trivial central character]
-When $\omega_{\pi_v}\neq 1$, the contragredient Satake parameters are
-$(\alpha_v^{-1}\omega_v(\varpi_v)^{-1}, \beta_v^{-1}\omega_v(\varpi_v)^{-1})$
-and the result generalizes to $L_v(s,\pi_v\times\tilde\pi_v) = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}\otimes\omega_\pi)$.
+\begin{remark}
+The cancellation is purely algebraic: it does not depend on any analytic properties
+of $\pi_v$ beyond the Casselman--Shalika formula and $\alpha_v \beta_v = 1$.
+When $\omega_{\pi,v}$ is non-trivial, the Satake parameters of $\tilde\pi_v$ become
+$(\alpha_v^{-1}\omega_v(\varpi_v)^{-1}, \beta_v^{-1}\omega_v(\varpi_v)^{-1})$,
+and the result generalizes to $L_v(s,\pi_v,\Ad \otimes \omega_\pi)$.
 \end{remark}
+
+\section{Numerical Verification}
+
+The file \texttt{src/euler\_factors.py} implements the computation of $I_v(s)$ via:
+\begin{enumerate}
+  \item Direct summation of the double series (truncated, for validation)
+  \item The closed-form formula from Theorem~\ref{thm:F1}
+\end{enumerate}
+For specific Satake parameters (e.g., those of the Ramanujan $\Delta$ form at small
+primes), both computations agree to machine precision.  The unit tests in
+\texttt{tests/test\_euler\_factors.py} verify the $(1+q_v^{-s})$ cancellation
+numerically and confirm the closed-form identity.
+
+\begin{thebibliography}{9}
+\bibitem{CS80} W.~Casselman and J.~Shalika, The unramified principal series of
+  $p$-adic groups II: the Whittaker function, Compositio Math.\ \textbf{41} (1980), 207--231.
+\bibitem{JS81} H.~Jacquet and J.~A.~Shalika, On Euler products and the classification of
+  automorphic forms I, Amer.\ J.\ Math.\ \textbf{103} (1981), 499--558.
+\end{thebibliography}
 
 \end{document}
