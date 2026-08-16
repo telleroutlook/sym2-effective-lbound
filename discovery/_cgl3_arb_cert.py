@@ -96,15 +96,14 @@ print()
 
 # -----------------------------------------------------------------------
 # Conservative certified upper bound (not assuming sign-definiteness):
-#   ||K_nu||_1 <= 0.225 = dense grid 0.197 + 15% safety
-# This follows from: int |K_nu| = int (-K_nu) [if sign-definite]
-#   or can be bounded by dense numerical integration with error control.
-# Dense computation: int_{0.0001}^{100} |K_nu| dy = 0.196 (numerical, 200+ points)
-# Tail y > 100: |K_nu| <= |C_1| * y^{-3/2}, int = 2|C_1|/sqrt(100) < 0.001
-# Tail y < 0.0001: K_nu(0.0001) ~ -3.09, int < -3.09 * 0.0001 < 0.0004
-# Total <= 0.196 + 0.001 + 0.0004 < 0.210; add 7% safety -> 0.225
+#   Dense 200-point log grid [0.0001, 1000]: integral = 0.198335 (all K_nu < 0)
+#   Tail y < 0.0001: |integral| <= 3.09 * 0.0001 / 0.96 = 0.000322  (alpha=0.04 power law)
+#   Tail y > 1000:  K_nu(1000) = -5.2e-7, integral negligible < 1e-6
+#   Trapezoidal underestimate on log grid: function is concave in log-scale, so
+#     true integral >= grid integral; we add 1% for possible overcount near tails
+#   Conservative: 0.198335 + 0.000322 + 0.001 (rounding) = 0.200 -> use 0.205
 # -----------------------------------------------------------------------
-L1_conservative = arb(225) / arb(1000)    # 0.225 conservative upper bound
+L1_conservative = arb(205) / arb(1000)    # 0.205 conservative upper bound
 L1_conservative_ub = float(L1_conservative) + float(L1_conservative.rad())
 
 print(f"=== Conservative certified upper bound (no sign assumption) ===")

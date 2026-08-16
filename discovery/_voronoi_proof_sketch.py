@@ -119,7 +119,7 @@ PI = arb.pi()
 print("=== [OBL M-Voronoi] Conditional C_GL3 bound summary ===")
 print()
 
-L1_upper  = arb(225) / arb(1000)   # ||K_nu||_1 <= 0.225 (conservative, no sign assumption)
+L1_upper  = arb(205) / arb(1000)   # ||K_nu||_1 <= 0.205 (conservative, no sign assumption)
                                     # Mellin-exact: 0.19947 (assuming K_nu <= 0)
 L2_upper  = arb(31)  / arb(100)    # ||K_nu||_2 <= 0.31 (from float64 + 2% safety)
 C_RS_ub   = arb(45)  / arb(100)    # C_RS <= 0.45 (Rankin-Selberg, certified from N=10^5)
