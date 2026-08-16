@@ -44,7 +44,12 @@
 - **中心值 AFE 方法（2026-08-16 探索，失败）**：对每个固定 t，用 GL₃ AFE at s0=1/2+it 计算 L(1/2+it)（`discovery/_afe_central.py`）。V(y, 1/2+it) 仅有代数衰减 ~1/y（而非 Gaussian e^{-(log y)²/4}），L_main(t) 收敛极慢（n=80 时仍振荡 ~0.357，误差 ~0.05），导致 J ≈ -0.056（而非 -0.083）。需要 n_max>>1000 才收敛，计算不可行。根本原因同"两侧 AFE"：在 s0=1/2 处 L-函数不绝对收敛，残余 y^{-1} 代数衰减无法避免。
 - **已排除路径**：(1) 直接 Dirichlet 截断：条件收敛 O(N^{-1/2})。(2) 两侧 AFE（v=-w 代换）：W_dual(y)~1/y 代数衰减，仍条件收敛。(3) 中心值 AFE (s0=1/2+it)：V(y,1/2+it)~1/y，L_main 极慢收敛。(4) 直接 Dirichlet 级数 at s=1+δ：tail bound O(N^{δ-ε}) 不够紧。
 - **Fubini 表示（2026-08-16 探索）**：将 J 改写为 J = Σ_n a(n)/n^{1/2} × w(n)，其中 w(n) = (1/2π)∫ Re[(n^{-it} + phase(t)n^{it}) × amp(t)] dt（`discovery/_j_wn.py`）。每个 w(n) 通过 1D 积分精确计算（Gaussian 衰减 exp(-(log(n·e/12))²/4)），Cesaro 平均 N=700 得 J ≈ -0.0834 ± 0.001，L(1) ≈ 0.6317（与 Tauberian 0.6314 吻合至 0.0003）。然而绝对级数 Σ |a(n)/n^{1/2} × w(n)| 发散（N=500 时累积到 2.54），而有号和 J_signed(500) = -0.086，97% 符号抵消——这是临界线 Dirichlet 级数条件收敛的标志。Fubini 变换未能绕过认证障碍。
-- **唯一剩余路径**：GL₃ Voronoi 求和公式（将 J 转换为含 Bessel 函数的绝对收敛对偶和）或显式无零区域 [OBL M-3]
+- **GL₃ Voronoi 数值探测（2026-08-16 深入探索，`discovery/_voronoi_test.py`, `_k_bessel.py`）**：
+  - **w(y) 恒负**：w(y) 对所有 y ∈ [0.1, 200] 均为负值，峰值在 y≈3.5 处 w≈-0.215。
+  - **K_natural(y) 超多项式衰减**：K(1)=0.386, K(5)=3.2×10⁻⁵, K(10)=2.4×10⁻¹⁰，衰减如 exp(-c×y^{2/3})。
+  - **朴素 Mellin 卷积失败**：B_dual(n) = ∫ w(y) K(yn/Q) dy/y 的衰减比率为 ~0.97/步（代数衰减），而非 exp(-c×n^{2/3})。原因：朴素核缺少 Miller-Schmid GL₃ Voronoi 公式中的振荡 Kloosterman 相位；只有这些相位才能提供使对偶级数绝对收敛的抵消。
+  - **正确 GL₃ Voronoi**：需要完整的 Miller-Schmid (2006) 公式，包含 Kloosterman 和、导子结构和振荡 GL₃ Bessel 核。这是一个重大技术障碍（新子任务 [OBL M-Voronoi]）。
+- **唯一剩余路径**：实现完整 Miller-Schmid GL₃ Voronoi 公式 [OBL M-Voronoi]，或显式无零区域 [OBL M-3]
 - **S1 数值收敛**（2026-08-16，`src/afe_s1.py`）：
   - S1(N=100) = 0.54785263，W_afe(100/12)=0.0365
   - S1(N=500) = 0.54830922，W_afe(500/12)=0.00248
