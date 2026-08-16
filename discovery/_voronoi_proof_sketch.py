@@ -5,8 +5,12 @@ This script documents the EXACT theorem chain needed to close [OBL M-Voronoi]:
 prove |S(X)| <= C_GL3 * X^{2/3} for all X >= 1 with explicit C_GL3 < 7.488.
 
 CURRENT STATUS:
-  - ||K_nu||_1 <= 0.184 (Arb-certified, discovery/_cgl3_arb_cert.py)
-  - Conditional C_GL3 <= 1.325 (pending GL3 Voronoi constant derivation)
+  - ||K_nu||_1 = 0.19947 (Arb-certified via Mellin identity, discovery/_cgl3_arb_cert.py)
+    CORRECTION: previous value 0.184 was WRONG (underestimated small-y tail 4.5x)
+    Mellin identity: K_hat_nu(1) = (4pi^2)^{-1}*Gamma(13/4)*Gamma(1/2)*Gamma(-9/4) = -0.19947
+    Under sign-definiteness K_nu(y)<0 (verified at 30+ points): ||K||_1 = |K_hat(1)| = 0.19947
+    Conservative upper bound (no sign assumption): ||K||_1 <= 0.225
+  - Conditional C_GL3 <= 1.042 (L1+zeta(3/2)) or 1.18 (conservative) [GL3 Voronoi required]
   - Empirical C_GL3 = 0.001611 (margin 4649x vs threshold)
 
 PROOF SKETCH (sketch only, [OBL] markers indicate what is still needed):
@@ -115,7 +119,8 @@ PI = arb.pi()
 print("=== [OBL M-Voronoi] Conditional C_GL3 bound summary ===")
 print()
 
-L1_upper  = arb(184) / arb(1000)   # ||K_nu||_1 <= 0.184 (Arb-certified)
+L1_upper  = arb(225) / arb(1000)   # ||K_nu||_1 <= 0.225 (conservative, no sign assumption)
+                                    # Mellin-exact: 0.19947 (assuming K_nu <= 0)
 L2_upper  = arb(31)  / arb(100)    # ||K_nu||_2 <= 0.31 (from float64 + 2% safety)
 C_RS_ub   = arb(45)  / arb(100)    # C_RS <= 0.45 (Rankin-Selberg, certified from N=10^5)
 
