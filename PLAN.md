@@ -95,6 +95,8 @@
 | Q-7 | exact Casselman–Shalika / Jacquet–Shalika ledger | OCR 或转录精确 theorem number 与 normalization，升级 `weaker-in-source` 行 | 已完成 |
 | Q-8 | full S1 tail certificate | 在 finite `S1[N,T]` 之外证明无穷 n/t tail；不得改变当前 finite 证书语义 | 已完成 |
 | Q-9 | outsourced V/J receipt check infrastructure | outsource/ 目录（OB-01/OB-02 自包含 prompt、PROMPT_LINT.md 对抗性清单、README.md 状态面板）、papers/PAPER_LINT.md（论文提交前 lint）；模式学习自 abc-conjecture-verification 仓库 | 已完成 |
+| Q-10 | instance M-3: numerical zero-free region for sym²Δ | `src/zero_free_arb.py`：用 Arb 在 {Re(s) ≥ σ₀, \|Im(s)\| ≤ T_max} 上认证 L(s,sym²Δ) ≠ 0，给出显式 δ₀ 和 partial sum 界 → 解锁 J 认证 | 待执行 |
+| Q-11 | certify J via Abel summation | 利用 Q-10 的零点自由区域和 partial sum 界，通过 Abel 求和认证 Cesàro 截断误差 → 得到 J ∈ [J_lo, J_hi] | 待执行 |
 
 ### 2026-08-18 Q-8 执行结果
 
@@ -123,6 +125,42 @@
 完整 S1 认证；Q-4 只能接收由 proof-tier 方法生成的 finite certificate。
 
 > **2026-08-18 状态修正**：原先“单实例 AFE 可完全绕开 M-3”的判断过于乐观。对 sym²Δ，主和 S1 可以用 Arb 认证，但对偶/围道项 J 的截断误差需要完整 GL₃ Voronoi 公式或实例级数值无零区域。统一族群界 E-1 仍走 c_eff / log p 路线；单实例 E-2 与 M-3/M-Voronoi 不再完全解耦。
+
+
+### 2026-08-18 Q-10 计划：实例 M-3 数值无零区域
+
+**目标**：对 sym²Δ，在矩形 R = {σ ∈ [0.6, 1], |t| ≤ T_max} 上认证 L(s, sym²Δ) ≠ 0，
+给出显式 δ₀ = min_{s∈R} |L(s)| > 0 和 partial sum 界 |S(X)| ≤ C_max × X^α（α < 1）。
+
+**技术路线**（三条并行，选最先成功的）：
+
+1. **Dirichlet 级数 + 余项界**（Re(s) > 1 区域）：
+   - 对 σ > 1，L(s) = Σ_{n≤N} A(n)/n^s + R_N(σ)
+   - |R_N(σ)| ≤ d₃_tail(N, σ) = Σ_{n>N} d₃(n)/n^σ
+   - d₃ 尾通过 Abel 求和从 Σ_{n≤x}d₃(n) ≤ x(log x+1)² 显式界定
+   - 在 σ = 1.01..1.5, |t| ≤ 20 上扫描，验证 |L(s)| > δ₁
+
+2. **GL₃ AFE 评值**（临界带内）：
+   - 对 1/2 < Re(s) ≤ 1，用 GL₃ AFE: L(s) = S_main(s;X) + χ(s)·S_dual(s;X_dual)
+   - 主和 S_main(s;X) = Σ_{n≤N} A(n)/n^s × V(n/X, s)（Gaussian 衰减，绝对收敛）
+   - 对偶和 S_dual(s;X_dual) = Σ_{n≤N_dual} A(n)·V*(nQ/X_dual, 1-s)
+   - 余项：|R_main| ≤ A_m × Σ_{n>N} d₃(n)/n^σ × (n/X)^{-(1+m)}（围道移动 m=2）
+   - 在 {σ ∈ [0.6, 1], |t| ≤ 20} 上扫描，验证 |L(s)| > δ₂
+
+3. **Cesàro 偏和直接界**：
+   - 用 N=10⁸ 的 Cesàro 偏和数据（已有 min|L_ces(0.9+it)| = 0.3926）
+   - 从经验 max|S(X)|/X^{2/3} = 0.001611 出发，尝试用解析方法证明 |S(X)| ≤ C × X^{2/3}
+   - 若成功：Cesàro 误差界 = C × N^{2/3-σ}/(σ-2/3)，σ=0.9, N=10⁸ 时误差 < 0.009C
+
+**预期输出**：
+- `src/zero_free_arb.py`：Arb 评值函数 L_arb(s) + 网格扫描 + 证书 JSON
+- `checker/check_zero_free.py`：独立验证器（不导入 src/）
+- 证书字段：σ₀, T_max, δ₀, C_max, α, N_terms, precision
+
+**与 J 认证的连接**：
+- 从 |S(X)| ≤ C_max × X^α 和 Abel 求和得 Cesàro 误差界
+- L(1) ∈ [L_ces(N,1) - ε(N), L_ces(N,1) + ε(N)]
+- 目标：L(1) ∈ [0.62, 0.65]（width ≤ 0.03）
 
 ### 轨道 1（快速出成果）：纯计算认证
 
