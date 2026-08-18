@@ -1,39 +1,94 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/telleroutlook/sym2-effective-lbound/schemas/bound-certificate.schema.json",
-  "title": "BoundCertificate",
-  "description": "Certificate for a lower bound L(1, sym^2 f) >= L_0",
+  "title": "sym2 L-function lower bound certificate",
+  "description": "Certificate witnessing L(1, sym^2 f) >= bound for a specific Hecke eigenform f.",
   "type": "object",
-  "required": ["form", "bound", "euler_product_cutoff", "tail_bound",
-               "euler_product_interval", "arb_precision_bits", "checker_version"],
+  "required": ["schema_version", "form", "bound", "euler_product_cutoff",
+               "euler_product_interval", "tail_bound", "software"],
+  "additionalProperties": false,
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version. Must be \"1.0\"."
+    },
     "form": {
       "type": "object",
-      "required": ["weight", "level", "label"],
+      "required": ["label", "weight", "level"],
+      "additionalProperties": false,
       "properties": {
-        "weight": { "type": "integer", "minimum": 1 },
-        "level": { "type": "integer", "minimum": 1 },
-        "label": { "type": "string" },
-        "description": { "type": "string" }
+        "label": {
+          "type": "string",
+          "description": "LMFDB or human label, e.g. \"1.12.a\" for Delta."
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Holomorphic weight k."
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Level N."
+        },
+        "hecke_coefficients": {
+          "type": "object",
+          "description": "Map from prime p (as string) to a_f(p) = tau(p) for Delta.",
+          "additionalProperties": {"type": "integer"}
+        }
       }
     },
-    "bound": { "type": "number", "exclusiveMinimum": 0 },
-    "euler_product_cutoff": { "type": "integer", "minimum": 2 },
-    "tail_bound": {
-      "type": "object",
-      "required": ["method", "constant"],
-      "properties": {
-        "method": { "type": "string", "enum": ["rankin-selberg-log-estimate", "arb-tail-integral"] },
-        "constant": { "type": "number", "exclusiveMinimum": 0 },
-        "exponent": { "type": "number" }
-      }
+    "bound": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "description": "The certified lower bound: L(1, sym^2 f) >= bound."
+    },
+    "euler_product_cutoff": {
+      "type": "integer",
+      "minimum": 2,
+      "description": "Only primes p <= cutoff are included in the explicit Euler product."
     },
     "euler_product_interval": {
-      "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Interval [lower, upper] containing the finite Euler product prod_{p<=P} L_p(1)."
     },
-    "arb_precision_bits": { "type": "integer", "minimum": 53 },
-    "certified": { "type": "boolean" },
-    "checker_version": { "type": "string" }
-  },
-  "additionalProperties": false
+    "tail_bound": {
+      "type": "object",
+      "required": ["method", "constant", "bound_value"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["ramanujan-deligne", "rankin-selberg"],
+          "description": "Which bounding theorem is used for the tail."
+        },
+        "constant": {
+          "type": "number",
+          "description": "The constant C in |sum_{p>P} log L_p| <= C/P."
+        },
+        "bound_value": {
+          "type": "number",
+          "description": "The numerical value C/P for this certificate."
+        }
+      }
+    },
+    "checker_version": {
+      "type": "string",
+      "description": "Version of checker/check_bound.py that verified this certificate."
+    },
+    "software": {
+      "type": "object",
+      "required": ["python", "mpmath_version"],
+      "additionalProperties": true,
+      "properties": {
+        "python": {"type": "string"},
+        "mpmath_version": {"type": "string"},
+        "flint_version": {"type": "string"}
+      }
+    }
+  }
 }
