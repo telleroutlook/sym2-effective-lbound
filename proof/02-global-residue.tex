@@ -13,6 +13,7 @@
 \DeclareMathOperator{\vol}{vol}
 \newcommand{\A}{\mathbb{A}}
 \newcommand{\calW}{\mathcal{W}}
+\newcommand{\calO}{\mathcal{O}}
 
 \title{Global Residue Positivity at $s=1$\\
 \large Proof Document 02 --- sym2-effective-lbound}
@@ -29,8 +30,9 @@ of three factors, each strictly positive:
 (1) the Fourier transform $\hat\Phi(0) > 0$,
 (2) the residue $\Res_{s=1} \zeta_F(s) > 0$ (Analytic Class Number Formula),
 (3) $L(1, \pi, \Ad) > 0$ (Shahidi 1981).
-This theorem plays a structural role in the Siegel zero exclusion argument
-(proof strategy Case 2 in spec/SPECIFICATION.md).
+This theorem records pointwise positivity for a fixed representation.  It does
+not by itself give a quantitative Siegel-zero argument; a uniform lower bound,
+or a uniform derivative bound near a putative zero, is a separate obligation.
 \end{abstract}
 
 \tableofcontents
@@ -166,13 +168,15 @@ Each factor is strictly positive:
 The product is therefore strictly positive.
 \end{proof}
 
-\begin{corollary}[Application to Siegel zero exclusion]
-If there existed a real zero $\beta \in (0,1)$ of $L(s, \pi, \Ad)$ with $\beta \to 1$
-as $N(\pi) \to \infty$, then $L(1, \pi, \Ad) \to 0$, contradicting Theorem~\ref{thm:F2}
-(since the residue would also approach zero while the other factors remain bounded
-away from zero).  This is the mechanism by which Theorem~F-2 excludes Siegel zeros
-in the Goldfeld--Hoffstein--Lieman argument.
-\end{corollary}
+\begin{remark}[What Theorem F-2 does not imply]
+Theorem~\ref{thm:F2} is pointwise in $\pi$.  It does not provide a positive
+lower bound for $L(1,\pi,\Ad)$ uniform in the level, and it does not bound
+$L'(s,\pi,\Ad)$ near a putative real zero.  Consequently, a sequence of real
+zeros $\beta\to1$ is not contradicted by positivity at $s=1$ alone.  Closing the
+Siegel-zero alternative requires the quantitative estimates in
+\texttt{proof/03-mollifier.tex} and \texttt{proof/04-effective-bound.tex},
+which remain obligations.
+\end{remark}
 
 \begin{thebibliography}{9}
 \bibitem{JS81} H.~Jacquet and J.~A.~Shalika, On Euler products and the classification

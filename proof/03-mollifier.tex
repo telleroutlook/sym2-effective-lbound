@@ -106,13 +106,22 @@ and Bruggeman--Motohashi or Blomer--Khan for explicit forms.
 
 \section{Zero-Density Estimate [OBL]}
 
-\begin{proposition}[Zero density near $s=1$, [OBL]]\label{prop:zero-density}
+\begin{proposition}[Quantitative exceptional-zero alternative, [OBL]]\label{prop:zero-density}
 There exists an explicit $c_1 > 0$ such that $L(s, \mathrm{sym}^2 f)$ has at most
 one real zero $\beta$ with $\beta > 1 - c_1/\log(N q_\infty)$, where $q_\infty$
-is the Archimedean conductor.  Moreover, if such a $\beta$ (Siegel zero) exists, then
-$L(1, \mathrm{sym}^2 f) > L(1, \mathrm{sym}^2 f) - L'(\beta, \cdot)(1-\beta) + O((1-\beta)^2)$,
-which contradicts Theorem~F-2 as $\beta \to 1$.
+is the Archimedean conductor.  Moreover, in the exceptional case one must prove
+an explicit lower bound
+\[
+  L(1,\mathrm{sym}^2 f)\ge \frac{c_2}{\log(N q_\infty)}.
+\]
 \end{proposition}
+
+\begin{remark}
+The last estimate is not a consequence of pointwise residue positivity F-2.
+It requires a uniform bound for the logarithmic derivative or for the Taylor
+coefficient at the exceptional zero, with explicit dependence on the conductor.
+That quantitative input is precisely still open.
+\end{remark}
 
 \begin{remark}[What is needed to close this obligation]
 This requires:

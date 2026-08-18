@@ -2,7 +2,7 @@
 
 **Document type:** authoritative mathematical specification
 **Scope:** symmetric square L-functions of primitive holomorphic Hecke eigenforms over Q
-**Completion state:** foundation layer [THM]; mollifier and explicit-constant layers [OBL]
+**Completion state:** F-1 and F-2 [THM]; F-3, mollifier, and explicit-constant layers [OBL]
 
 ---
 
@@ -53,9 +53,18 @@ For trivial central character, L(s, sym^2 f) = L(s, f, Ad) (the adjoint L-functi
 [DEF] L(s, f x fbar) = zeta(s) * L(s, sym^2 f),
 arising from the dual group decomposition std (x) std^v = 1 + Ad.
 
+For the Ramanujan Delta function, the Fourier-coefficient normalization used in
+the computations satisfies the separate identity
+
+    sum_n tau(n)^2 / n^{11+s} = [zeta(s)/zeta(2s)] * L(s, sym^2 Delta).
+
+The factor zeta(2s)^{-1} is not optional: it comes from the local factor 1+x in
+the squared spherical Whittaker series.  The earlier identity without this
+denominator led to the retracted F-3 estimate below.
+
 ---
 
-## 2. Foundation Theorems [THM]
+## 2. Foundation Theorems
 
 ### 2.1 Local Euler Factor Factorization
 
@@ -85,17 +94,25 @@ The (1 + q_v^{-s}) factor cancels exactly via Clebsch-Gordan.
   Res_{s=1} zeta_F(s) = 2^{r1} (2pi)^{r2} h_F R_F / (w_F sqrt|D_F|) > 0.
 
 [BASE] (Shahidi 1981) L(1, f, Ad) > 0 for any generic cuspidal automorphic pi.
+  Baseline audit note: the exact adjoint statement is currently `not-found` in
+  baseline/REFERENCE_BASELINE.md; do not use this input in a release chain until
+  the precise theorem or bridge is supplied.
 
 [THM] (F-2) [proved in proof/02-global-residue.tex]
   Res_{s=1} <1, T^JS_{s,Phi}[W_f (x) W_fbar]>
   = Phihat(0) * Res_{s=1} zeta_F(s) * L(1, pi, Ad) * ||W_f||^2 > 0
 
-### 2.3 Instance Certification
+### 2.3 Instance Certification [OBL]
 
-[THM] (F-3) [certified in src/numerical_delta.py, verified by tests/test_numerical.py]
-For Delta in S_{12}(SL_2(Z)) (Ramanujan delta function, N=1):
-  L(1, sym^2 Delta) in [2.405, 2.407]  (Arb interval arithmetic, 128 bits)
-In particular L(1, sym^2 Delta) >= 2.405 > 0.
+[OBL] (F-3) Instance certification at s=1
+For Delta in S_{12}(SL_2(Z)) (Ramanujan delta function, N=1), prove a certified
+interval [L_lo, L_hi] for L(1, sym^2 Delta) using Arb interval arithmetic.
+
+Discovery computations consistently indicate that L(1, sym^2 Delta) is close to
+0.631793.  They do not certify this value.  The earlier claimed interval
+[2.405, 2.407] is retracted: it used the wrong zeta(2s)^{-1} normalization and
+an incorrect tabulated value of tau(47).  No positive lower bound for
+L(1, sym^2 Delta) is currently available from this repository.
 
 ---
 
@@ -121,7 +138,8 @@ with explicit, computable c_eff > 0.
 Proof strategy (Goldfeld-Hoffstein-Lieman):
   Case 1 (no Siegel zero): zero-free region => contour integral =>
     L(1, sym^2 f) >= c_1 / log p with c_1 explicit in terms of the zero-free radius.
-  Case 2 (Siegel zero): contradicts [THM F-2]. Excluded.
+  Case 2 (exceptional zero): pointwise positivity F-2 does not exclude it;
+    a quantitative derivative/log-derivative bound is required [OBL].
 
 The gap: extracting c_1 requires tracing explicit constants through the zero-free region
 estimate and the contour integral. This is the core research contribution.
@@ -156,8 +174,8 @@ A bound certificate for L(1, sym^2 f) >= L_0:
       "checker_version": "1.0.0"
     }
 
-checker/check_bound.py verifies independently:
-  1. Hecke eigenvalue relations a_f(p)^2 = a_f(p^2) + p^{k-1} for unramified p
-  2. Satake parameters satisfy alpha_p * beta_p = 1
-  3. Euler product tail bound is valid
-  4. Interval arithmetic enclosure strictly contains L_0
+checker/check_bound.py is an independent rejection gate.  At present no proof-tier
+Euler-product tail estimate at s=1 has been admitted, so it must reject the former
+"3/P" Ramanujan-Deligne tail (sum_{p>P} 3/p diverges) rather than report a PASS.
+When E-2 supplies a real certificate, the checker must recompute its finite data
+and interval enclosure from independently generated exact inputs.

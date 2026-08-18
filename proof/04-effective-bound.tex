@@ -4,12 +4,14 @@
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
 
 \newcommand{\A}{\mathbb{A}}
 \DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ad}{Ad}
 
 \title{Explicit Lower Bound: $L(1, \mathrm{sym}^2 f) \geq c_{\mathrm{eff}}/\log N$\\
 \large Proof Document 04 --- sym2-effective-lbound\\
@@ -56,13 +58,12 @@ The theorem is [OBL].  The following are [THM] and available:
 \begin{itemize}
   \item Theorem~F-1 (local Euler factor factorization): [THM]
   \item Theorem~F-2 (global residue positivity): [THM]
-  \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \geq 2.405$): [THM]
 \end{itemize}
 The following remain [OBL]:
 \begin{itemize}
   \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \in [L_{\mathrm{lo}}, L_{\mathrm{hi}}]$ certified):
-        the prior value 2.405 was retracted (wrong RS identity); correct value $\approx 0.631$
-        pending AFE + Arb certification via \texttt{src/numerical\_delta.py}.
+        the prior value $2.405$ was retracted (wrong RS identity); correct discovery
+        estimate $\approx 0.631793$, pending certified control of the AFE dual term.
   \item Mollifier mean value estimate (proof/03-mollifier.tex, Prop.~M-1)
   \item Zero-free region with explicit constant (proof/03-mollifier.tex, Prop.~M-2)
   \item Explicit contour integral constant (this document, Section~3)
@@ -105,26 +106,27 @@ calculation, which requires tracing the constant in the log-free zero-free regio
 \textbf{[OBL: close this argument with explicit $c_1$.]}
 \end{proof}
 
-\subsection{Case 2: Siegel Zero Exists -- Excluded by Theorem F-2}
+\subsection{Case 2: Exceptional Zero, Quantitative Obligation}
 
-\begin{proposition}[Case 2: Siegel zero excluded]\label{prop:case2}
+\begin{proposition}[Case 2: explicit exceptional-zero bound, {[OBL]}]\label{prop:case2}
 If $\beta$ is a Siegel zero for $L(s, \mathrm{sym}^2 f)$ with $\beta > 1 - c_0/\log p$,
 then $L(1, \mathrm{sym}^2 f) \geq c_2/\log p$ for an explicit $c_2 > 0$.
 \end{proposition}
 
 \begin{proof}[Proof strategy]
-The existence of a Siegel zero $\beta$ close to 1 forces $L(\beta, \mathrm{sym}^2 f) = 0$,
-but by Theorem~F-2 (global residue positivity), $L(1, \pi, \Ad) > 0$ (which equals
-$L(1, \mathrm{sym}^2 f)$ for trivial central character).  More precisely, for
-$\beta = 1 - \varepsilon$ with $\varepsilon = O(1/\log p)$:
+For $\beta=1-\varepsilon$ with $\varepsilon=O(1/\log p)$ and some
+$\xi\in(\beta,1)$,
 \[
-  L(1, \mathrm{sym}^2 f) = L(\beta, \cdot) + L'(\beta', \cdot)(1-\beta)
-  \geq -L'(\beta', \cdot) \cdot \varepsilon
+  L(1,\mathrm{sym}^2 f)=L(\beta,\cdot)+L'(\xi,\cdot)\varepsilon
+  =L'(\xi,\cdot)\varepsilon .
 \]
-for some $\beta' \in (\beta, 1)$, where $-L'(\beta', \cdot)$ can be bounded below
-using the Rankin--Selberg method from Theorem~F-2.
-This gives $L(1, \cdot) \geq c_2 \varepsilon = c_2/\log p$.
-\textbf{[OBL: make $c_2$ explicit from Theorem~F-2 quantitative bounds.]}\end{proof}
+Thus the desired bound requires a uniform explicit lower bound for
+$L'(\xi,\cdot)$ on this interval.  Theorem~F-2 supplies only pointwise
+positivity at $s=1$ for each form; it supplies neither uniform positivity nor a
+derivative bound.  Deriving and certifying such a quantitative input is open.
+\textbf{[OBL: prove the required uniform logarithmic-derivative or Taylor
+coefficient bound, then make $c_2$ explicit.]}
+\end{proof}
 
 \subsection{Conclusion}
 
@@ -150,10 +152,11 @@ To compute $c_{\mathrm{eff}}$ explicitly, we need:
         completed $L$-function $\Lambda(s, \Pi) = q(\Pi)^{s/2} L_\infty(s, \Pi) L(s, \Pi)$
         satisfying $\Lambda(s) = \varepsilon(\Pi) \Lambda(1-s, \tilde\Pi)$.
         From this, the density of zeros is controlled by $\log q(\Pi)$.
-  \item \textbf{Siegel zero constant.}  From the Taylor expansion at a potential Siegel
-        zero, the Rankin--Selberg bound (Theorem~F-2) gives
-        $c_2 \geq c_4 \cdot \Res_{s=1}\zeta_Q(s) \cdot \min_v L_v(1, \Pi_v)^{-1}$,
-        where the product is over finitely many bad places and is computable.
+  \item \textbf{Exceptional-zero constant.}  From the Taylor expansion at a
+        potential Siegel zero, obtain a uniform explicit lower bound for the
+        relevant logarithmic derivative or first Taylor coefficient.  The
+        existing pointwise residue positivity F-2 is insufficient for this
+        step; the required quantitative Rankin--Selberg input must be proved.
   \item \textbf{Interval arithmetic certification.}  Once $c_1$ and $c_2$ are expressed
         as explicit rational functions of the above quantities, \texttt{python-flint}/Arb
         will certify the numerical values with outward-rounded interval arithmetic.
@@ -180,7 +183,9 @@ GL$_3$ AFE partial sum: $0.631$.  None of these is a certified bound.
 \textbf{Certification path.}  A certified interval requires:
 \begin{enumerate}
   \item Certified $S_1 = \sum_{n=1}^{670} a(n)/n \cdot W_{\mathrm{afe}}(n/12)$ via Arb
-        (tail $< 10^{-10}$ since $W_{\mathrm{afe}}(670/12) \approx 5\times10^{-4}$).
+        together with a rigorous truncation bound.  Numerically,
+        $W_{\mathrm{afe}}(670/12) \approx 1.37\times10^{-3}$; the observed tail scale
+        is about $8\times10^{-7}$, not $10^{-10}$.
   \item Certified $J$ via GL$_3$ Voronoi summation formula or explicit zero-free region
         for $L(s, \mathrm{sym}^2\Delta)$ [OBL M-3].
 \end{enumerate}

@@ -1,0 +1,153 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{obligation}{Obligation}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\DeclareMathOperator{\Sym}{Sym}
+
+\title{An Explicit Constant from the GL(3) Voronoi Formula\\
+\large Proof Document 05 --- sym2-effective-lbound\\
+\normalsize \textbf{Status: [OBL]}}
+\author{}
+\date{2026-08-18}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document records the precise obligation needed to turn the Miller--Schmid
+GL(3) Voronoi summation formula into an explicit constant for the dual/contour
+term in the AFE approach to \(L(1,\mathrm{sym}^2\Delta)\), and eventually into
+the zero-free-region estimate M-3.  No explicit constant is proved here.  The
+only admitted input is the exact normalized formula in Miller--Schmid Theorem
+1.18; numerical thresholds obtained by floating-point scans are discovery-tier
+evidence and have no logical force.
+\end{abstract}
+
+\section{Source formula}
+
+\begin{theorem}[Miller--Schmid, Theorem 1.18 {\normalfont [BASE]}]
+\label{thm:ms-voronoi}
+Let \(a_{n,m}\) be Fourier coefficients of a cuspidal \(GL(3,\Z)\)-automorphic
+representation with parameters \(\lambda=(\lambda_1,\lambda_2,\lambda_3)\) and
+\(\delta=(\delta_1,\delta_2,\delta_3)\).  Let \(f\) be a Schwartz function which
+vanishes to infinite order at the origin.  For \((a,c)=1\), \(c\neq0\), an inverse
+\(\bar a\) of \(a\bmod c\), and \(q>0\),
+\begin{align*}
+  \sum_{n\neq0} a_{q,n} e(-na/c) f(n)
+  &= \sum_{d\mid cq} \left|\frac{c}{d}\right|
+       \sum_{n\neq0} \frac{A(n,d)}{|n|}
+       S(q\bar a,n;qc/d)\,
+       F\!\left(\frac{nd^2}{c^3q}\right).
+\end{align*}
+Here \(S\) is the Kloosterman sum and \(F\) is the normalized threefold
+integral transform specified in the source.  In particular, the factor
+\(A(n,d)/|n|\), the modulus \(qc/d\), and the argument
+\(nd^2/(c^3q)\) are part of the theorem's normalization.
+\end{theorem}
+
+\begin{remark}
+The source-backed entry `MS-V.1` in
+\texttt{baseline/REFERENCE\_BASELINE.md} records the public primary source.
+This repository has not independently reproved Theorem
+\ref{thm:ms-voronoi}; it is admitted only as the stated baseline.  Any derivation
+which replaces the displayed normalization by a generic expression such as
+\(c^{-2}K_\nu(\cdot)\) is not a specialization of this theorem.
+\end{remark}
+
+\section{Required explicit estimate}
+
+Let \(\mathcal{T}\) denote a fixed finite-dimensional test-function class to be
+specified in the eventual certificate.  It must include the Mellin--Bessel weight
+used by the \(J\)-term, together with explicit Sobolev or Schwartz seminorms.
+
+\begin{obligation}[Explicit GL(3) Voronoi constant {\normalfont [OBL]}]
+\label{ob:explicit-voronoi}
+Derive, from Theorem~\ref{thm:ms-voronoi}, an explicit function
+\[
+  C_{\mathrm{Vor}}\colon \mathcal{T}\to(0,\infty)
+\]
+such that for every \(X\ge X_0\), every \(q\) and \(c\) in the finite set
+occurring in the \(J\)-term, and every \(\phi\in\mathcal{T}\),
+\[
+  \left|
+    \sum_{n\neq0} a_{q,n} e(-na/c)\phi(n/X)
+  \right|
+  \le C_{\mathrm{Vor}}(\phi) X^{2/3+\epsilon}
+\]
+(or prove a different explicit exponent rigorously).  All constants, including
+\(X_0\), \(\epsilon\), the coefficient moment, and the dependence on \(q,c\),
+must be computable and replayable.  No numerical threshold from
+\texttt{discovery/} may be substituted for \(C_{\mathrm{Vor}}\).
+\end{obligation}
+
+\begin{remark}
+For the self-dual symmetric-square lift, replacing a primal sum by the same sum
+with \(q=c=1\) is tautological and cannot prove cancellation.  The derivation
+must explain why the chosen additive characters and dyadic decomposition convert
+the left side into shorter oscillatory dual sums.  A mere identity with a dual
+sum is not a size estimate.
+\end{remark}
+
+\subsection{Required constant-tracking ledger}
+
+Obligation~\ref{ob:explicit-voronoi} is closed only after all following entries
+are supplied and independently checked:
+
+\begin{enumerate}
+  \item \textbf{Test function normalization.} An explicit definition of
+        \(\mathcal{T}\), its Mellin transform, and every seminorm used in the
+        bound.  The \(J\)-weight may not be changed after the estimate is proved.
+  \item \textbf{Coefficient normalization.} A definition of \(a_{q,n}\) and
+        \(A(n,d)\) matching Miller--Schmid.  The transition from normalized
+        \(\Delta\) coefficients to \(a_{q,n}\) must be an identity, not a
+        heuristic.
+  \item \textbf{Rankin--Selberg moment.} A source-backed explicit bound for the
+        required finite \(A(n,d)\)-moment, including the diagonal range and all
+        powers of \(d\).
+  \item \textbf{Kloosterman estimate.} The chosen Weil-type bound, its exact
+        constant, and its dependence on \(qc/d\).
+  \item \textbf{Bessel transform norm.} A certified upper bound for the relevant
+        \(L^1\), \(L^2\), or Sobolev norm of \(F\), using outward-rounded
+        interval arithmetic.
+  \item \textbf{Summation order.} A rigorous dyadic decomposition of the
+        \((c,d,n)\)-sum.  The certificate must state the resulting \(c\)-sum
+        exponent; \(\zeta(3/2)\), \(\zeta(4/3)\), and \(\zeta(7/6)\) are distinct
+        candidate calculations, not interchangeable.
+  \item \textbf{Truncation and tails.} Explicit truncation radii and tail bounds
+        for every infinite or conditionally convergent sum.  If cancellation is
+        used, it must be bounded rather than observed numerically.
+  \item \textbf{Replay command.} A deterministic checker command which recomputes
+        every numerical constant from exact or interval inputs.
+\end{enumerate}
+
+\section{Forbidden shortcuts}
+
+\begin{itemize}
+  \item An empirical maximum of finitely many sums is not \(C_{\mathrm{Vor}}\).
+  \item A numerically large margin below a floating-point threshold does not
+        close M-3 or the \(J\)-certification.
+  \item The theorem is an exact summation formula, not by itself an estimate;
+        cancellation must come from the Kloosterman, coefficient, and Bessel
+        inputs.
+  \item No bound may silently truncate the \(d\mid cq\), \(c\), or \(n\)-sums.
+  \item The output may not be called a zero-free region until it is connected
+        to a complete certified argument for \(L(s,\mathrm{sym}^2\Delta)\).
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{MS06} S.~D.~Miller and W.~Schmid,
+  \emph{Automorphic distributions, \(L\)-functions, and Voronoi summation for
+  \(GL(3)\)}, Ann.\ of Math.\ (2) \textbf{164} (2006), no.~2, 423--488.
+\end{thebibliography}
+
+\end{document}

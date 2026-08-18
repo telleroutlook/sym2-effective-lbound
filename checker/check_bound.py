@@ -7,16 +7,15 @@ produced by src/numerical_delta.py from first principles.
 Verification steps:
   1. Hecke eigenvalue relation: a_f(p)^2 = a_f(p^2) + p^{k-1}  (for unramified p)
   2. Satake normalization: tilde_alpha_p * tilde_beta_p = 1
-  3. Euler product tail bound validity
+  3. Euler product tail rejection until a proof-tier method is supplied
   4. Interval enclosure strictly contains the claimed bound L_0
 
-Status: active verifier.
+Status: active rejection gate.  No L(1) Euler-product tail estimate is admitted.
 """
 
 import json
 import math
 import sys
-from typing import Optional
 
 
 CHECKER_VERSION = "1.0.0"
@@ -35,7 +34,6 @@ def check_hecke_relations(form: dict) -> tuple:
     Returns (ok: bool, message: str).
     """
     k = form.get("weight", 12)
-    level = form.get("level", 1)
     coefficients = form.get("hecke_coefficients", {})
 
     if not coefficients:
@@ -92,10 +90,11 @@ def check_satake_normalization(form: dict) -> tuple:
 
 def check_tail_bound(cert: dict) -> tuple:
     """
-    Verify the tail bound is valid:
-    sum_{p > P} log L_p(1, sym^2 f) <= constant / P.
+    Reject all currently proposed Euler-product tail bounds at s=1.
 
-    Uses the Ramanujan-Deligne bound |a_Pi(p)| <= 3 for GL3 sym^2 coefficients.
+    The former "Ramanujan-Deligne" 3/P estimate is invalid because the absolute
+    termwise bound gives sum_{p>P} 3/p, which diverges.  A valid E-2 certificate
+    must replace this by a separately proved, independently replayable tail.
     """
     tail = cert.get("tail_bound", {})
     method = tail.get("method", "")
@@ -106,8 +105,14 @@ def check_tail_bound(cert: dict) -> tuple:
     if cutoff <= 0:
         return False, "euler_product_cutoff must be positive"
 
-    if method not in ("ramanujan-deligne", "rankin-selberg"):
-        return False, f"Unknown tail bound method: {method}"
+    if method == "ramanujan-deligne":
+        return False, (
+            "Ramanujan-Deligne tail rejected: sum_{p>P} 3/p diverges; "
+            "E-2 remains open"
+        )
+
+    if method == "rankin-selberg":
+        return False, "Rankin-Selberg tail rejected: no proof-tier verifier is admitted"
 
     # Check the stated bound_value is consistent with constant/cutoff
     expected = constant / cutoff
@@ -117,7 +122,7 @@ def check_tail_bound(cert: dict) -> tuple:
             f"constant/cutoff = {expected}"
         )
 
-    return True, f"Tail bound OK: <= {constant}/{cutoff} = {expected:.6f}"
+    return False, f"Unknown or unadmitted tail bound method: {method}"
 
 
 def check_interval(cert: dict) -> tuple:

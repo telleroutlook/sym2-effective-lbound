@@ -13,7 +13,7 @@
 A Computer-Assisted Approach\\[6pt]
 \large Working paper --- sym2-effective-lbound}
 \author{}
-\date{Version: 0.1 --- Draft}
+\date{Version: 0.2 --- Status-audit draft}
 
 \begin{document}
 \maketitle
@@ -24,9 +24,10 @@ $L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994) effecti
 The paper has two components: (1) a rigorous re-derivation of the local Euler factor
 factorization via the SU(2) Clebsch--Gordan identity and the global residue
 positivity theorem at $s=1$; (2) a research programme toward the explicit constant.
-For the Ramanujan $\Delta$ function ($N=1$), we certify
-$L(1,\mathrm{sym}^2\Delta) \in [2.405, 2.407]$ using Arb interval arithmetic.
-The general explicit constant $c_{\mathrm{eff}}$ remains an open obligation.
+For the Ramanujan $\Delta$ function ($N=1$), the value
+$L(1,\mathrm{sym}^2\Delta)\approx 0.631793$ is supported by several discovery-tier
+computations but is not yet certified.  The instance bound F-3 and the general
+explicit constant $c_{\mathrm{eff}}$ remain open obligations.
 \end{abstract}
 
 \tableofcontents
@@ -43,8 +44,9 @@ is \emph{ineffective}: the constant $c>0$ is not computable from the proof.
 
 \textbf{Our approach.}
 (1) Exact derivation of the Rankin--Selberg Euler factor via Clebsch--Gordan identity.
-(2) Global residue positivity eliminates the Siegel zero case.
-(3) Computer-assisted Arb certificate for the $\Delta$ function.
+(2) A pointwise global residue positivity theorem, with the quantitative
+    exceptional-zero alternative left as an explicit obligation.
+(3) A planned computer-assisted Arb certificate for the $\Delta$ function.
 (4) Research programme toward explicit $c_{\mathrm{eff}}$ via explicit zero-free region.
 
 \section{Local Euler Factor Factorization \texttt{[THM]}}
@@ -63,14 +65,17 @@ See \texttt{proof/02-global-residue.tex} for the full proof of:
   = \hat\Phi(0)\cdot\kappa_F\cdot L(1,\pi,\mathrm{Ad})\cdot\|W_f\|^2 > 0.
 \]
 
-\section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[THM]}}
+\section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[OBL]}}
 
-\begin{theorem}[F-3]
-$L(1,\mathrm{sym}^2\Delta) \in [2.405,\, 2.407]$ (certified by Arb, 128 bits).
+\begin{theorem}[F-3, obligation]
+Produce an Arb-certified interval $[L_{\mathrm{lo}},L_{\mathrm{hi}}]$ for
+$L(1,\mathrm{sym}^2\Delta)$.
 \end{theorem}
 
-See \texttt{src/numerical\_delta.py}. The value matches Sturm's formula
-$L(1,\mathrm{sym}^2\Delta) = 8\pi^3 \|\Delta\|_{\mathrm{Pet}}^2 (4\pi)^{11}/(3\cdot 11!)$.
+Current discovery computations give $L(1,\mathrm{sym}^2\Delta)\approx 0.631793$.
+The former claimed interval $[2.405,2.407]$ is retracted: it omitted the
+$\zeta(2s)^{-1}$ factor in the Rankin--Selberg coefficient identity and used an
+incorrect value of $\tau(47)$.  Certification of the AFE dual sum remains open.
 
 \section{Mollifier Construction \texttt{[OBL]}}
 
@@ -84,12 +89,11 @@ will be certified for $p \leq 10^4$.
 
 \section{Conclusions}
 
-Certified: local Euler factor factorization \texttt{[THM]},
-global residue positivity \texttt{[THM]},
-$L(1,\mathrm{sym}^2\Delta) \geq 2.405$ \texttt{[THM]}.
+Certified: local Euler factor factorization \texttt{[THM]} and global residue
+positivity \texttt{[THM]}.
 
-Open: explicit zero-free region \texttt{[OBL]},
-effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
+Open: certification of $L(1,\mathrm{sym}^2\Delta)$, an explicit zero-free region
+\texttt{[OBL]}, and an effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
 
 \section*{References}
 

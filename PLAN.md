@@ -21,7 +21,68 @@
 
 ## 双轨并行推进策略（2026-08-16 更新）
 
-> **关键洞察**：单实例认证（Δ 函数、小素数级 p）可通过 AFE + Arb 直接完成，**无需** M-3 无零区域。只有统一族群界（uniform bound for all f）才必须走 c_eff / log p 路线并依赖 M-3。两个目标应**解耦并行推进**。
+### 2026-08-18 状态审计结论
+
+- **撤回传播**：`spec/`、`proof/paper.tex`、`proof/04` 中残留的 F-3 [THM] / 2.405
+  说法已清除；F-3 现在一致为 [OBL]。当前没有本仓库认证的
+  L(1, sym²Δ) 正下界。
+- **checker 修正**：`checker/check_bound.py` 不再把发散的
+  `sum_{p>P} 3/p` 包装成 3/P 尾部界；在 E-2 提供可重放证书前，它必须拒绝
+  当前 Euler-product 证书。新增 `tests/test_status_grammar.py` 固定该拒绝行为。
+- **M-Voronoi 诚实化**：N=10^8 扫描给出的是条件阈值和经验常数，不是
+  C_GL3 的证明；Miller-Schmid 定理的正规化与 c-求和指数仍未提取。
+  本轮已将 Miller-Schmid (2006 preprint) Theorem 1.18 的精确 Kloosterman/Bessel
+  公式（含 `(c/d)^{1-sum lambda}`、`A(n,d)/|n|` 与 `F(nd^2/(c^3 q))` 正规化）
+  转录到 `discovery/_voronoi_proof_sketch.py`，后续推导必须从该公式而非旧
+  泛型 `c^{-2}K_nu` 公式出发。
+- **baseline 缺口**：`baseline/` 目前没有要求的 PDF 或逐条 claim ledger；
+  因此外部 [BASE] 引用在发布/下游使用前仍需 source-backed verification。
+
+### 2026-08-18 执行队列（本轮按序推进）
+
+| 顺序 | 任务 | 可验证交付物 | 状态 |
+|---|---|---|---|
+| Q-1 | baseline evidence ledger | `baseline/REFERENCE_BASELINE.md` + source-level claim table；PDF 暂不提交，先区分 source-backed / source-unavailable | 已完成 |
+| Q-2 | Miller–Schmid \(C_{GL3}\) 正式 obligation | `proof/05-voronoi-constant.tex`，状态必须为 `[OBL]`；从 Theorem 1.18 精确公式出发 | 已完成 |
+| Q-3 | S1 Arb 有限和原型 | `src/afe_s1_arb.py`：exact τ 输入、Arb sym² 系数、Arb 垂直围道积分权重；只认证有限截断，不认证无穷尾项 | 已完成 |
+| Q-4 | checker 独立重算 | checker 重算 τ 与有限 partial sum/interval，而不是只读取生成器数字；完整 L(1) tail 仍拒绝 | 已完成 |
+| Q-5 | 阻塞项外包规格 | `OUTSOURCING.md`：\(C_{GL3}\) 与 J 两个自包含任务，包含输入、目标、禁止路径、验收命令 | 已完成 |
+
+### 2026-08-18 本轮执行结果与新增发现
+
+- **Q-1**：逐条外部基线 ledger 已建立。GHL 附录定理和 Miller--Schmid
+  Theorem 1.18 是 source-backed；Gelbart--Jacquet Theorem 9.3 在其非自扭
+  假设下 source-backed。Casselman--Shalika / Jacquet--Shalika 目前只验证到
+  weaker-in-source；Shahidi 1981 已取得作者扫描并核到 Theorems 5.2--5.3，
+  但未找到 proof/02 所需的逐点 `L(1,Ad)>0` 精确陈述，ledger 记为 `not-found`。
+  另已核验 Shahidi 1980 BAMS 定理：`L_S(1+it,pi x pi') != 0`；它只给出
+  pair L-function 非零，不能自动分离 `zeta(s)` 极点与 `L(1,Ad)` 的可能零点。
+- **F-2 审计修正**：F-2 的逐点留数正性不能排除 exceptional zero，也不能
+  给出按 level 一致的下界。此前“F-2 排除 Siegel zero”的传播已在
+  `spec/`、`proof/02`、`proof/03`、`proof/04`、`proof/paper.tex` 中纠正。
+  exceptional-zero 分支需要一致导数/log-derivative 界，仍是 `[OBL]`。
+- **Q-2**：新增 `proof/05-voronoi-constant.tex`，固定 Miller--Schmid 公式的
+  \(A(n,d)/|n|\)、\(|c/d|\)、modulus \(qc/d\) 与 argument
+  \(nd^2/(c^3q)\) 正规化；明确所有数值阈值 discovery-only。
+- **Q-3/Q-4**：新增 `src/afe_s1_arb.py` 与独立 `checker/check_s1_finite.py`。
+  证书只认证有限对象 `S1[N,T]`，显式拒绝 infinite S1、tail 与 L(1) promotion。
+  checker 从 τ eta-product、sym² 递推和 Arb 积分独立重算，不导入 `src/`。
+- **Q-5**：新增 `OUTSOURCING.md`，将 \(C_{GL3}\) 与 J certification 转成
+  两个自包含外包任务，包含目标、允许路线、禁止路径和验收命令。
+
+### 下一轮优先队列
+
+| 顺序 | 任务 | 可验证交付物 | 状态 |
+|---|---|---|---|
+| Q-6 | Shahidi/adjoint baseline repair | 找到精确定理并写出从 Shahidi Theorem 5.2/相关文献到 `L(1,Ad)>0` 的完整桥，或将 F-2 降级为 `[OBL]` | 待执行 |
+| Q-7 | exact Casselman–Shalika / Jacquet–Shalika ledger | OCR 或转录精确 theorem number 与 normalization，升级 `weaker-in-source` 行 | 待执行 |
+| Q-8 | full S1 tail certificate | 在 finite `S1[N,T]` 之外证明无穷 n/t tail；不得改变当前 finite 证书语义 | 待执行 |
+| Q-9 | outsourced V/J receipt check | 按 `OUTSOURCING.md` 独立复核外部数学稿和 checker | 待执行 |
+
+**执行纪律**：Q-2 与 J 不能因数值裕量大而关闭；Q-3 的输出不得称为
+完整 S1 认证；Q-4 只能接收由 proof-tier 方法生成的 finite certificate。
+
+> **2026-08-18 状态修正**：原先“单实例 AFE 可完全绕开 M-3”的判断过于乐观。对 sym²Δ，主和 S1 可以用 Arb 认证，但对偶/围道项 J 的截断误差需要完整 GL₃ Voronoi 公式或实例级数值无零区域。统一族群界 E-1 仍走 c_eff / log p 路线；单实例 E-2 与 M-3/M-Voronoi 不再完全解耦。
 
 ### 轨道 1（快速出成果）：纯计算认证
 
@@ -165,8 +226,8 @@
   **最终理论障碍（单一、极具体，已更新 2026-08-17）**：
   ~~对 σ=0.90，N=10^6：需证明 |S(X)| ≤ C × X^{2/3} 对 X > 10^6 成立，C < 2.63。~~
   ~~**已更新（N=10^7）**：需 C < 4.375。~~
-  **最终确认（N=10^8，2026-08-17）**：需 C < **7.4880**。由于 Q_GL3^{1/3} = 6.9296 < 7.4880，
-  **任意满足 C_GL3 ≤ Q^{1/3} 的 GL3 Voronoi 界均直接认证零点自由区域 {σ≥0.9}**。
+**最终确认（N=10^8，2026-08-17，条件性）**：需 C < **7.4880**。由于 Q_GL3^{1/3} = 6.9296 < 7.4880，
+**若能独立证明 C_GL3 ≤ Q^{1/3} 对所有 X≥1 成立，则该 Voronoi 界足以认证零点自由区域 {σ≥0.9}**。
   经验常数 C_GL3_emp = 0.001611（比阈值小 4649 倍）。
   **Arb 认证 GL3 Bessel 范数（2026-08-17，`discovery/_cgl3_arb_cert.py`，200-bit 精度，已修正）**：
   - **||K_nu||_1 = 0.19947（Arb 认证，Mellin 恒等式，60 位精度）**
@@ -182,8 +243,8 @@
   | L1 + ζ(3/2)（保守） | 2×0.225×ζ(3/2) | **1.176** | **6.4×** |
   | L2 + √C_RS + ζ(7/6) | 2×√C_RS×||K||_2×ζ(7/6) | **2.74** | **2.7×** |
   所有路线均 < Q^{1/3}=6.93 < 7.488（裕量对 c-sum 公式的选择稳健）。
-  **[OBL M-Voronoi] 剩余工作**：从 Miller-Schmid (2006) Thm 1.1 形式提取确切 c-sum 指数；
-  条件认证实质已完成，仅需正式写出公式（任意合理选择均产生 C_GL3 < 2.74 << 7.488）。
+  **[OBL M-Voronoi] 剩余工作**：从 Miller-Schmid (2006) Theorem 1.18 提取带正规化的 Kloosterman/Bessel 核，
+  并证明光滑截断下 c-求和的显式指数界；当前 1.04--2.74 只是未完成的条件草图，不是条件认证实质完成。
   经验常数约为 0.0037（N=10^7），比 N=10^8 阈值（7.49）小 2024 倍。
 - **Rankin-Selberg 密度（2026-08-16 会话 5，`discovery/_rs_density.py`）**：
   C_RS = lim_{N→∞} (1/N)×Σ_{n≤N}|a(n)|² = **0.4433**（N=10^3..10^5 稳定，δ<10^{-3}）。
@@ -208,9 +269,10 @@
   | 1.071 (保守) | 0.00923 | **0.6226** | 0.6410 | ✓ |
   | 6.93 (Q^{1/3}) | 0.05972 | 0.5721 | 0.6915 | ✓ |
   | 15.8 | 0.13616 | 0.4956 | 0.7679 | ✓ |
-  **认证阈值汇总（[OBL M-Voronoi] 目标，N=10^8）**：
-  - C_GL3 < **7.488** → 零点自由区域 {σ≥0.9} 认证 + L(1) ≥ 0.567（**Q^{1/3}=6.93 满足此条件**）
-  - C_GL3 < **15.8** → L(1, sym²Δ) > 0 认证（GL₃ 理论几乎确保）
+  **条件阈值汇总（[OBL M-Voronoi] 目标，N=10^8）**：
+  - 若对所有 X≥1 有 C_GL3 < **7.488**，则可认证零点自由区域 {σ≥0.9} 并得 L(1) ≥ 0.567；
+    目前尚未证明 Q^{1/3}=6.93 这一候选界。
+  - 若对所有 X≥1 有 C_GL3 < **15.8**，则可认证 L(1, sym²Δ) > 0；该假设仍未证明。
   经验 C_GL3 = 0.001611，比最严阈值（7.488）小 4649 倍。
 
 - **GL₃ Voronoi 数值实现（2026-08-16 会话 4，两次尝试 + 根本原因更正）**：
@@ -286,7 +348,7 @@ L(1,sym²Δ) ∈ [2.405,2.407]。**此结论已撤回**。
 | 编号 | 交付物 | 状态 | 说明 |
 |------|--------|------|------|
 | E-1 | L(1, sym² f) ≥ c_eff / log N 中显式常数 c_eff | [OBL] | 依赖 M-3（轨道 2） |
-| E-2 | sym²Δ 及 p ≤ 10^4 的计算机辅助认证区间 | [OBL] | 依赖 AFE + Arb，**不需要 M-3**（轨道 1） |
+| E-2 | sym²Δ 及 p ≤ 10^4 的计算机辅助认证区间 | [OBL] | 依赖 AFE 主和 Arb 认证，且需 M-Voronoi 或实例级 M-3 来认证对偶/围道项 |
 | E-3 | 最终论文（目标投 Annals/IMRN） | [OBL] | 依赖 E-1 + E-2 |
 
 ---
@@ -306,8 +368,9 @@ Tauberian 渐近给出：∑_{n≤N} τ(n)²/n^{11} / N → L(1,sym²Δ)/ζ(2)�
 
 其中 W 为 GL₃ 对应的检验函数（由 Gamma 因子比 G(1+z)/G(1) 的 Mellin 变换确定），
 X ~ (解析导子)^{1/2} ≈ 8（weight-12 对应解析导子约 60），
-级数在 ~30-50 项后按 e^{-cn^{2/3}} 指数衰减，可用 Arb 严格认证。
-误差项通过函数方程直接控制，无需零点自由区域。
+主级数数值收敛，但实际 AFE 权重衰减约为 Gaussian-on-log 而非 e^{-cn^{2/3}}。
+对偶项 J 的截断误差在临界带内条件收敛；必须通过完整 GL₃ Voronoi 或实例级
+数值无零区域认证。早先“误差项由函数方程直接控制、无需零点区域”的说法已撤回。
 
 ### 路线 B：Siegel 零点排除（一般级别 N）
 
@@ -317,7 +380,8 @@ Goldfeld–Hoffstein–Lieman 方法的核心二分：
 积分给出 L(1, sym² f) ≥ c_1 / log N，其中 c_1 可从无零区域半径**显式计算**。
 这是本项目的**核心技术贡献点**（轨道 2，依赖 M-3）。
 
-**情形 2（存在 Siegel 零点）**：全局留数正值性定理（F-2）排除此情形。
+**情形 2（存在 exceptional zero）**：F-2 的逐点正值性不足以排除。需要一致的
+log-derivative/Taylor 系数界来给出 \(c_2/\log N\)，仍为 `[OBL]`。
 
 ### 路线 C：次对数改进（远期探索，低优先级）
 

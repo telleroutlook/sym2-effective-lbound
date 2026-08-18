@@ -1,8 +1,9 @@
 """
-Conditional certified lower bound for L(1, sym^2 Delta).
+Conditional lower-bound calculator for L(1, sym^2 Delta).
 
-This script documents the EXACT certification structure: what is already
-proved/certified, and what single theoretical constant is still needed.
+This script documents the conditional structure: what is computed, what remains
+discovery-only, and what single theoretical constant is still needed.  It is
+not a certificate.
 
 STRUCTURE:
   L(1) = L_ces(N, 1) + [L(1) - L_ces(N, 1)]
@@ -30,11 +31,13 @@ Certification window (N=10^8 scan results, 2026-08-17):
   sigma=0.90, N=10^8: needs C_GL3 < 7.49  (Q^{1/3}=6.93 suffices!)
   sigma=0.95, N=10^6: needs C_GL3 < 6.93  (same Q^{1/3})
 """
-import sys; sys.path.insert(0, '.')
-import numpy as np
+import sys
+
+
+sys.path.insert(0, '.')
 
 # -----------------------------------------------------------------------
-# Certified inputs (from N=10^8 scan, 2026-08-17)
+# Float-scan inputs (from the N=10^8 discovery scan, 2026-08-17)
 # -----------------------------------------------------------------------
 L_ces_1M  = 0.631793   # L_ces(N=10^6, s=1), stable < 3e-4
 min_L_09  = 0.392596   # min|L_ces(0.9+it, N=10^8)| over t in [0,200] (t=110.020)
@@ -75,7 +78,7 @@ def cesaro_error_sigma(C_GL3, N, sigma):
 # Print certification table
 # -----------------------------------------------------------------------
 print("=" * 65)
-print("CONDITIONAL CERTIFIED LOWER BOUND: L(1, sym^2 Delta)")
+print("CONDITIONAL LOWER-BOUND CALCULATOR: L(1, sym^2 Delta) [discovery tier]")
 print("=" * 65)
 
 print(f"\n--- Direct L(1) bound [Abel at s=1, N={N:.0e}] ---")
@@ -105,7 +108,7 @@ for C in [0.01, 1.00, 2.63, 5.00, 6.93, 7.49]:
     cert = "YES" if margin > 0 else "NO"
     print(f"{C:>8.2f}  {err:>12.6f}  {margin:>12.6f}  {cert}")
 
-print(f"\n--- Zero-free region {{sigma>=0.95}} [Abel, N=10^6] ---")
+print("\n--- Zero-free region {sigma>=0.95} [Abel, N=10^6] ---")
 sigma = 0.95
 N6 = 1_000_000
 max_S_1M_v = 63.82
@@ -125,10 +128,9 @@ for C in [0.01, 1.00, 3.00, 5.00, 6.93, 7.50]:
 print("\n" + "=" * 65)
 print("SINGLE REMAINING GAP:")
 print("  Prove |S(X)| <= C_GL3 * X^{2/3} for all X with explicit C_GL3.")
-print(f"  C_GL3 < Q^{{1/3}}={332.75**(1/3):.3f} => zero-free {{sigma>=0.9}} certified (N=10^8 threshold: {threshold:.3f})")
-print(f"  C_GL3 < Q^{{1/4}}={332.75**(1/4):.3f} => zero-free {{sigma>=0.9}} certified (N=10^7 threshold: 4.375)")
-print(f"  C_GL3 < 15.8  => L(1,sym^2 Delta) > 0 certified")
+print(f"  A proved C_GL3 < Q^{{1/3}}={332.75**(1/3):.3f} would certify zero-free {{sigma>=0.9}} at the N=10^8 threshold {threshold:.3f}.")
+print(f"  A proved C_GL3 < Q^{{1/4}}={332.75**(1/4):.3f} would certify zero-free {{sigma>=0.9}} at the N=10^7 threshold 4.375.")
+print("  A proved C_GL3 < 15.8 would certify L(1,sym^2 Delta) > 0.")
 print(f"  [Empirical C_GL3={C_GL3_emp:.5f}, margin vs any threshold: >4649x]")
 print(f"  [Rough Voronoi estimate: C_GL3 ~ Q^{{1/6}}*sqrt(C_RS)*O(1) ~ 6.32 < {threshold:.3f}]")
 print("=" * 65)
-
