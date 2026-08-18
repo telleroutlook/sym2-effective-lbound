@@ -23,8 +23,10 @@ processed with `pdftotext` or page OCR; no paywalled content is redistributed.
 | GHL-A.1 | For a non-GL(1)-lift newform `f`, its adjoint-square lift `F` satisfies `L(1,F) >= c_1/log(AN+1)` with effective absolute constants; the appendix remark extends the argument to holomorphic forms and states that there are no GL(1) lifts for prime level and trivial central character. | Goldfeld--Hoffstein--Lieman, *Appendix: An effective zero-free region*, Ann. of Math. (2) **140** (1994), 177--181, Main Theorem and following Remark, pp. 177--178. Public scan: <https://www.math.columbia.edu/~goldfeld/EffectiveZeroFreeRegion.pdf>. | supported | Validates the research target and the prime-level generic setting, but gives no explicit numerical `c_1`; M-3/E-1 remain `[OBL]`. |
 | MS-V.1 | For cuspidal `GL(3,Z)`, additive twists of Schwartz functions satisfy the exact dual sum involving `S(q a_bar,n; qc/d)`, `A(n,d)`, and the normalized transform `F(nd^2/(c^3 q))` in Miller--Schmid Theorem 1.18. | Miller--Schmid, *Automorphic distributions, L-functions, and Voronoi summation for GL(3)*, Ann. of Math. (2) **164** (2006), 423--488, Theorem 1.18, esp. pp. 427--428. Public PDF: <https://annals.math.princeton.edu/wp-content/uploads/annals-v164-n2-p02.pdf>. | supported | M-Voronoi and the `C_GL3` derivation must start from this exact normalization. It does not by itself supply any explicit decay constant. |
 | GJ-9.3 | A non-dihedral cuspidal automorphic representation of GL(2) has an essentially unique automorphic cuspidal adjoint lift to GL(3) with the prescribed adjoint Satake classes. | Gelbart--Jacquet, *A relation between automorphic representations of GL(2) and GL(3)*, Ann. Sci. ENS (4) **11** (1978), 471--542, Theorem (9.3), pp. 532--533. Numdam PDF: <https://www.numdam.org/item/10.24033/asens.1355.pdf>. | supported (conditional on the theorem's non-self-twist hypothesis) | Supports automorphy for non-CM/non-dihedral inputs. It does not make bad local factors or the conductor constant explicit. |
-| JS-EP.1 | The Euler product attached to a cuspidal automorphic representation of GL(n) is absolutely convergent for `Re(s) > 1`. | Jacquet--Shalika, *On Euler products and the classification of automorphic representations I*, Amer. J. Math. **103** (1981), 499--558, introduction §0 and §5, p. 499. Public scan: <https://www.math.columbia.edu/~hj/On%20Euler%20products%20I.pdf>. | weaker-in-source | This supports absolute convergence, but not the particular global integral factorization and local correction factors stated in proof/02. F-2 is therefore not yet release-source-backed from this row alone. |
-| CS-W.1 | The unramified Whittaker function has an explicit formula for an unramified reductive group. | Casselman--Shalika, *The unramified principal series of p-adic groups II: The Whittaker function*, Compositio Math. **41** (1980), 207--231, p. 207. Public scan: <https://personal.math.ubc.ca/~cass/research/pdf/casselman-shalika.pdf>. | weaker-in-source | The source supports existence of an explicit formula, but the GL(2) normalization and character-ratio formula used in proof/01 have not yet been transcribed theorem-by-theorem. |
+| JS-EP.1 | If `pi` and `pi'` are irreducible unitary cuspidal representations of `GL_r(A_F)` and `GL_p(A_F)`, then the incomplete Rankin--Selberg Euler product `L_S(s,pi x pi')` converges absolutely and is nonzero in `Re(s) > 1`. | Jacquet--Shalika, *On Euler products and the classification of automorphic representations I*, Amer. J. Math. **103** (1981), 499--558, Theorem (5.3), pp. 555--556 (article pp. 499--558). Public scan: <https://www.math.columbia.edu/~hj/On%20Euler%20products%20I.pdf>. | supported | This is now theorem-level evidence for absolute convergence. It does not describe the residue at `s=1`, so it does not close F-2. |
+| CS-W.1 | For an unramified split reductive group, the normalized essential Whittaker function on the dominant cocharacter `a_J` is the modulus factor `delta^{1/2}(a_J)` times `Tr rho_J(A)`, where `rho_J` is the representation with highest weight `J` and `A` is the Satake class. | Casselman--Shalika, *The unramified principal series of p-adic groups II: The Whittaker function*, Compositio Math. **41** (1980), 207--231, Theorem 5.4, p. 227. Jacquet--Shalika 1981, §2.2, especially formula (2.2.2), p. 511, transcribes the same formula for `GL_r`. Public scan: <https://personal.math.ubc.ca/~cass/research/pdf/casselman-shalika.pdf>. | supported | Specializing `r=2`, `J=(l,0)`, and the standard Haar measure gives the `q_v^{-l/2} chi_l(alpha_v,beta_v)` normalization used by F-1. This closes the previous normalization mismatch at unramified places. |
+| JS-LI.1 | For generic unramified `GL_r` data, the Jacquet--Shalika local integral with essential Whittaker functions and characteristic-function test vector equals `L_v(s,pi x pi')`, under the source's measure normalization. | Jacquet--Shalika, 1981, Proposition (2.3), pp. 511--512, following the formula displayed in §(2.2). Public scan: <https://www.math.columbia.edu/~hj/On%20Euler%20products%20I.pdf>. | supported | Gives the exact unramified local integral used in F-1. It does not control ramified or archimedean correction factors. |
+| JS-GF.1 | The particular global factorization in proof/02, including explicit correction factors at every place in `S` and positivity of their values at `s=1`, follows from Jacquet--Shalika 1981. | Jacquet--Shalika 1981, §4.5--§4.7, pp. 550--552, gives the global integral, its Euler product for pure tensors, and Lemma (4.6) on a simple pole; §§1.5 and 3.17 give local nonvanishing. Public scan: <https://www.math.columbia.edu/~hj/On%20Euler%20products%20I.pdf>. | not-found | The source supports the global integral, pure-tensor factorization, and pole criterion, but does not state the explicit positive correction factors or residue formula asserted by F-2. A complete local positivity/normalization bridge is still required; F-2 remains `[OBL]`. |
 | SH-AD.1 | `L(1,pi,Ad)` is positive for every generic cuspidal GL(2) representation. | Shahidi, *On certain L-functions*, Amer. J. Math. **103** (1981), 297--355. Author scan: <https://www.math.purdue.edu/~fshahidi/articles/Shahidi%20%5B1981,%2059pp%5D---On%20certain%20L-functions.pdf>, Theorems 5.2--5.3, pp. 352--354. | not-found | The paper is now source-backed, but the inspected theorems state nonvanishing for Jacquet--Shalika pair L-functions and for symmetric third/fourth powers; they do not verbatim establish the claimed `L(1,Ad)>0`. F-2's positivity input remains blocked until the exact theorem is located or a complete bridge is proved. |
 | SH-RS.1 | The incomplete Rankin--Selberg pair Euler product `L_S(1+it,pi x pi')` is nonzero for every real `t`. | Shahidi, *On nonvanishing of L-functions*, Bull. Amer. Math. Soc. (N.S.) **2** (1980), 462--464, Theorem, p. 462. AMS PDF: <https://www.ams.org/journals/bull/1980-02-03/S0273-0979-1980-14769-2/S0273-0979-1980-14769-2.pdf>. | supported | This is a useful related input. For `pi'=pi~` and trivial central character it concerns `zeta(s)L(s,pi,Ad)`, so a zero of `L(1,Ad)` may cancel the zeta pole. It does not alone imply SH-AD.1. |
 | SH-S2.1 | The symmetric-square Dirichlet series has the asserted holomorphic continuation and functional equation. | Shimura, *On the holomorphy of certain Dirichlet series*, Proc. London Math. Soc. (3) **31** (1975), 79--98. DOI: <https://doi.org/10.1112/plms/s3-31.1.79>. | source-unavailable | Not verified against primary text. For non-dihedral forms, GJ-9.3 supplies a related automorphic route, but bad-place and archimedean normalizations remain unchecked. |
@@ -77,16 +79,33 @@ for every nontrivial character `chi`. It concludes that the relevant degree-thre
 `L`-functions are entire, local lifts exist, their restricted tensor product is
 automorphic cuspidal, and the listed complementary-series components do not occur.
 
-### Jacquet--Shalika introduction
+### Jacquet--Shalika exact statements
 
-OCR of p. 499 states:
+OCR of the JSTOR scan gives the following theorem-level statements.
 
-> We prove in Section 5 that the Euler product for `L(s,pi)` is absolutely
-> convergent in the half-plane `Re(s) = 1`.
+The unramified Whittaker normalization in §2.2, p. 511, says that for the
+essential vector `W`,
 
-(The OCR text uses `Re(s) = 1`; the mathematical statement in context is the
-half-plane `Re(s) > 1`.)  This is weaker than the specific integral factorization
-claimed in proof/02 and therefore is not sufficient to close the F-2 baseline gap.
+```text
+W(a_J) = delta^{1/2}(a_J) Tr(rho_J(A))
+```
+
+for `J in T_+(r)`, and `W(a_J)=0` otherwise.  Proposition (2.3), pp. 511--512,
+then states that the local integral with both essential Whittaker functions and
+the characteristic function of `R^r` equals `L_v(s,pi x pi')` (source notation
+`L_s(s,pi x pi')`).  The measures are normalized by `vol(N R K)=vol(K)=1`.
+
+Theorem (5.3), pp. 555--556, states that for irreducible unitary cuspidal
+representations `pi` and `pi'`, the product `L_S(s,pi x pi')` is absolutely
+convergent in `Re(s)>1`; in particular it is nonzero there.
+
+Section 4.5--4.7, pp. 550--552, defines the global Whittaker integral, factors
+it as a product of local integrals for pure tensors, and proves Lemma (4.6):
+it is meromorphic, holomorphic for `Re(s)>1`, has a simple pole at `s=1` when
+`pi'=pi~`, the global test function has nonzero Fourier transform at zero, and
+the Whittaker vector is nonzero; conversely such a pole forces `pi'=pi~`.
+These are strong inputs, but the paper does not supply the explicit local
+correction factors or their positivity asserted in the current F-2 formula.
 
 ### Shahidi Theorems 5.2 and 5.3
 
@@ -113,9 +132,9 @@ formatting issue.
    Miller--Schmid Theorem 1.18, Gelbart--Jacquet Theorem 9.3, and Shahidi's
    pair-nonvanishing theorem.  As transcribed here, none gives an explicit
    numerical constant for this repository's effective bound.
-2. F-1 and F-2 must not be advertised as release-ready external-source baselines
-   until the Casselman--Shalika, Jacquet--Shalika, and Shahidi rows are upgraded
-   from `weaker-in-source`/`not-found` to exact theorem-level evidence.
+2. F-1's external Casselman--Shalika input is now source-backed at theorem
+   level.  F-2 remains `[OBL]`: SH-AD.1 is still `not-found`, and JS-GF.1's
+   explicit positive local correction/residue bridge has not been supplied.
 3. `src/certified_rs.py` internally checks arithmetic, but its Deligne input is
    not yet source-backed.  Its `s>1` intervals should be called provisional in
    any external report until DEL-R.1 is verified.

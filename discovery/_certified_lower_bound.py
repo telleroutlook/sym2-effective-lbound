@@ -9,7 +9,7 @@ SUMMARY:
   which EXCEEDS S1 ~ 0.548. So the certified interval is [-0.408, 1.505] —
   no useful lower bound from this approach.
 
-  The only certified lower bound remains L(1) > 0 from [THM F-2].
+  There is currently no certified positive lower bound for L(1): F-2 is [OBL].
   L(1) ~ 0.6318 (discovery tier) but certifying this requires [OBL E-2].
 
 OBSTRUCTION (definitive):

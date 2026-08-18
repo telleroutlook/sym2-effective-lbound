@@ -22,8 +22,8 @@ A Computer-Assisted Approach\\[6pt]
 We present a computer-assisted approach to making the lower bound
 $L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994) effective.
 The paper has two components: (1) a rigorous re-derivation of the local Euler factor
-factorization via the SU(2) Clebsch--Gordan identity and the global residue
-positivity theorem at $s=1$; (2) a research programme toward the explicit constant.
+factorization via the SU(2) Clebsch--Gordan identity; (2) a research programme
+toward the global residue positivity input and the explicit constant.
 For the Ramanujan $\Delta$ function ($N=1$), the value
 $L(1,\mathrm{sym}^2\Delta)\approx 0.631793$ is supported by several discovery-tier
 computations but is not yet certified.  The instance bound F-3 and the general
@@ -44,8 +44,9 @@ is \emph{ineffective}: the constant $c>0$ is not computable from the proof.
 
 \textbf{Our approach.}
 (1) Exact derivation of the Rankin--Selberg Euler factor via Clebsch--Gordan identity.
-(2) A pointwise global residue positivity theorem, with the quantitative
-    exceptional-zero alternative left as an explicit obligation.
+(2) A planned pointwise global residue positivity input, with the source-level
+    adjoint and bad-local-factor gaps, together with the quantitative
+    exceptional-zero alternative, left as explicit obligations.
 (3) A planned computer-assisted Arb certificate for the $\Delta$ function.
 (4) Research programme toward explicit $c_{\mathrm{eff}}$ via explicit zero-free region.
 
@@ -57,13 +58,15 @@ See \texttt{proof/01-foundations.tex} for the full proof of:
   = \zeta_v(s)\cdot L_v(s,\pi_v,\mathrm{Ad}).
 \]
 
-\section{Global Residue Positivity \texttt{[THM]}}
+\section{Global Residue Positivity \texttt{[OBL]}}
 
-See \texttt{proof/02-global-residue.tex} for the full proof of:
+The desired statement in \texttt{proof/02-global-residue.tex} is:
 \[
   \mathrm{Res}_{s=1}\langle 1, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
   = \hat\Phi(0)\cdot\kappa_F\cdot L(1,\pi,\mathrm{Ad})\cdot\|W_f\|^2 > 0.
 \]
+It remains open because the exact adjoint nonvanishing input and the positivity
+of every bad local correction factor have not been proved.
 
 \section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[OBL]}}
 
@@ -89,11 +92,11 @@ will be certified for $p \leq 10^4$.
 
 \section{Conclusions}
 
-Certified: local Euler factor factorization \texttt{[THM]} and global residue
-positivity \texttt{[THM]}.
+Certified: local Euler factor factorization \texttt{[THM]}.
 
-Open: certification of $L(1,\mathrm{sym}^2\Delta)$, an explicit zero-free region
-\texttt{[OBL]}, and an effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
+Open: global residue positivity, certification of
+$L(1,\mathrm{sym}^2\Delta)$, an explicit zero-free region \texttt{[OBL]}, and
+an effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
 
 \section*{References}
 

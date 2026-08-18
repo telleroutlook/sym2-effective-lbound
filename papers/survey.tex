@@ -181,27 +181,25 @@ For non-trivial $\omega_{\pi,v}$: $L_v(s,\pi_v\times\tilde\pi_v) = \zeta_v(s)\cd
 
 \textbf{Ramified} ($v\in S_{\mathrm{ram}}$): JPSS essential vectors give $I_v(1) > 0$.
 
-\section{Global Simple Pole and Residue Positivity}
+\section{Global Simple Pole and Residue Positivity [OBL]}
 
-\begin{theorem}[F-2: Rankin--Selberg Residue Positivity]\label{thm:residue}
+The following desired statement is an obligation, not a theorem in this repository:
+
+\begin{quote}
+\textbf{F-2.}
 For any non-zero $W_f$ and $\Phi$ with $\hat\Phi(0) > 0$:
 \[
   \mathrm{Res}_{s=1}\langle 1,\, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
   = \hat\Phi(0)\cdot\bigl(\mathrm{Res}_{s=1}\,\zeta_F(s)\bigr)\cdot L(1,\pi,\mathrm{Ad})
     \cdot\|W_f\|_\mathcal{W}^2 > 0.
 \]
-\end{theorem}
+\end{quote}
 
-\begin{proof}
-From Theorem~\ref{thm:local} and the Euler product assembly:
-\[
-  \langle 1,\mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f\otimes W_{\bar f}]\rangle
-  = \hat\Phi(0)\cdot\zeta_F(s)\cdot L(s,\pi,\mathrm{Ad})\cdot\|W_f\|_\mathcal{W}^2.
-\]
-The Analytic Class Number Formula gives $\mathrm{Res}_{s=1}\zeta_F(s) = 2^{r_1}(2\pi)^{r_2}h_FR_F/(w_F\sqrt{|D_F|}) > 0$.
-Shahidi's non-vanishing theorem gives $L(1,\pi,\mathrm{Ad}) > 0$.
-The residue is a product of four positive factors. \qed
-\end{proof}
+The local theorem above covers only unramified places.  A complete F-2 proof
+still requires the exact adjoint nonvanishing input (or a complete
+pair-L-function bridge), every bad local correction factor, and a positivity
+argument for the globally normalized residue.  The assertion must not be used
+downstream while it is [OBL].
 
 \section{Connections to Geometry and Physics}
 

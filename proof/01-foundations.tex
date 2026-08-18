@@ -18,7 +18,6 @@
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\calO}{\mathcal{O}}
 \newcommand{\calW}{\mathcal{W}}
-\newcommand{\varpi}{\varpi}
 
 \title{Foundations: Local Euler Factor Factorization and the Clebsch--Gordan Cancellation\\
 \large Proof Document 01 --- sym2-effective-lbound}
@@ -58,7 +57,8 @@ is normalized so that $W_{f,v}^\circ(I_2) = 1$.
 
 \section{Casselman--Shalika Formula}
 
-\begin{theorem}[Casselman--Shalika \cite{CS80}]\label{thm:CS}
+\begin{theorem}[Casselman--Shalika {\cite[Theorem 5.4, p.~227]{CS80};
+Jacquet--Shalika {\cite[Section 2.2, p.~511]{JS81}}}]\label{thm:CS}
 For $l \geq 0$,
 \[
   W_{f,v}^\circ\bigl(\diag(\varpi_v^l, 1)\bigr)
@@ -72,6 +72,21 @@ where
 is the character of the $(l+1)$-dimensional irreducible representation of $\mathrm{SU}(2)$.
 For $l < 0$, $W_{f,v}^\circ(\diag(\varpi_v^l, 1)) = 0$.
 \end{theorem}
+
+\begin{proof}[Source-to-normalization bridge]
+Casselman--Shalika's Theorem 5.4 evaluates the normalized spherical Whittaker
+function on the dominant torus by the Weyl-character sum.  Jacquet--Shalika
+transcribe the equivalent essential-vector
+normalization
+\[
+  W(a_J)=\delta^{1/2}(a_J)\operatorname{Tr}\rho_J(A)
+\]
+for $GL_r$.  Taking $r=2$, $J=(l,0)$, and $a_J=\diag(\varpi_v^l,1)$ gives
+$\delta^{1/2}(a_J)=q_v^{-l/2}$; the restriction to $SL_2$ of the
+highest-weight representation $\rho_J$ is its $l$-th symmetric power, whose
+character is $\chi_l$.  The asserted formula follows under the repository's
+measure normalization.
+\end{proof}
 
 \section{Iwasawa Reduction of the Local Integral}
 

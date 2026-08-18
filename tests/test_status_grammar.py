@@ -113,6 +113,41 @@ def test_pointwise_positivity_is_not_promoted_to_exceptional_zero_exclusion():
     assert "pointwise" in combined.lower()
 
 
+def test_f2_is_downgraded_until_adjoint_and_local_corrections_close():
+    spec = _read("spec/SPECIFICATION.md")
+    proof02 = _read("proof/02-global-residue.tex")
+    readme = _read("README.md")
+    paper = _read("proof/paper.tex")
+    survey = _read("papers/survey.tex")
+    lower_bound_note = _read("discovery/_certified_lower_bound.py")
+
+    assert "F-1 [THM]; F-2, F-3" in spec
+    assert "[OBL] (F-2)" in spec
+    assert "Obligation F-2" in proof02
+    assert "\\texttt{[OBL]" in proof02
+    assert "\\begin{theorem}" not in proof02
+    assert "F-2 | Global residue positivity                 | **[OBL]**" in readme
+    assert "Global Residue Positivity \\texttt{[OBL]}" in paper
+    assert "Residue Positivity [OBL]" in survey
+    assert "\\begin{theorem}[F-2" not in survey
+    assert "from [THM F-2]" not in lower_bound_note
+
+
+def test_exact_casselman_shalika_and_jacquet_shalika_ledger_rows():
+    ledger = _read("baseline/REFERENCE_BASELINE.md")
+    proof01 = _read("proof/01-foundations.tex")
+
+    for row in ("CS-W.1", "JS-LI.1", "JS-EP.1", "JS-GF.1"):
+        assert f"| {row} |" in ledger
+    assert "Theorem 5.4, p. 227" in ledger
+    assert "Proposition (2.3), pp. 511--512" in ledger
+    assert "Theorem (5.3), pp. 555--556" in ledger
+    assert "| JS-GF.1 |" in ledger
+    assert "| not-found |" in ledger.partition("| JS-GF.1 |")[2].splitlines()[0]
+    assert "Theorem 5.4, p.~227" in proof01
+    assert "Section 2.2, p.~511" in proof01
+
+
 def test_voronoi_obligation_and_baseline_ledger_exist():
     obligation = _read("proof/05-voronoi-constant.tex")
     assert "Status: [OBL]" in obligation

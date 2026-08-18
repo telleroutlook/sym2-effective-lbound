@@ -1,12 +1,6 @@
 \documentclass[12pt]{article}
-\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{amsmath,amssymb,mathtools}
 \usepackage{hyperref}
-
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{remark}[theorem]{Remark}
 
 \DeclareMathOperator{\Res}{Res}
 \DeclareMathOperator{\Ad}{Ad}
@@ -24,166 +18,115 @@
 \maketitle
 
 \begin{abstract}
-We prove Theorem~F-2: the global Jacquet--Shalika quadratic integral possesses a
-simple pole at $s=1$ with a strictly positive residue.  The positivity is a product
-of three factors, each strictly positive:
-(1) the Fourier transform $\hat\Phi(0) > 0$,
-(2) the residue $\Res_{s=1} \zeta_F(s) > 0$ (Analytic Class Number Formula),
-(3) $L(1, \pi, \Ad) > 0$ (Shahidi 1981).
-This theorem records pointwise positivity for a fixed representation.  It does
-not by itself give a quantitative Siegel-zero argument; a uniform lower bound,
-or a uniform derivative bound near a putative zero, is a separate obligation.
+This document records the open obligation F-2.  The desired statement is that a
+suitably normalized global Jacquet--Shalika quadratic integral has a strictly
+positive residue at $s=1$.  The earlier version incorrectly promoted this
+statement to a theorem while two inputs were not source-backed: an exact
+$L(1,\pi,\Ad)>0$ theorem was not located, and the positivity and normalization
+of every ramified/archimedean local correction factor were not proved.  F-2 is
+therefore \texttt{[OBL]} and may not be used downstream.
 \end{abstract}
 
-\tableofcontents
+\section*{Status}
 
-\section{The Jacquet--Shalika Transfer Operator}
+\textbf{Obligation F-2: \texttt{[OBL].}}  The statement below is not a theorem
+in this repository.  In particular, it does not imply any lower bound for
+$L(1,\mathrm{sym}^2 f)$, any quantitative estimate uniform in the level, or the
+absence of a Siegel zero.
 
-Let $\pi = \bigotimes_v' \pi_v$ be an irreducible generic cuspidal automorphic
-representation of $GL_2(\A_F)$, with contragredient $\tilde\pi$.  Fix a non-trivial
-additive character $\psi: F \backslash \A_F \to \mathbb{C}^\times$.
+\section{Desired statement}
 
-\begin{definition}[Jacquet--Shalika integral]
-For $W_f \in \calW(\pi, \psi)$, $s \in \mathbb{C}$ with $\mathrm{Re}(s) > 1$, and
-$\Phi \in \mathcal{S}(\A_F^2)$, define
+Let $\pi=\bigotimes_v'\pi_v$ be an irreducible generic cuspidal automorphic
+representation of $GL_2(\A_F)$ with contragredient $\tilde\pi$.  Fix a nonzero
+additive character $\psi:F\backslash\A_F\to\mathbb{C}^\times$, a factorizable
+Schwartz--Bruhat function $\Phi$, and nonzero factorizable Whittaker vectors
+$W\in\calW(\pi,\psi)$ and $\tilde W\in\calW(\tilde\pi,\psi^{-1})$.  The desired
+global object is a Jacquet--Shalika integral of the form
 \[
-  \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}]
-  = \int_{N_2(\A_F) \backslash GL_2(\A_F)}
-    W_f(g)\, \overline{W_f(g)}\, \Phi(e_2 g)\, |\det g|^s_{\A_F}\, d^\times g,
+  \Psi(s,W,\tilde W,\Phi)
+  =\int_{N_2(\A_F)\backslash GL_2(\A_F)}
+    \tilde W(g)W(g)\Phi(e_2g)|\det g|_{\A_F}^{s}\,d^\times g .
 \]
-where $e_2 = (0,1) \in F^2$.
-\end{definition}
+The obligation is to prove, with all normalizations explicit, that after the
+standard Rankin--Selberg regularization it has a simple pole at $s=1$ whose
+residue is strictly positive for the intended class of real data, and that this
+residue factors as a strictly positive constant times $L(1,\pi,\Ad)$.
 
-\section{Euler Product Factorization}
+\section{Source-backed inputs and remaining gaps}
 
-\begin{theorem}[Jacquet--Shalika \cite{JS81}]\label{thm:euler-product}
-For $\Phi = \prod_v \Phi_v$ a pure tensor and $W_f = \prod_v W_{f,v}$,
+\subsection{Unramified local integral}
+
+For generic unramified local data, Jacquet--Shalika define the essential
+Whittaker functions and prove
 \[
-  \langle 1, \mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}]\rangle
-  = \hat\Phi(0) \cdot \zeta_F(s) \cdot L(s, \pi, \Ad) \cdot \|W_f\|_{\calW}^2
-  \cdot \prod_{v \in S} \epsilon_v(s),
+  \Psi_v(s,W^\circ,\widetilde W^\circ,\mathbf{1}_{\calO_v^2})
+  =L_v(s,\tilde\pi_v\times\pi_v)
 \]
-where $S$ is the finite set of places where $\pi_v$ or $\psi_v$ is ramified,
-$\hat\Phi$ is the Fourier transform of $\Phi$, and
-$\epsilon_v(s)$ are explicit non-zero local correction factors for $v \in S$.
-\end{theorem}
+when $\vol(N_v A_v K_v)=\vol(K_v)=1$ \cite[Proposition~(2.3), pp.~511--512]{JS81}.
+This is compatible with the Casselman--Shalika normalization used for F-1
+\cite[Theorem~5.4, p.~227]{CS80}.
 
-\begin{remark}
-For the standard choice $\Phi_v = \mathbf{1}_{\calO_v^2}$ at unramified places,
-the correction factors $\epsilon_v(s) = 1$ by Theorem~F-1 (proof/01-foundations.tex).
-At Archimedean places, choosing $\Phi_v(x) = e^{-\pi \|x\|_v^2}$ (Gaussian) gives
-$\hat\Phi_v(0) = 1$ and $\epsilon_v(1) > 0$ by standard Mellin--Whittaker analysis.
-\end{remark}
+This input covers only the unramified places.  It does not specify the values,
+signs, or archimedean normalization of the local correction factors required in
+the global residue formula.
 
-\section{Positivity of Each Factor}
+\subsection{Global integral and pole criterion}
 
-\subsection{Fourier Transform Term}
+Jacquet--Shalika construct the corresponding global Whittaker integral, prove
+factorization into local integrals for pure tensors, and prove that it is
+meromorphic and holomorphic for $\Re s>1$.  If the Fourier transform of the
+global test function is nonzero at zero and $\pi'=\tilde\pi$, the integral has a
+simple pole at $s=1$; conversely, such a pole forces $\pi'=\tilde\pi$
+\cite[Section~4.5--4.7, especially Lemma~(4.6), pp.~550--552]{JS81}.
 
-\begin{lemma}\label{lem:fourier-pos}
-For the Schwartz--Bruhat test function $\Phi = \prod_v \Phi_v$ with $\Phi_v$ as
-in the Remark above, $\hat\Phi(0) = \prod_v \hat\Phi_v(0) > 0$.
-\end{lemma}
+This establishes existence of a simple pole for suitable data, but not the
+explicit positive residue formula desired in F-2.  A complete proof must:
+\begin{enumerate}
+  \item choose the global data and normalize all Haar measures;
+  \item compute each factor in the finite bad-place product;
+  \item prove that every relevant local factor is nonzero at $s=1$ and has the
+        sign claimed in the final formula;
+  \item identify the global constant with a positive norm-square;
+  \item pass from $L(s,\tilde\pi\times\pi)$ to $\zeta_F(s)L(s,\pi,\Ad)$,
+        including the bad local definitions and possible central-character
+        twists.
+\end{enumerate}
 
-\begin{proof}
-At non-Archimedean places, $\hat\Phi_v(0) = \vol(\calO_v^2) = 1$ (normalized Haar
-measure).  At Archimedean places, $\hat\Phi_v(0) = \int e^{-\pi\|x\|^2} dx = 1$.
-The Euler product converges and equals 1.
-\end{proof}
+\subsection{Adjoint value}
 
-\subsection{Dedekind Zeta Residue}
-
-\begin{theorem}[Analytic Class Number Formula]\label{thm:acnf}
-$\zeta_F(s)$ has a simple pole at $s=1$ with strictly positive residue:
+The current proof attempt required the exact input
 \[
-  \Res_{s=1} \zeta_F(s)
-  = \frac{2^{r_1}(2\pi)^{r_2} h_F R_F}{w_F \sqrt{|D_F|}} > 0,
+  L(1,\pi,\Ad)>0.
 \]
-where $r_1, r_2$ are the numbers of real and complex places, $h_F$ is the class number,
-$R_F$ is the regulator, $w_F$ is the number of roots of unity, and $D_F$ is the discriminant.
-\end{theorem}
+The ledger's source check of Shahidi's 1981 Theorems 5.2--5.3 found
+nonvanishing of pair $L$-functions and of symmetric third/fourth powers, not
+this adjoint statement.  The pair statement at $t=0$ concerns a product with
+the zeta factor and therefore does not by itself separate the zeta pole from a
+zero of the adjoint factor.
 
-\begin{proof}
-Standard; see \cite[Ch.~7]{Neukirch}.  All quantities $h_F, R_F, w_F, |D_F|$ are
-positive integers, and $2^{r_1}(2\pi)^{r_2} > 0$.
-\end{proof}
+Accordingly, the following bridge remains open: either locate a primary theorem
+that states $L(1,\pi,\Ad)>0$ under the required hypotheses, or prove a complete
+bridge from the Jacquet--Shalika simple-pole criterion to nonvanishing of
+$L(1,\pi,\Ad)$, then determine its sign from real-axis normalization and
+continuity.  Until that is done, this input is unavailable.
 
-\subsection{Non-Vanishing of the Adjoint $L$-Function}
+\section{What must not be inferred}
 
-\begin{theorem}[Shahidi \cite{Sh81}]\label{thm:shahidi}
-For any irreducible generic cuspidal automorphic representation $\pi$ of $GL_2(\A_F)$,
-\[
-  L(1, \pi, \Ad) > 0.
-\]
-\end{theorem}
-
-\begin{proof}
-Shahidi (1981) proves that $L(s, \pi, \Ad)$ is entire and non-zero on $\mathrm{Re}(s) = 1$
-via the Langlands--Shahidi method: the adjoint $L$-function appears as a normalizing
-factor of an Eisenstein series on $GL_3$, and the non-vanishing follows from
-the theory of intertwining operators.
-\end{proof}
-
-\subsection{Whittaker Norm}
-
-\begin{lemma}\label{lem:norm-pos}
-For any non-zero $W_f \in \calW(\pi, \psi)$, $\|W_f\|_{\calW}^2 > 0$.
-\end{lemma}
-
-\begin{proof}
-The Whittaker $L^2$-norm $\|W_f\|^2 = \int_{N_2(\A_F) \backslash GL_2(\A_F)^1}
-|W_f(g)|^2 dg$ is a positive-definite Hermitian form by unitarity of $\pi$.
-\end{proof}
-
-\section{Main Theorem: Global Residue Positivity}
-
-\begin{theorem}[F-2: Global Residue Positivity]\label{thm:F2}
-For any non-zero $W_f \in \calW(\pi, \psi)$ and $\Phi$ as above,
-\[
-  \Res_{s=1}\langle 1,\mathcal{T}_{s,\Phi}^{\mathrm{JS}}[W_f \otimes W_{\bar f}]\rangle
-  = \hat\Phi(0) \cdot \Res_{s=1}\zeta_F(s) \cdot L(1,\pi,\Ad) \cdot \|W_f\|_{\calW}^2 > 0.
-\]
-\end{theorem}
-
-\begin{proof}
-By Theorem~\ref{thm:euler-product}, the global integral equals
-$\hat\Phi(0) \cdot \zeta_F(s) \cdot L(s,\pi,\Ad) \cdot \|W_f\|^2 \cdot \prod_{v \in S}\epsilon_v(s)$
-for $\mathrm{Re}(s)$ sufficiently large.  Both sides have meromorphic continuation.
-The only simple pole comes from $\zeta_F(s)$ at $s=1$, since $L(s,\pi,\Ad)$ is
-holomorphic at $s=1$ by \cite{Sh81} and $\epsilon_v(1) \neq 0$ at ramified places.
-Taking the residue:
-\begin{align*}
-  \Res_{s=1}\langle 1, \mathcal{T}^{\mathrm{JS}}\rangle
-  &= \hat\Phi(0) \cdot \bigl(\Res_{s=1}\zeta_F(s)\bigr) \cdot L(1,\pi,\Ad)
-     \cdot \|W_f\|^2 \cdot \prod_{v\in S}\epsilon_v(1).
-\end{align*}
-Each factor is strictly positive:
-\begin{itemize}
-  \item $\hat\Phi(0) > 0$: Lemma~\ref{lem:fourier-pos}.
-  \item $\Res_{s=1}\zeta_F(s) > 0$: Theorem~\ref{thm:acnf}.
-  \item $L(1,\pi,\Ad) > 0$: Theorem~\ref{thm:shahidi}.
-  \item $\|W_f\|^2 > 0$: Lemma~\ref{lem:norm-pos}.
-  \item $\epsilon_v(1) > 0$ for $v \in S$: local non-vanishing at $s=1$,
-        proved case-by-case from the JPSS theory of essential vectors.
-\end{itemize}
-The product is therefore strictly positive.
-\end{proof}
-
-\begin{remark}[What Theorem F-2 does not imply]
-Theorem~\ref{thm:F2} is pointwise in $\pi$.  It does not provide a positive
-lower bound for $L(1,\pi,\Ad)$ uniform in the level, and it does not bound
-$L'(s,\pi,\Ad)$ near a putative real zero.  Consequently, a sequence of real
-zeros $\beta\to1$ is not contradicted by positivity at $s=1$ alone.  Closing the
-Siegel-zero alternative requires the quantitative estimates in
-\texttt{proof/03-mollifier.tex} and \texttt{proof/04-effective-bound.tex},
-which remain obligations.
-\end{remark}
+Even after F-2 is proved, it would be pointwise in $\pi$.  It would not provide
+a lower bound uniform in the level, a derivative/logarithmic-derivative bound,
+or exclusion of a real zero approaching $s=1$.  Those quantitative implications
+remain separate obligations in proof documents 03 and 04.
 
 \begin{thebibliography}{9}
-\bibitem{JS81} H.~Jacquet and J.~A.~Shalika, On Euler products and the classification
-  of automorphic forms I--II, Amer.\ J.\ Math.\ \textbf{103} (1981), 499--558, 777--815.
-\bibitem{Sh81} F.~Shahidi, On certain $L$-functions, Amer.\ J.\ Math.\ \textbf{103}
-  (1981), 297--351.
-\bibitem{Neukirch} J.~Neukirch, Algebraic Number Theory, Springer, 1999.
+
+\bibitem{CS80} W.~Casselman and J.~Shalika, The unramified principal series of
+  $p$-adic groups II: the Whittaker function, Compositio Math.\ \textbf{41}
+  (1980), 207--231.
+
+\bibitem{JS81} H.~Jacquet and J.~A.~Shalika, On Euler products and the
+  classification of automorphic representations I, Amer.\ J.\ Math.\ \textbf{103}
+  (1981), 499--558.
+
 \end{thebibliography}
 
 \end{document}

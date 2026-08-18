@@ -1,0 +1,43 @@
+{
+  "M": 200000,
+  "N": 20000,
+  "T": 8.0,
+  "abs_T": 8.0,
+  "baseline_inputs": [
+    "DEL-D.1"
+  ],
+  "certifies": "only the infinite AFE main sum S1; not J, not L(1)",
+  "certifies_infinite_s1": true,
+  "certifies_l1": false,
+  "contour_constant_interval": [
+    679.7315588179655,
+    679.7315588179729
+  ],
+  "contour_m": 2,
+  "finite_interval": [
+    0.548301913463674,
+    0.5483019134636812
+  ],
+  "finite_interval_semantics": "S1[N,T] by one simultaneous Arb vertical integral",
+  "form": {
+    "label": "delta",
+    "level": 1,
+    "weight": 12
+  },
+  "interval_semantics": "32 binary ulps outward beyond Arb endpoints",
+  "method": "afe-s1-full-v1",
+  "n_tail_bound": [
+    3.5229469692215938e-06,
+    3.5229469692216213e-06
+  ],
+  "precision_bits": 128,
+  "s1_interval": [
+    0.5482983905166945,
+    0.5483054364106607
+  ],
+  "t_tail_bound": [
+    1.1458389029573867e-29,
+    1.1458389029573958e-29
+  ],
+  "tau_sha256": "5ddfdc6d9b736c182132ea0fce49218afa1f1dcaa7e465017a0b7ec6c026cbd8"
+}

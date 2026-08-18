@@ -25,8 +25,8 @@ starting with the Ramanujan Delta function (k=12, N=1).
 | ID  | Description                               | Status     | File                         |
 |-----|-------------------------------------------|------------|------------------------------|
 | F-1 | CG local Euler factor factorization       | **[THM]**  | proof/01-foundations.tex     |
-| F-2 | Global residue positivity + Siegel excl.  | **[THM]**  | proof/02-global-residue.tex  |
-| F-3 | L(1, sym^2 f) > 0 (qualitative)           | **[THM]**  | proof/02-global-residue.tex  |
+| F-2 | Global residue positivity                 | **[OBL]**  | proof/02-global-residue.tex  |
+| F-3 | Certified L(1, sym^2 Delta) interval      | **[OBL]**  | proof/04-effective-bound.tex |
 | M-1 | Mollifier construction on GL3             | **[OBL]**  | proof/03-mollifier.tex       |
 | M-2 | Mean value estimate (Kuznetsov/Petersson) | **[OBL]**  | proof/03-mollifier.tex       |
 | E-1 | Certified finite Euler product (Delta)    | **[OBL]**  | src/numerical_delta.py       |
@@ -42,19 +42,21 @@ Status grammar: [THM] = proved here; [OBL] = open proof obligation;
   L_p(s, f x f)^{-1} = L_p(s, sym^2 f)^{-1} * (1 - p^{-s})(1 + p^{-s}),
   with exact (1+p^{-s}) cancellation from the Clebsch-Gordan identity chi_l^2 = sum_{j=0}^l chi_{2j}.
 
-- **Theorem F-2:** L(1, sym^2 f) > 0, via:
-  (i) Rankin-Selberg residue proportional to Petersson norm squared > 0;
-  (ii) Analytic class number formula Res_{s=1} zeta_F(s) > 0;
-  (iii) Shahidi non-vanishing L(1, f, Ad) > 0.
+- **Open obligation F-2:** prove the global residue formula, including every
+  bad local correction factor and the adjoint input `L(1, Ad) > 0`.  The exact
+  Shahidi statement is not yet source-backed; a complete pair-L-function bridge
+  has not been supplied.
 
-- **Target (E-1+E-2, [OBL]):** L(1, sym^2 Delta) >= 2.40, certified by
-  interval arithmetic with cutoff P=100 and tail bound C_0/P.
+- **Target (F-3, [OBL]):** certify an interval for L(1, sym^2 Delta).  Current
+  infinite-S1 certificate covers the main sum S1 with rigorous tail bounds
+  (E_t negligible, E_n ~ 3.5e-6).  The dual/contour term J and L(1) remain
+  [OBL], blocked by the GL3 Voronoi c-sum [OBL M-Voronoi].
 
 ## Numerical Anchor (Discovery Tier)
 
 For the Ramanujan Delta function, known tau(p) values give:
 
-    L(1, sym^2 Delta) ~ 2.4055  (from Euler product, verified numerically)
+    L(1, sym^2 Delta) ~ 0.631793  (discovery only; not a certificate)
 
 Local factor formula:
 
@@ -69,25 +71,34 @@ sym2-effective-lbound/
   spec/SPECIFICATION.md     # Authoritative math spec (status grammar, certificate format)
   proof/
     01-foundations.tex      # [THM F-1] Clebsch-Gordan local factorization
-    02-global-residue.tex   # [THM F-2] Global positivity + Siegel exclusion
+    02-global-residue.tex   # [OBL F-2] Global residue positivity
     03-mollifier.tex        # [OBL] Mollifier construction on GL3
     04-effective-bound.tex  # [OBL] Main theorem and GHL dichotomy
     paper.tex               # Combined paper skeleton
   src/
     euler_factors.py        # chi_l, local_factor_series, local_factor_closed
     numerical_delta.py      # TAU_PRIMES, L(1,sym^2 Delta) computation
+    afe_s1_arb.py           # Finite S1[N,T] Arb certificate (canonical gamma)
+    afe_s1_full.py          # Infinite S1 certificate with rigorous tail bounds
+    tau_sieve.py            # Exact tau(n) via eta-product recurrence
     mollifier.py            # [OBL] Mollifier coefficients (discovery tier)
   checker/
     check_bound.py          # Independent certificate verifier (no src/ imports)
+    check_s1_finite.py      # Verifier for finite S1[N,T] certificates
+    check_s1_full.py        # Verifier for infinite S1 certificate (no src/ imports)
   tests/
     test_euler_factors.py   # F-1 theorem tests
     test_mollifier.py       # Mollifier coefficient tests
     test_numerical.py       # L(1,sym^2 Delta) numerical tests
+    test_afe_s1_arb.py      # Finite S1 certificate tests
+    test_afe_s1_full.py     # Infinite S1 certificate + checker tests
   schemas/
     bound-certificate.schema.json  # JSON schema for certificates
   papers/
     survey.tex              # GL2xGL2 Rankin-Selberg pedagogical survey
-  baseline/                 # Published theorem sources (PDF + citations)
+  baseline/
+    s1_full_certificate.json  # Reference infinite-S1 certificate (N=20000, T=8)
+    REFERENCE_BASELINE.md   # Source-backed theorem ledger (no committed PDFs)
   discovery/                # UNTRUSTED explorations; never imported by src/
 ```
 
@@ -99,6 +110,12 @@ M0 foundations
     --> M2 Euler product (numerical_delta.py)
       --> M3 Mollifier (mollifier.py)  [OBL]
         --> M4 Effective bound (04-effective-bound.tex)  [OBL]
+
+S1 certificate chain (independent of M0-M4):
+  tau_sieve.py  -->  afe_s1_arb.py (finite S1[N,T])
+  tau_sieve.py  -->  afe_s1_full.py (infinite S1 with tail bounds)
+  checker/check_s1_finite.py  (no src/ imports)
+  checker/check_s1_full.py    (no src/ imports)
 ```
 
 No reverse imports. `checker/` is independent of `src/`.
@@ -116,8 +133,8 @@ All tests must pass before any work begins. Failing tests must be fixed first.
 
 1. Goldfeld, Hoffstein, Lieman (1994) -- GHL lower bound (ineffective c)
 2. Gelbart, Jacquet (1978) -- GL3 symmetric square lift
-3. Shahidi (1981) -- Non-vanishing L(1, f, Ad) > 0
-4. Jacquet, Shalika (1976) -- Non-vanishing of GL_n zeta functions
+3. Shahidi (1981) -- inspected; the exact L(1, Ad) statement remains not-found
+4. Jacquet, Shalika (1981) -- unramified local integral and Euler-product convergence
 5. Iwaniec, Kowalski -- Analytic Number Theory (reference for explicit formulas)
 
 ## License

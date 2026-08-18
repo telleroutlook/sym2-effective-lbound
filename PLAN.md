@@ -26,6 +26,7 @@
 - **撤回传播**：`spec/`、`proof/paper.tex`、`proof/04` 中残留的 F-3 [THM] / 2.405
   说法已清除；F-3 现在一致为 [OBL]。当前没有本仓库认证的
   L(1, sym²Δ) 正下界。
+- **F-2 降级**：Shahidi 的精确 `L(1,Ad)>0` 陈述仍未找到，Jacquet--Shalika 也没有给出 proof/02 旧稿所需的全局正 local correction 公式。F-2 已从 [THM] 对外降级为 [OBL]；下游不得使用它。
 - **checker 修正**：`checker/check_bound.py` 不再把发散的
   `sum_{p>P} 3/p` 包装成 3/P 尾部界；在 E-2 提供可重放证书前，它必须拒绝
   当前 Euler-product 证书。新增 `tests/test_status_grammar.py` 固定该拒绝行为。
@@ -52,8 +53,9 @@
 
 - **Q-1**：逐条外部基线 ledger 已建立。GHL 附录定理和 Miller--Schmid
   Theorem 1.18 是 source-backed；Gelbart--Jacquet Theorem 9.3 在其非自扭
-  假设下 source-backed。Casselman--Shalika / Jacquet--Shalika 目前只验证到
-  weaker-in-source；Shahidi 1981 已取得作者扫描并核到 Theorems 5.2--5.3，
+  假设下 source-backed。Casselman--Shalika Theorem 5.4 与 Jacquet--Shalika
+  Proposition 2.3 / Theorem 5.3 后续已核到精确 theorem-level。Shahidi 1981
+  已取得作者扫描并核到 Theorems 5.2--5.3，
   但未找到 proof/02 所需的逐点 `L(1,Ad)>0` 精确陈述，ledger 记为 `not-found`。
   另已核验 Shahidi 1980 BAMS 定理：`L_S(1+it,pi x pi') != 0`；它只给出
   pair L-function 非零，不能自动分离 `zeta(s)` 极点与 `L(1,Ad)` 的可能零点。
@@ -70,14 +72,52 @@
 - **Q-5**：新增 `OUTSOURCING.md`，将 \(C_{GL3}\) 与 J certification 转成
   两个自包含外包任务，包含目标、允许路线、禁止路径和验收命令。
 
+### 2026-08-18 本轮 Q-6/Q-7 执行结果
+
+- **Q-6（安全降级）**：未找到精确 Shahidi adjoint theorem，也没有完成
+  pair L-function / Jacquet--Shalika 极点到全局 F-2 公式的完整正性桥。
+  因此 `proof/02-global-residue.tex` 重写为 obligation：显式列出 adjoint
+  输入、bad local correction 正性、measure normalization 和
+  `L(pi~ x pi)` 到 `zeta L(Ad)` 的缺口。`spec/`、`README.md`、
+  `proof/04`、`proof/paper.tex` 同步将 F-2 改为 `[OBL]`。
+- **Q-7（精确引用）**：通过作者/公开扫描 OCR 核验
+  Casselman--Shalika Theorem 5.4 (p. 227) 和 Jacquet--Shalika §2.2
+  formula (2.2.2)、Proposition 2.3 (pp. 511--512)、Lemma 4.6
+  (pp. 550--552)、Theorem 5.3 (pp. 555--556)。ledger 拆分为 CS-W.1、
+  JS-LI.1、JS-EP.1、JS-GF.1。F-1 的外部输入现在 theorem-level
+  source-backed；F-2 仍由 SH-AD.1 / JS-GF.1 阻塞。
+
 ### 下一轮优先队列
 
 | 顺序 | 任务 | 可验证交付物 | 状态 |
 |---|---|---|---|
-| Q-6 | Shahidi/adjoint baseline repair | 找到精确定理并写出从 Shahidi Theorem 5.2/相关文献到 `L(1,Ad)>0` 的完整桥，或将 F-2 降级为 `[OBL]` | 待执行 |
-| Q-7 | exact Casselman–Shalika / Jacquet–Shalika ledger | OCR 或转录精确 theorem number 与 normalization，升级 `weaker-in-source` 行 | 待执行 |
-| Q-8 | full S1 tail certificate | 在 finite `S1[N,T]` 之外证明无穷 n/t tail；不得改变当前 finite 证书语义 | 待执行 |
-| Q-9 | outsourced V/J receipt check | 按 `OUTSOURCING.md` 独立复核外部数学稿和 checker | 待执行 |
+| Q-6 | Shahidi/adjoint baseline repair | 找到精确定理并写出完整桥，或将 F-2 降级为 `[OBL]` | 已完成（降级） |
+| Q-7 | exact Casselman–Shalika / Jacquet–Shalika ledger | OCR 或转录精确 theorem number 与 normalization，升级 `weaker-in-source` 行 | 已完成 |
+| Q-8 | full S1 tail certificate | 在 finite `S1[N,T]` 之外证明无穷 n/t tail；不得改变当前 finite 证书语义 | 已完成 |
+| Q-9 | outsourced V/J receipt check infrastructure | outsource/ 目录（OB-01/OB-02 自包含 prompt、PROMPT_LINT.md 对抗性清单、README.md 状态面板）、papers/PAPER_LINT.md（论文提交前 lint）；模式学习自 abc-conjecture-verification 仓库 | 已完成 |
+
+### 2026-08-18 Q-8 执行结果
+
+- **Q-8（infinite S1 证书）**：新增 `src/afe_s1_full.py`，在有限截断 S1[N,T]
+  之外用初等工具证明无穷尾项：
+  - **垂直尾项 E_t**：|E_t| ≤ 12·C_T·Σ_{n≤N}|A(n)|/n²，其中
+    C_T = G(2)/G(1)·e·e^{-T²}/(2πT²)。在 T=8 时 C_T ~ 10^{-29}，尾项可忽略。
+  - **系数尾项 E_n**：用围道移动 Re(u): 1→1+m（m=2，无极点，Gaussian 衰减），
+    得 |W(y)| ≤ A_m·y^{-(1+m)}，其中
+    A_m = G(2+m)/G(1)·e^{(1+m)²}/(2√π·(1+m)) ≈ 680。
+    d₃ 尾通过 Abel 求和从 Σ_{n≤x}d₃(n) ≤ x(log x+1)² 显式界定。
+  - **关键不等式**：|Γ(x+it)| ≤ Γ(x)（Weierstrass 乘积），将模积分降为闭式。
+  - **参考证书**：N=20000, T=8, M=200000, precision=128
+    → S1 ∈ [0.548298, 0.548305]（width ≈ 7.0e-6），E_t ≈ 1.1e-29，
+    E_n ≈ 3.5e-6，A₂ ≈ 680。189 秒计算完成。
+  - `checker/check_s1_full.py`：独立重算 τ、d₃、sym² 系数、围道常数、Abel 尾，
+    不导入 `src/`；拒绝 finiteness-only promotion、L(1) 认证和篡改间隔。
+  - `tests/test_afe_s1_full.py`：13 项测试（d₃ 值、sym² 系数、有限间隔交叉验证、
+    checker 通过/拒绝、真值包含、尾项层级）。
+  - **修复的 bug**：(1) 错误 gamma Γ_R(s)Γ_C(s) → 正确 Γ_R(s)Γ_C(s+11)；
+    (2) `acb(lower, upper)` 误用为区间（实为 `lower + upper·i`）→ 改用
+    `arb(center, radius)`。
+  - 证书只认证无穷主和 S1；不认证对偶项 J 或 L(1,sym²Δ)。
 
 **执行纪律**：Q-2 与 J 不能因数值裕量大而关闭；Q-3 的输出不得称为
 完整 S1 认证；Q-4 只能接收由 proof-tier 方法生成的 finite certificate。
@@ -313,7 +353,7 @@
 | 编号 | 交付物 | 状态 | 对应文件 |
 |------|--------|------|----------|
 | F-1 | 局部 Euler 因子分解定理（Clebsch–Gordan 消去） | [THM] | proof/01-foundations.tex |
-| F-2 | 全局留数正值性定理（Res_{s=1} > 0） | [THM] | proof/02-global-residue.tex |
+| F-2 | 全局留数正值性定理（Res_{s=1} > 0） | [OBL] | proof/02-global-residue.tex |
 | F-3 | Δ 函数的 L(1, sym² Δ) 认证 | [OBL] | discovery/rs_estimate.py |
 
 **F-3 状态说明**（2026-08-16 更新）：
@@ -412,8 +452,8 @@ log-derivative/Taylor 系数界来给出 \(c_2/\log N\)，仍为 `[OBL]`。
 | P0 | Hoffstein–Lockhart (1994) | Siegel 零点主定理 |
 | P1 | Goldfeld "Automorphic Forms for GL(n,R)" | GL₃ AFE 权重函数推导 |
 | P1 | Holowinsky–Soundararajan (2010) | QUE 和 sym² 下界应用 |
-| P1 | Shahidi (1981) | 伴随 L-函数不消失 |
-| P1 | Jacquet–Shalika (1981) | Rankin–Selberg 积分 |
+| P1 | Shahidi (1981) | 寻找或补桥 `L(1,Ad)>0`；当前 not-found |
+| P1 | Jacquet–Shalika (1981) | Rankin–Selberg 积分、局部因子与 Euler product 收敛 |
 | P1 | Booker / Blomer (近期) | 显式子凸性界和显式无零区域（M-3 参考）|
 | P2 | Shimura (1975) | sym² 全纯延拓 |
 | P2 | Gelbart–Jacquet (1978) | sym² 自守性（GL₃ 提升） |

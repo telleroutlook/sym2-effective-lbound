@@ -57,10 +57,11 @@ certified by interval arithmetic in \texttt{src/numerical\_delta.py}.
 The theorem is [OBL].  The following are [THM] and available:
 \begin{itemize}
   \item Theorem~F-1 (local Euler factor factorization): [THM]
-  \item Theorem~F-2 (global residue positivity): [THM]
 \end{itemize}
 The following remain [OBL]:
 \begin{itemize}
+  \item Theorem~F-2 (global residue positivity): the exact adjoint input and
+        positive bad-local correction factors are not yet supplied
   \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \in [L_{\mathrm{lo}}, L_{\mathrm{hi}}]$ certified):
         the prior value $2.405$ was retracted (wrong RS identity); correct discovery
         estimate $\approx 0.631793$, pending certified control of the AFE dual term.
@@ -121,9 +122,9 @@ $\xi\in(\beta,1)$,
   =L'(\xi,\cdot)\varepsilon .
 \]
 Thus the desired bound requires a uniform explicit lower bound for
-$L'(\xi,\cdot)$ on this interval.  Theorem~F-2 supplies only pointwise
-positivity at $s=1$ for each form; it supplies neither uniform positivity nor a
-derivative bound.  Deriving and certifying such a quantitative input is open.
+$L'(\xi,\cdot)$ on this interval.  Even the desired pointwise F-2 input would
+supply neither uniform positivity nor a derivative bound.  Deriving and
+certifying such a quantitative input is open.
 \textbf{[OBL: prove the required uniform logarithmic-derivative or Taylor
 coefficient bound, then make $c_2$ explicit.]}
 \end{proof}
@@ -155,7 +156,7 @@ To compute $c_{\mathrm{eff}}$ explicitly, we need:
   \item \textbf{Exceptional-zero constant.}  From the Taylor expansion at a
         potential Siegel zero, obtain a uniform explicit lower bound for the
         relevant logarithmic derivative or first Taylor coefficient.  The
-        existing pointwise residue positivity F-2 is insufficient for this
+        the desired pointwise residue positivity F-2 would be insufficient for this
         step; the required quantitative Rankin--Selberg input must be proved.
   \item \textbf{Interval arithmetic certification.}  Once $c_1$ and $c_2$ are expressed
         as explicit rational functions of the above quantities, \texttt{python-flint}/Arb

@@ -2,7 +2,7 @@
 
 **Document type:** authoritative mathematical specification
 **Scope:** symmetric square L-functions of primitive holomorphic Hecke eigenforms over Q
-**Completion state:** F-1 and F-2 [THM]; F-3, mollifier, and explicit-constant layers [OBL]
+**Completion state:** F-1 [THM]; F-2, F-3, mollifier, and explicit-constant layers [OBL]
 
 ---
 
@@ -21,7 +21,8 @@
 ### 0.2 Module Dependency
 
     M0 foundations
-      +-> M1 local factors + global residue  (proof/01, proof/02)  [THM]
+      +-> M1 local factors [THM] (proof/01)
+            +-> M1 global residue [OBL] (proof/02)
             +-> M2 mollifier construction     (proof/03)            [OBL]
                   +-> M3 zero-free region     (proof/04 pt1-2)      [OBL]
                         +-> M4 explicit bound (proof/04 pt3)        [OBL]
@@ -72,7 +73,9 @@ denominator led to the retracted F-3 estimate below.
 a_v * b_v = 1:
   W_{f,v}(diag(varpi_v^l, 1)) = q_v^{-l/2} chi_l(a_v, b_v)
 where chi_l(a,b) = (a^{l+1} - b^{l+1})/(a-b) is the SU(2) character.
-Source: Casselman-Shalika (1980), Compositio Math.
+Source: Casselman-Shalika (1980), Compositio Math. 41, Theorem 5.4, p. 227,
+with the GL(2) essential-vector transcription in Jacquet-Shalika (1981),
+Section 2.2, p. 511.
 
 [BASE] (Clebsch-Gordan for SU(2)) chi_l^2 = sum_{j=0}^l chi_{2j}, hence:
   sum_{j>=0} chi_{2j}(a,b) x^j = (1+x) / [(1-a^2 x)(1-b^2 x)]  (ab=1)
@@ -86,21 +89,30 @@ The (1 + q_v^{-s}) factor cancels exactly via Clebsch-Gordan.
 
 ### 2.2 Global Residue Positivity
 
-[BASE] (Jacquet-Shalika 1981) The Jacquet-Shalika integral factors as:
-  integral_{N(A)\GL_2(A)} W_f(g) Wbar_f(g) |det g|^s dg
-  = zeta_F(s) * L(s, f, Ad) * ||W_f||^2 * (local factors at bad primes)
+[BASE] (Jacquet-Shalika 1981, Proposition 2.3, pp. 511-512)
+For generic unramified local data and the measure normalization
+vol(N_v A_v K_v)=vol(K_v)=1, the local Jacquet-Shalika integral with essential
+Whittaker functions equals L_v(s, pi_v x pi_v~).
+
+[BASE] (Jacquet-Shalika 1981, Lemma 4.6, pp. 550-552)
+The global pure-tensor Whittaker integral is meromorphic and has a simple pole
+at s=1 for pi' = pi~ and nonzero global test data.  This source does not give
+the explicit positive local correction factors required below.
 
 [BASE] (Analytic Class Number Formula)
   Res_{s=1} zeta_F(s) = 2^{r1} (2pi)^{r2} h_F R_F / (w_F sqrt|D_F|) > 0.
 
-[BASE] (Shahidi 1981) L(1, f, Ad) > 0 for any generic cuspidal automorphic pi.
+[OBL] (Adjoint value) L(1, f, Ad) > 0 for the intended class of pi.
   Baseline audit note: the exact adjoint statement is currently `not-found` in
-  baseline/REFERENCE_BASELINE.md; do not use this input in a release chain until
-  the precise theorem or bridge is supplied.
+  baseline/REFERENCE_BASELINE.md.  Either a primary theorem or a complete bridge
+  from the pair L-function / Jacquet-Shalika pole to the adjoint factor must be
+  supplied before this input is used.
 
-[THM] (F-2) [proved in proof/02-global-residue.tex]
+[OBL] (F-2) [open in proof/02-global-residue.tex]
   Res_{s=1} <1, T^JS_{s,Phi}[W_f (x) W_fbar]>
   = Phihat(0) * Res_{s=1} zeta_F(s) * L(1, pi, Ad) * ||W_f||^2 > 0
+Required additionally: compute every bad local correction, prove its sign and
+normalization, and prove the adjoint-value obligation above.
 
 ### 2.3 Instance Certification [OBL]
 
