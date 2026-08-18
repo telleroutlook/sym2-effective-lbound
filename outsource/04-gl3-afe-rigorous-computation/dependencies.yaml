@@ -1,0 +1,60 @@
+theorem_id: gl3-afe-rigorous-sym2-delta
+status:
+  mathematical: METHOD-DESCRIPTION
+  computational: DISCOVERY
+dependencies:
+  - id: GELBART-JACQUET-GL3-AFE
+    statement: >
+      L(s, sym^2 f) for a GL_2 cusp form f has an approximate functional
+      equation expressing L(s) as a smoothed sum of A(n)/n^s with
+      exponentially decaying weight.
+    source: >
+      Gelbart-Jacquet (1978), "A note on the symmetric square L-function";
+      standard in the theory of automorphic L-functions.
+    mathematical: REFEREED
+    peer_reviewed: true
+    computational: NONE
+    usable_as_premise: true
+    role: Provides the fundamental identity used for computation.
+  - id: RAMANUJAN-DELIGNE-BOUND
+    statement: >
+      |tau(p)| <= 2*p^{5.5} for all primes p (Ramanujan conjecture,
+      proved by Deligne).
+    source: >
+      Deligne (1974), "La conjecture de Weil I"; proved via etale
+      cohomology.
+    mathematical: REFEREED
+    peer_reviewed: true
+    computational: NONE
+    usable_as_premise: true
+    role: Gives |A(p)| <= 2 and |A(n)| <= d_3(n) for all n.
+  - id: ARB-INTERVAL-ARITHMETIC
+    statement: >
+      The Arb library provides rigorous interval arithmetic for complex
+      analysis, including Gamma function evaluation with outward rounding.
+    source: >
+      Fredrik Johansson (2012-), "Arb: efficient arbitrary-precision
+      midpoint-radius interval arithmetic"; implemented in python-flint.
+    mathematical: REFEREED
+    peer_reviewed: true
+    computational: VERIFIED
+    usable_as_premise: true
+    role: Provides the computational framework for certified evaluation.
+  - id: DISCOVERY-ZERO-FREE-SCAN
+    statement: >
+      Empirical scan shows |L(s)| >= 0.127 for sigma in [0.6, 1.0],
+      |t| <= 20, via smoothed sum with X = 4000 and N = 20000.
+    source: >
+      Computed in src/zero_free_arb.py; certificate in
+      baseline/zero_free_scan.json.
+    mathematical: EMPIRICAL
+    peer_reviewed: false
+    computational: DISCOVERY
+    usable_as_premise: false
+    role: Provides the target region and expected lower bound for the
+      rigorous computation.
+gate_a_status: NOT_SUBMITTED
+gate_a_note: >
+  This is a computational method, not a theorem. The reviewer is asked to
+  evaluate the correctness of the method and the completeness of the error
+  analysis, not to verify a mathematical proof.

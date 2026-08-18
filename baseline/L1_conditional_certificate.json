@@ -1,0 +1,39 @@
+{
+  "module": "L1-conditional",
+  "status": "discovery",
+  "certifies_L1": false,
+  "certifies_L1_conditional": true,
+  "condition": "|S(X)| <= 0.259 * X^0.5 for all X >= 1 (empirical from N=20000, NOT proven)",
+  "S1_interval": [
+    0.548298,
+    0.548305
+  ],
+  "S1_certified": true,
+  "L_cesaro_N": 100000000,
+  "L_cesaro_value": 0.6317929,
+  "cesaro_error_bound": 5.1800000000000005e-05,
+  "L1_interval_conditional": [
+    0.6317410999999999,
+    0.6318447
+  ],
+  "L1_width": 0.00010360000000009251,
+  "partial_sum_bound": {
+    "C": 0.259,
+    "alpha": 0.5,
+    "proven": false
+  },
+  "zero_free_region": {
+    "certified_Re_s_gt_1": true,
+    "certified_min_L_at_s2": 0.806,
+    "discovery_critical_strip": {
+      "sigma_min": 0.6,
+      "certified_min_L": 0.127
+    },
+    "proof_tier": false
+  },
+  "next_steps": [
+    "Prove |S(X)| <= C*X^{0.5+epsilon} [OB-03]",
+    "Or compute L(s) via GL3 AFE with certified error bounds [OB-04]",
+    "Then upgrade to proof-tier L(1) certificate"
+  ]
+}

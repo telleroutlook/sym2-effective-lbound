@@ -9,6 +9,8 @@ Status key: **pending** (not yet sent), **sent** (prompt dispatched),
 |---|---|---|---|---|
 | Task V: C_GL3 from Miller–Schmid Thm 1.18 | pending | OB-01-cgl3-explicit-bound.md | — | Blocked: need full Kloosterman/Bessel extraction |
 | Task J: certified AFE dual term for L(1,sym²Δ) | pending | OB-02-dual-term-certification.md | — | Blocked: depends on Task V or [OBL M-3] |
+| OB-03: partial-sum bound \|S(X)\| << X^{1/2+ε} | pending | 03-partial-sum-bound-proof/ | — | Key blocker for Q-11; empirical evidence X<=20000 |
+| OB-04: GL₃ AFE rigorous computation | pending | 04-gl3-afe-rigorous-computation/ | — | Needs Arb/python-flint; would give zero-free region |
 
 ## Pre-send checklist (mandatory)
 
