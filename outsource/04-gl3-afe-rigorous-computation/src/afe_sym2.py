@@ -113,8 +113,13 @@ def gamma_c(s):
 
 
 def G_factor(s):
-    """G(s) = Gamma_R(s) * Gamma_C(s + 11) for sym^2 of weight-12 form."""
-    return gamma_r(s) * gamma_c(s + 11)
+    """G(s) = Gamma_R(s+1) * Gamma_C(s+11) for sym^2 of weight-12 form.
+
+    Correct normalization: Lambda(s) = G(s) * L(s, sym^2 Delta) satisfies
+    Lambda(s) = Lambda(1-s).  The +1 in Gamma_R comes from the standard
+    completed L-function for sym^2 of a weight-k holomorphic cusp form.
+    """
+    return gamma_r(s + 1) * gamma_c(s + 11)
 
 
 # ===================================================================
@@ -239,7 +244,7 @@ def make_certificate(grid_results, sigma_min, sigma_max, t_min, t_max,
     return {
         "module": "M-3",
         "status": "discovery",
-        "certifies_zero_free": min_pt["L_mod"] > 0,
+        "certifies_zero_free": False,  # finite grid cannot certify continuous region
         "method": "GL3 AFE smoothed sum (mpmath, not Arb)",
         "N_terms": N_terms,
         "X": X,
@@ -251,9 +256,10 @@ def make_certificate(grid_results, sigma_min, sigma_max, t_min, t_max,
         "min_L_t": min_pt["t"],
         "witness_file": "witness/grid_values.json",
         "notes": (
-            "Discovery tier (mpmath floats). "
-            "Proof-tier requires Arb interval arithmetic (python-flint) "
-            "with outward rounding to certify 0 is not in [L_lo, L_hi]."
+            "Discovery tier (mpmath floats, single-sum AFE only). "
+            "NOT a certified L(s) evaluation. Missing: (1) dual sum from "
+            "functional equation, (2) Arb interval arithmetic, (3) rigorous "
+            "quadrature error bound, (4) continuous-region argument."
         ),
     }
 

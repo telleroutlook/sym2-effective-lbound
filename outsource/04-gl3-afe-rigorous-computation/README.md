@@ -35,7 +35,7 @@ where V(y, s) is the weight function from Mellin inversion:
 V(y, s) = (1/2pi i) int_{Re(u)=c} G(s+u)/G(s) * y^{-u} * h(u)/u du
 ```
 
-with G(s) = Gamma_R(s) * Gamma_C(s+11) and h(u) a suitable
+with G(s) = Gamma_R(s+1) * Gamma_C(s+11) and h(u) a suitable
 cutoff function (e.g., h(u) = exp(u^2)).
 
 The key properties:

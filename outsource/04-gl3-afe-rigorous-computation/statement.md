@@ -18,7 +18,7 @@ certified error bounds using Arb interval arithmetic.
 
 - The symmetric-square coefficients A(n) for n = 1..N (computed from
   the Ramanujan tau function via the Euler sieve).
-- The gamma factor G(s) = Gamma_R(s) * Gamma_C(s+11).
+- The gamma factor G(s) = Gamma_R(s+1) * Gamma_C(s+11).
 - A grid of points {(sigma_j, t_k)} in [0.5, 1.0] x [-T_max, T_max].
 
 ## Output

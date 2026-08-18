@@ -1,7 +1,7 @@
 # Statement — Partial-sum bound for sym^2 Delta
 
 **Theorem ID:** ps-bound-sym2-delta
-**Mathematical status:** CONJECTURE (empirical evidence, no proof)
+**Mathematical status:** THEOREM (via Friedlander-Iwaniec Proposition 3.2; explicit constant not available)
 **Computational status:** EMPIRICAL (verified for X <= 20000)
 **Program ref:** sym2-effective-lbound Q-11
 **Paper target:** Paper A (effective L(1) bound)

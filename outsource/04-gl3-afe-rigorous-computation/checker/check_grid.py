@@ -123,7 +123,7 @@ def _gamma_c(s):
 
 
 def _G(s):
-    return _gamma_r(s) * _gamma_c(s + 11)
+    return _gamma_r(s + 1) * _gamma_c(s + 11)
 
 
 def _afe_weight(y, s, T=30.0, n_quad=500):
@@ -196,8 +196,10 @@ def check(witness_path):
         reported = r["L_mod"]
         rel_err = abs(mod_recomputed - reported) / max(reported, 1e-10)
 
-        if rel_err < 0.1:
+        if rel_err < 0.001:
             status = "PASS"
+        elif rel_err < 0.1:
+            status = "WARN"
         else:
             status = "FAIL"
             all_pass = False

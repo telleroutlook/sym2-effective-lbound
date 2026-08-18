@@ -1,20 +1,17 @@
 # Limitations — GL_3 AFE computation
 
-1. The weight function V(y, s) is computed via Mellin inversion, which
-   requires bounding the tail of the Gamma-factor integral. This bound
-   depends on the convexity exponent for L(s) in the critical strip,
-   which is not optimal (the Lindelof hypothesis would give a better bound).
+1. The current implementation computes ONLY the main sum of the AFE.
+   The dual sum (from the functional equation) is NOT implemented.
+   This means the computed values are NOT certified approximations to L(s).
 
-2. The computation uses mpmath floats (discovery tier). A proof-tier
-   version requires python-flint (Arb) with outward rounding, which is
-   significantly slower.
+2. The weight function V(y, s) is computed via mpmath floats, not Arb
+   interval arithmetic. No error bounds are certified.
 
-3. The grid resolution (sigma steps, t steps) determines the certified
-   zero-free region. Finer grids give better regions but cost more time.
+3. The "independent checker" recomputes the same single-sum formula,
+   so it verifies arithmetic consistency, not mathematical correctness.
 
-4. The method evaluates L(s) at specific points. It does not directly
-   prove the partial-sum bound |S(X)| << X^{1/2}; that requires an
-   additional step (zero-free region -> explicit formula -> partial sums).
+4. The finite grid (45 points in the critical strip) cannot certify a
+   continuous zero-free region. Points between grid locations may be zero.
 
 5. For large |t|, the Gamma factors grow exponentially, making the
-   computation harder. The practical limit is |t| ~ 100 with current tools.
+   computation harder. The practical limit is |t| ~ 100.

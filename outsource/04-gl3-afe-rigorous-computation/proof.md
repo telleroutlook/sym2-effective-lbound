@@ -25,7 +25,7 @@ where:
 V(y, s) = (1/2*pi*i) * int_{Re(u)=c} G(s+u)/G(s) * y^{-u} * h(u)/u du
 ```
 
-with G(s) = Gamma_R(s) * Gamma_C(s+11).
+with G(s) = Gamma_R(s+1) * Gamma_C(s+11).
 
 **Properties of V(y, s):**
 - V(y, s) ~ 1 for small y (y << 1).
@@ -41,6 +41,23 @@ Choose X and N such that:
 - The main sum: sum_{n<=N} A(n)/n^s * V(n/X, s) captures L(s).
 - The tail: sum_{n>N} |A(n)|/n^{Re(s)} * |V(n/X, s)| is small.
 - The dual sum (from the functional equation) contributes O(X^{-1/2}).
+
+**DUAL SUM — NOT YET IMPLEMENTED [OBL]:**
+The current `src/afe_sym2.py` computes ONLY the main sum. The standard AFE
+for a self-dual GL_3 L-function with root number +1 is:
+
+```
+L(s) = main_sum(s) + chi(s) * conj(main_sum(1-s))
+```
+
+where chi(s) = Q^{1/2-s} * G(1-s)/G(s) and the dual sum involves
+V_tilde(n/X, 1-s). For the current parameters (Q=1, s near 1), the dual
+sum contributes at most O(X^{-1/2}) and is NOT negligible for rigorous
+certification. See Harcos (2003) for the general GL_n AFE formulation.
+
+The current implementation treats the main sum alone as an approximation
+to L(s). This is valid as a discovery-tier diagnostic but NOT as a
+certified computation.
 
 **Truncation parameter N:** The weight V(n/X, s) decays like
 exp(-c * (log(n/X))^2) for n >> X. The tail from n > N is bounded by:
