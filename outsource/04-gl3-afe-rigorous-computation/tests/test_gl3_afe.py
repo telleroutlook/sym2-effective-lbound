@@ -83,3 +83,50 @@ def test_L_positive_real():
     for sigma in [1.5, 2.0, 3.0]:
         Ls = sum(a[n - 1] / n ** sigma for n in range(1, N + 1))
         assert Ls > 0, f"L({sigma}) = {Ls:.6f} <= 0"
+
+
+def test_sym2_A1():
+    """A(1) = 1 by definition."""
+    tau = _compute_tau(10)
+    a = _compute_sym2(tau)
+    assert a[0] == 1.0
+
+
+def test_sym2_A2():
+    """A(2) = c_2^2 - 1 where c_2 = tau(2)/2^{5.5}."""
+    tau = _compute_tau(10)
+    a = _compute_sym2(tau)
+    c2 = tau[1] / (2 ** 5.5)
+    expected = c2 * c2 - 1
+    assert abs(a[1] - expected) < 1e-6, f"A(2) = {a[1]}, expected {expected}"
+
+
+def test_afe_weight_decays():
+    """V(y, s) should decay for large y (Gaussian decay)."""
+    import os
+    import sys
+    _src = os.path.join(os.path.dirname(__file__), "..", "src")
+    if _src not in sys.path:
+        sys.path.insert(0, _src)
+    from afe_sym2 import afe_weight, mp
+    s = mp.mpc(1.0, 0.0)
+    V_small = abs(afe_weight(0.5, s, T=20, n_quad=200))
+    V_large = abs(afe_weight(5.0, s, T=20, n_quad=200))
+    assert V_small > V_large, f"V(0.5)={V_small:.4f} should > V(5.0)={V_large:.4f}"
+
+
+def test_afe_L2_matches_dirichlet():
+    """L(1.0) via AFE should be positive and in reasonable range."""
+    import os
+    import sys
+    _src = os.path.join(os.path.dirname(__file__), "..", "src")
+    if _src not in sys.path:
+        sys.path.insert(0, _src)
+    from afe_sym2 import L_via_AFE, mp, compute_tau, compute_sym2_coeffs
+    N = 200
+    tau = compute_tau(N)
+    a = compute_sym2_coeffs(tau)
+    s = mp.mpc(1.0, 0.0)
+    L_a = float(mp.re(L_via_AFE(a, s, X=12.0, N_terms=60)))
+    assert L_a > 0, f"L(1.0) via AFE = {L_a:.6f} <= 0"
+    assert 0.4 < L_a < 0.8, f"L(1.0) via AFE = {L_a:.6f} outside [0.4, 0.8]"

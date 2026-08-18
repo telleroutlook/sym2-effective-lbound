@@ -66,13 +66,16 @@ The key properties:
 
 - `statement.md` — formal statement of the computation goal
 - `proof.md` — description of the method and error analysis
+- `src/afe_sym2.py` — self-contained AFE implementation (tau sieve, Gamma factors, weight function, grid scan)
+- `checker/check_grid.py` — independent verifier (recomputes L(s) at all grid points, spot-checks L(2))
+- `checker/README.md` — checker documentation
+- `witness/grid_values.json` — discovery-tier L(s) values on 5x9+5x5 grid (mpmath floats)
+- `witness/README.md` — witness documentation
 - `dependencies.yaml` — dependency graph with evidence levels
 - `limitations.md` — scope and limitations
 - `novelty.md` — what is new
-- `checker/` — independent verification code
-- `witness/` — computational witnesses (certified L(s) values)
 - `_REVIEW_RETURN_TEMPLATE.md` — structured review checklist
-- `tests/` — test file
+- `tests/test_gl3_afe.py` — test file
 - `MANIFEST.sha256` — integrity hashes
 
 ## Reviewer requirements

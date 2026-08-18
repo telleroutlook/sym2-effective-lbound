@@ -59,21 +59,28 @@ for N >> X (factorial growth of d_3(n) ensures rapid convergence).
 
 ## §4. Weight function computation
 
-The weight function V(y, s) is computed via Mellin inversion by shifting
-the contour from Re(u) = c > 0 to Re(u) = -m (m = 2 or 3), picking up
-residues from Gamma poles.
+The weight function V(y, s) is computed via Mellin contour integration
+at Re(u) = 1, using h(u) = exp(u^2) as cutoff.
+
+**Implementation:** `src/afe_sym2.py` computes V(y, s) via midpoint
+quadrature (n_quad = 500 points over [-T, T] with T = 30). The Gaussian
+decay of exp(u^2) ensures rapid convergence. For the 5x9 grid evaluation,
+each L(s) requires 60 AFE weight evaluations (one per term in the sum),
+each using 500 quadrature points.
 
 **Residues:** G(s+u) has poles at s+u = -2k (from Gamma(s/2)) and at
-s+u+11 = -2k (from Gamma((s+u+11)/2)). These contribute explicit terms
-to V(y, s).
+s+u+11 = -2k (from Gamma((s+u+11)/2)). The contour at Re(u) = 1 is to
+the right of the pole at u = 0 (residue 1), so V(y, s) → 1 as y → 0.
 
-**Tail integral:** The integral along Re(u) = -m is bounded by the decay
-of h(u)/u and the growth of G(s+u)/G(s).
+**Checker verification:** The independent checker (`checker/check_grid.py`)
+recomputes all 70 grid points from scratch (no imports from src/) and
+confirms relative error < 10^{-8} at every point.
 
-**What is needed [OBL]:**
-- Explicit residue computation (finite sum of Gamma-function values).
-- Rigorous bound on the tail integral along Re(u) = -m.
-- Verification that m = 2 or 3 suffices for the target precision.
+**What is needed for proof-tier [OBL]:**
+- Replace mpmath floats with Arb interval arithmetic (python-flint).
+- Bound the quadrature error explicitly (midpoint rule for analytic
+  integrands: O(exp(-c*T^2)) with explicit c from Stirling).
+- Bound |G(s+u)| on the contour Re(u) = 1, |Im(u)| <= T, for s in grid.
 
 ## §5. Arb interval arithmetic
 
