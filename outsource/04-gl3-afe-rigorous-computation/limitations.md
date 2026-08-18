@@ -1,17 +1,21 @@
 # Limitations — GL_3 AFE computation
 
-1. The current implementation computes ONLY the main sum of the AFE.
-   The dual sum (from the functional equation) is NOT implemented.
-   This means the computed values are NOT certified approximations to L(s).
+1. The implementation uses mpmath floats (30 digits), not Arb interval
+   arithmetic. No certified error bounds are provided. This is
+   discovery-tier only.
 
-2. The weight function V(y, s) is computed via mpmath floats, not Arb
-   interval arithmetic. No error bounds are certified.
+2. The two-term AFE (main sum + dual sum) is implemented with the
+   correct gamma ratio G(1-s+v)/G(s) in the dual weight. However,
+   the quadrature error and truncation error are not rigorously bounded.
 
-3. The "independent checker" recomputes the same single-sum formula,
-   so it verifies arithmetic consistency, not mathematical correctness.
+3. The "independent checker" recomputes the same formula with the same
+   algorithm, verifying arithmetic consistency, not mathematical correctness.
 
 4. The finite grid (45 points in the critical strip) cannot certify a
-   continuous zero-free region. Points between grid locations may be zero.
+   continuous zero-free region. Points between grid locations may be zeros.
 
 5. For large |t|, the Gamma factors grow exponentially, making the
    computation harder. The practical limit is |t| ~ 100.
+
+6. The dual sum weight V_tilde(n*X, s) decays as ~(nX)^{-1} for large n,
+   ensuring convergence. With X=12, N=60: V_tilde(720, s) ~ 4e-6.

@@ -148,32 +148,80 @@ def afe_weight(y, s, T=30.0, n_quad=500):
     return integral / (2 * mp.pi)
 
 
-# ===================================================================
-# 5. L(s) via smoothed-sum identity (Track B: critical strip)
-# ===================================================================
-
-def L_via_AFE(a_sym2, s, X=None, N_terms=None):
+def afe_weight_dual(y, s, T=30.0, n_quad=500):
     """
-    L(s) = sum_{n=1}^{N} A(n)/n^s * V(n/X, s) + tail.
+    V_tilde(y, s) for the dual sum in the GL_3 AFE.
 
-    X defaults to max(4, |s|^{0.3} + 3) for convergence.
-    N_terms defaults to 5*X (Gaussian decay ensures fast convergence).
+    From the Mellin inversion + functional equation derivation:
+      L(s) = Sigma a(n)/n^s V(n/X, s) + Sigma a(n) n^{s-1} V_tilde(nX, s)
+
+    where:
+      V(y, s)     = (1/2pi i) int G(s+u)/G(s) y^{-u} h(u)/u du
+      V_tilde(y,s) = (1/2pi i) int G(1-s+v)/G(s) y^{-v} h(-v)/v dv
+
+    with h(u) = exp(u^2).  Key: the gamma ratio is G(1-s+v)/G(s),
+    NOT G(1-s+v)/G(1-s).  NO external chi factor.
+    """
+    y_mp = mp.mpf(y)
+    Gs = G_factor(s)
+    s1 = mp.mpc(1, 0) - s  # 1 - s
+    dt = 2 * T / n_quad
+    integral = mp.mpc(0)
+    for i in range(n_quad):
+        tau = -T + (i + 0.5) * dt
+        v = mp.mpc(1, tau)
+        Gv = G_factor(s1 + v)  # G(1 - s + v)
+        integrand = (Gv / Gs) * mp.power(y_mp, -v) * mp.exp(v * v) / v
+        integral += integrand * dt
+    return integral / (2 * mp.pi)
+
+
+# ===================================================================
+# 5. L(s) via AFE with dual sum (self-dual GL_3, root number +1)
+# ===================================================================
+
+def L_via_AFE(a_sym2, s, X=None, N_terms=None, T=30.0, n_quad=500):
+    """
+    L(s) via smoothed GL_3 AFE with dual sum.
+
+    For self-dual L(s, sym^2 Delta) with root number +1 and Q=1:
+
+    L(s) = sum_{n<=N} A(n)/n^s * V(n/X, s)
+           + sum_{n<=N} A(n) * n^{s-1} * V_tilde(n*X, s)
+
+    where V is the main weight (gamma ratio G(s+u)/G(s))
+    and V_tilde is the dual weight (gamma ratio G(1-s+v)/G(s)).
+    NO external chi factor -- the gamma ratio is inside the integral.
     """
     if X is None:
         X = max(4.0, (abs(s) ** 2 + 100) ** 0.3)
     if N_terms is None:
         N_terms = min(int(5 * X), len(a_sym2))
 
-    total = mp.mpc(0)
+    # --- Main sum: Sigma A(n)/n^s * V(n/X, s) ---
+    main_total = mp.mpc(0)
     for n in range(1, N_terms + 1):
         an = mp.mpf(a_sym2[n - 1])
         if an == 0:
             continue
         y = mp.mpf(n) / mp.mpf(X)
-        V = afe_weight(y, s)
+        V = afe_weight(y, s, T=T, n_quad=n_quad)
         ns = mp.power(mp.mpf(n), -s)
-        total += an * ns * V
-    return total
+        main_total += an * ns * V
+
+    # --- Dual sum: Sigma A(n) * n^{s-1} * V_tilde(n*X, s) ---
+    s_m1 = s - mp.mpc(1, 0)  # s - 1
+    dual_total = mp.mpc(0)
+    for n in range(1, N_terms + 1):
+        an = mp.mpf(a_sym2[n - 1])
+        if an == 0:
+            continue
+        y_dual = mp.mpf(n) * mp.mpf(X)  # n * X, not n / X
+        V_d = afe_weight_dual(y_dual, s, T=T, n_quad=n_quad)
+        nsm1 = mp.power(mp.mpf(n), s_m1)  # n^{s-1}
+        dual_total += an * nsm1 * V_d
+
+    return main_total + dual_total
 
 
 def L_dirichlet(a_sym2, s, N_terms=None):
@@ -203,7 +251,8 @@ def L_dirichlet(a_sym2, s, N_terms=None):
 # ===================================================================
 
 def grid_scan(a_sym2, sigma_min, sigma_max, n_sigma,
-              t_min, t_max, n_t, method="afe", X=12.0, N_dirichlet=5000):
+              t_min, t_max, n_t, method="afe", X=12.0, N_dirichlet=5000,
+              T=30.0, n_quad=500):
     """
     Evaluate |L(s)| at grid points.  method = "afe" or "dirichlet".
 
@@ -221,7 +270,7 @@ def grid_scan(a_sym2, sigma_min, sigma_max, n_sigma,
             if method == "dirichlet" and sigma > 1.0:
                 L_val = L_dirichlet(a_sym2, s, N_dirichlet)
             else:
-                L_val = L_via_AFE(a_sym2, s, X=X)
+                L_val = L_via_AFE(a_sym2, s, X=X, T=T, n_quad=n_quad)
             L_mod = abs(L_val)
             results.append({
                 "sigma": round(sigma, 6),
@@ -239,14 +288,15 @@ def grid_scan(a_sym2, sigma_min, sigma_max, n_sigma,
 # ===================================================================
 
 def make_certificate(grid_results, sigma_min, sigma_max, t_min, t_max,
-                     N_terms, X):
+                     N_coeffs, N_afe, X):
     min_pt = min(grid_results, key=lambda r: r["L_mod"])
     return {
         "module": "M-3",
         "status": "discovery",
         "certifies_zero_free": False,  # finite grid cannot certify continuous region
-        "method": "GL3 AFE smoothed sum (mpmath, not Arb)",
-        "N_terms": N_terms,
+        "method": "GL3 AFE two-term smoothed sum (mpmath, not Arb)",
+        "N_coeffs": N_coeffs,
+        "N_afe": N_afe,
         "X": X,
         "sigma_range": [sigma_min, sigma_max],
         "t_range": [t_min, t_max],
@@ -256,10 +306,11 @@ def make_certificate(grid_results, sigma_min, sigma_max, t_min, t_max,
         "min_L_t": min_pt["t"],
         "witness_file": "witness/grid_values.json",
         "notes": (
-            "Discovery tier (mpmath floats, single-sum AFE only). "
-            "NOT a certified L(s) evaluation. Missing: (1) dual sum from "
-            "functional equation, (2) Arb interval arithmetic, (3) rigorous "
-            "quadrature error bound, (4) continuous-region argument."
+            "Discovery tier (mpmath floats, two-term AFE with corrected "
+            "dual sum using gamma ratio G(1-s+v)/G(s)). "
+            "NOT a certified L(s) evaluation. Missing: (1) Arb interval "
+            "arithmetic, (2) rigorous quadrature error bound, "
+            "(3) continuous-region argument."
         ),
     }
 
@@ -314,7 +365,7 @@ def main():
     # --- Combine and write witness ---
     all_results = results_afe + results_dir
     cert = make_certificate(results_afe, SIGMA_MIN, SIGMA_MAX,
-                            T_MIN, T_MAX, N_COEFFS, X)
+                            T_MIN, T_MAX, N_COEFFS, int(5 * X), X)
     cert["spot_L2"] = round(float(mp.re(L2)), 6)
 
     witness_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),

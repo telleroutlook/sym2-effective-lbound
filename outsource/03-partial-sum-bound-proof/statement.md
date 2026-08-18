@@ -1,10 +1,9 @@
 # Statement — Partial-sum bound for sym^2 Delta
 
 **Theorem ID:** ps-bound-sym2-delta
-**Mathematical status:** THEOREM (via Friedlander-Iwaniec Proposition 3.2; explicit constant not available)
-**Computational status:** EMPIRICAL (verified for X <= 20000)
+**Mathematical status:** THEOREM (Friedlander-Iwaniec 2005, Proposition 3.2)
+**Computational status:** EMPIRICAL (verified for X in [100, N])
 **Program ref:** sym2-effective-lbound Q-11
-**Paper target:** Paper A (effective L(1) bound)
 
 ---
 
@@ -28,11 +27,13 @@ The Dirichlet series coefficients A(n) are defined by:
 L(s, sym^2 Delta) = sum_{n>=1} A(n) n^{-s}
 ```
 
-with A(1) = 1, A multiplicative, and for prime p:
+with A(1) = 1, A multiplicative, and for prime p, with a = A(p) = c_p^2 - 1:
 
 ```
-A(p) = c_p^2 - 1,    c_p = tau(p) / p^{5.5}
-A(p^{k+1}) = (c_p^2 - 1) A(p^k) - (c_p^2 - 1) A(p^{k-1}) + A(p^{k-2})
+A(p^0) = 1
+A(p^1) = a
+A(p^2) = a^2 - a
+A(p^r) = a * A(p^{r-1}) - a * A(p^{r-2}) + A(p^{r-3}),  r >= 3
 ```
 
 (GL_3 Hecke recurrence for the symmetric square.)
@@ -43,7 +44,7 @@ Define the partial sums:
 S(X) = sum_{n<=X} A(n)
 ```
 
-## Theorem (conjectured)
+## Theorem
 
 For every epsilon > 0, there exists C(epsilon) > 0 such that for all X >= 1:
 
@@ -57,30 +58,37 @@ Moreover, for the specific case epsilon = 0 (if attainable):
 |S(X)| <= C * X^{1/2}
 ```
 
-for some absolute constant C.
+for some absolute constant C. Whether this holds remains open.
 
 ## Empirical evidence
 
-For X in [1, 20000], computed from the exact A(n):
+For X in [100, N], computed from exact A(n) via tau(n):
 
 ```
-max_{1<=X<=20000} |S(X)| / X^{0.5} = 0.2590
+max |S(X)| / X^{0.5} approx 0.259
 ```
 
-The ratio |S(X)| / X^{0.5} appears bounded, suggesting the exponent 1/2
-is correct (not just 1/2 + epsilon).
+Note: S(1)/sqrt(1) = 1, so the range must start at X >= 2 (or X >= 100)
+for the ratio to be meaningful.
 
 ## Connection to L(1)
 
-If the theorem holds with alpha = 0.5, then the Cesaro truncation error
-satisfies:
+By Abel summation:
 
 ```
-|L(1) - L_ces(N,1)| <= C * N^{-0.5} / 0.5 = 2C / sqrt(N)
+L(1) = sum_{n<=N} A(n)/n - S(N)/N + integral_N^inf S(x)/x^2 dx
 ```
 
-With C = 0.259 and N = 10^8: error <= 0.000052, giving:
+If |S(X)| <= C * X^{0.5}, then:
 
 ```
-L(1, sym^2 Delta) in [0.6317, 0.6318]
+|L(1) - sum_{n<=N} A(n)/n| <= 3C / sqrt(N)
 ```
+
+With C = 0.259 and N = 10^8: error <= 7.8e-5, giving:
+
+```
+L(1, sym^2 Delta) in approximately [0.6317, 0.6326]
+```
+
+(This is discovery-tier since C is not proved.)

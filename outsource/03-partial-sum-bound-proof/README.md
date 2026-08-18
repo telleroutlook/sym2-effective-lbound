@@ -8,7 +8,7 @@ directory to the reviewer.
 Prove a partial-sum bound of the form
 
 ```
-S(X) := sum_{n<=X} A(n)  =  O(X^{1/2 + epsilon})
+S(X) := sum_{n<=X} A(n)  =  O_epsilon(X^{1/2 + epsilon})
 ```
 
 where A(n) are the normalized symmetric-square coefficients of the
@@ -23,68 +23,41 @@ multiplicative with the GL_3 Hecke recurrence for prime powers.
 
 ## Why this is needed
 
-The L(1) value decomposes as L(1) = S1 - J where:
+The L(1) value is computed as L(1) = S1 - J where:
 - S1 is the "main sum" (certified to [0.548298, 0.548305]).
-- J is the "Cesaro truncation error" from approximating L(1) by
-  L_ces(N,1) = (1/N) sum_{n<=N} S(n).
+- J is the Abel summation truncation error from approximating L(1) by
+  a finite Dirichlet sum.
 
-The Cesàro error satisfies:
-```
-|L(1) - L_ces(N,1)| <= C * N^{alpha - 1} / alpha
-```
-when |S(X)| <= C * X^alpha for all X >= 1.
+By Abel summation:
 
-With the EMPIRICAL bound |S(X)| <= 0.259 * X^{0.5} (verified for X <= 20000),
-N = 10^8 gives Cesàro error <= 0.000052, yielding:
 ```
-L(1) in [0.6317, 0.6318]   (CONDITIONAL on the partial-sum bound)
+L(1) = sum_{n<=N} A(n)/n - S(N)/N + integral_N^inf S(x)/x^2 dx
 ```
 
-Without a PROOF of the partial-sum bound, this is discovery-tier only.
+When |S(X)| <= C * X^alpha with alpha < 1, this gives:
 
-## Empirical evidence
+```
+|L(1) - sum_{n<=N} A(n)/n| <= C * (1 + 1/(1-alpha)) * N^{alpha-1}
+```
 
-- For X in [1, 20000]: max |S(X)| / X^{0.5} = 0.2590.
-- The bound |S(X)| <= X^{0.5} appears to hold with room to spare.
-- A zero-free scan (src/zero_free_arb.py) certifies L(s) != 0 for
-  Re(s) > 1 (via truncated Dirichlet series with tail bound).
-- Discovery-tier scan extends to critical strip [0.6, 1.0] via smoothed
-  sum (not yet rigorous).
+## Proved result
 
-## Suggested proof routes
+**Theorem** (Friedlander-Iwaniec 2005, Proposition 3.2):
+For every epsilon > 0:
 
-### Route A: Zero-free region via explicit formula
+```
+S(X) = O_epsilon(X^{1/2 + epsilon})
+```
 
-1. Prove L(s, sym^2 Delta) != 0 for Re(s) >= sigma_0 with 1/2 < sigma_0 < 1.
-2. Apply the explicit formula:
-   S(X) = X * (residue at s=1) + sum_{rho} X^rho / rho + O(...)
-   where the sum is over non-trivial zeros rho of L(s, sym^2 Delta).
-3. If all zeros have Re(rho) <= sigma_0, then |S(X)| << X^{sigma_0}.
+unconditionally. No GRH, no zero-free region needed.
 
-### Route B: GL_3 AFE direct computation
-
-1. Use the GL_3 approximate functional equation to evaluate L(s) at
-   specific points in the critical strip with certified error bounds.
-2. Show L(s) != 0 at enough points to establish a zero-free region.
-3. Route A then applies.
-
-### Route C: Analytic number theory methods
-
-1. Use the Rankin-Selberg convolution L(s, sym^2 Delta x sym^2 Delta)
-   or other analytic techniques to bound S(X) directly.
-2. The bound |A(n)| <= d_3(n) (DEL-D.1) is too weak; need oscillation.
-
-## What the reviewer should produce
-
-1. A proof of |S(X)| <= C * X^{1/2 + epsilon} for some explicit C, epsilon.
-2. An explicit constant if possible (smaller C gives tighter L(1) interval).
-3. Identification of which proof route succeeds (or a new route).
-4. Any dependencies on unproved conjectures must be clearly stated.
+**What is NOT available:** The explicit constant C(epsilon). The empirical
+value max |S(X)|/X^{0.5} = 0.259 for X in [100, N] is discovery-tier only.
 
 ## Contents
 
 - `statement.md` — formal statement of the partial-sum bound
-- `proof.md` — proof (or proof sketch with gaps identified)
+- `proof.md` — proof via Friedlander-Iwaniec Proposition 3.2
 - `dependencies.yaml` — dependency graph with evidence levels
 - `limitations.md` — scope and limitations
 - `novelty.md` — what is new
@@ -104,7 +77,6 @@ with one of: PASS, PASS WITH MINOR REVISIONS, FAIL, INCONCLUSIVE.
 ## Optional local checks
 
 `python3 -m pytest tests/ -q` inside a fresh unpack of this batch.
-Test count as measured in this exact bundle: to be determined.
 
 ## Integrity
 

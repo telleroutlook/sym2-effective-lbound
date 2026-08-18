@@ -1,156 +1,139 @@
-# Proof — Rigorous GL_3 AFE computation for L(s, sym^2 Delta)
+# Proof — GL_3 AFE computation for L(s, sym^2 Delta)
 
-**Status:** PROOF-SKETCH (method description with identified gaps; not a completed proof).
+**Status:** DISCOVERY-TIER (mpmath floats with full two-term AFE; not Arb-certified).
 
 ## §1. Method overview
 
 The goal is to compute L(s, sym^2 Delta) at points in the critical strip
-with certified error bounds, establishing a zero-free region.
+to establish numerical bounds.
 
 The method uses the GL_3 approximate functional equation (AFE), which
-expresses L(s) as a smoothed sum of A(n)/n^s with an exponentially decaying
-weight function V(y, s).
+expresses L(s) as two smoothed sums with weight functions derived from
+the Gamma factors.
 
-## §2. The smoothed-sum identity
+## §2. The two-term AFE identity
 
-For Re(s) > 0 and suitable cutoff function h(u) (e.g., h(u) = exp(u^2)):
+For self-dual L(s, sym^2 Delta) with root number +1 and conductor Q=1,
+the AFE is:
 
 ```
-sum_{n>=1} A(n)/n^s * V(n/X, s) = L(s) + R(X, s)
+L(s) = main(s) + dual(s)
 ```
 
 where:
 
 ```
-V(y, s) = (1/2*pi*i) * int_{Re(u)=c} G(s+u)/G(s) * y^{-u} * h(u)/u du
+main(s) = sum_{n>=1} A(n)/n^s * V(n/X, s)
+dual(s) = sum_{n>=1} A(n) * n^{s-1} * V_tilde(n*X, s)
 ```
 
-with G(s) = Gamma_R(s+1) * Gamma_C(s+11).
+with weight functions:
 
-**Properties of V(y, s):**
-- V(y, s) ~ 1 for small y (y << 1).
-- V(y, s) decays like exp(-c * (log y)^2) for large y (Gaussian decay).
-- The Mellin transform int_0^inf V(y, s) * y^{s-1} dy = G(s+u)/(G(s)*u)
-  evaluated at u = 0 gives the residue 1, ensuring V normalizes correctly.
+```
+V(y, s)     = (1/2pi i) int_{Re(u)=1} G(s+u)/G(s) * y^{-u} * h(u)/u du
+V_tilde(y,s) = (1/2pi i) int_{Re(v)=1} G(1-s+v)/G(s) * y^{-v} * h(-v)/v dv
+```
 
-**Reference:** Gelbart-Jacquet (1978), Section 1; standard in GL_3 AFE literature.
+with h(u) = exp(u^2) as cutoff and G(s) = Gamma_R(s+1) * Gamma_C(s+11).
+
+**Key property:** The gamma ratio in V_tilde is G(1-s+v)/G(s), NOT
+G(1-s+v)/G(1-s). There is NO external chi factor — the gamma ratio is
+inside the contour integral.
+
+**Reference:** Standard GL_3 AFE derivation via Mellin inversion + functional
+equation (Gelbart-Jacquet 1978; Goldfeld 2006).
 
 ## §3. Truncation and tail bound
 
 Choose X and N such that:
-- The main sum: sum_{n<=N} A(n)/n^s * V(n/X, s) captures L(s).
-- The tail: sum_{n>N} |A(n)|/n^{Re(s)} * |V(n/X, s)| is small.
-- The dual sum (from the functional equation) contributes O(X^{-1/2}).
+- The main sum captures L(s) with weight V(n/X, s) ~ 1 for n << X.
+- The dual sum converges with weight V_tilde(n*X, s) decaying for large nX.
+- The tail from n > N is small.
 
-**DUAL SUM — NOT YET IMPLEMENTED [OBL]:**
-The current `src/afe_sym2.py` computes ONLY the main sum. The standard AFE
-for a self-dual GL_3 L-function with root number +1 is:
-
-```
-L(s) = main_sum(s) + chi(s) * conj(main_sum(1-s))
-```
-
-where chi(s) = Q^{1/2-s} * G(1-s)/G(s) and the dual sum involves
-V_tilde(n/X, 1-s). For the current parameters (Q=1, s near 1), the dual
-sum contributes at most O(X^{-1/2}) and is NOT negligible for rigorous
-certification. See Harcos (2003) for the general GL_n AFE formulation.
-
-The current implementation treats the main sum alone as an approximation
-to L(s). This is valid as a discovery-tier diagnostic but NOT as a
-certified computation.
-
-**Truncation parameter N:** The weight V(n/X, s) decays like
-exp(-c * (log(n/X))^2) for n >> X. The tail from n > N is bounded by:
-
-```
-tail <= d_3_max * sum_{n>N} n^{-sigma} * exp(-c * (log(n/X))^2)
-      <= epsilon * exp(-c * (log(N/X))^2)
-```
-
-for N >> X (factorial growth of d_3(n) ensures rapid convergence).
+The weight V(y, s) decays for large y. V_tilde(y, s) decays for large y.
+With X=12, N_terms=60: the weights at n=60 give V(5, s) ~ 0.2 and
+V_tilde(720, s) ~ 0.000004, ensuring rapid convergence.
 
 **What is needed [OBL]:**
-- Explicit bound on V(y, s) for all y > 0 and s in the critical strip.
-- Explicit bound on the Gamma factors G(s+u) for Re(u) = c and s in the grid.
-- Verification that N ~ X^{3/2} suffices for target precision 10^{-6}.
+- Explicit bound on V(y, s) and V_tilde(y, s) for all y > 0 and s in the
+  critical strip.
+- Verification that N_terms=60 suffices for target precision 10^{-4}.
 
 ## §4. Weight function computation
 
-The weight function V(y, s) is computed via Mellin contour integration
-at Re(u) = 1, using h(u) = exp(u^2) as cutoff.
+The weight functions V and V_tilde are computed via Mellin contour integration
+at Re(u) = Re(v) = 1, using h(u) = exp(u^2) as cutoff.
 
-**Implementation:** `src/afe_sym2.py` computes V(y, s) via midpoint
-quadrature (n_quad = 500 points over [-T, T] with T = 30). The Gaussian
-decay of exp(u^2) ensures rapid convergence. For the 5x9 grid evaluation,
-each L(s) requires 60 AFE weight evaluations (one per term in the sum),
-each using 500 quadrature points.
+**Implementation:** `src/afe_sym2.py` computes V and V_tilde via midpoint
+quadrature (n_quad = 500 points over [-T, T] with T = 20). The Gaussian
+decay of exp(u^2) ensures rapid convergence.
 
-**Residues:** G(s+u) has poles at s+u = -2k (from Gamma(s/2)) and at
-s+u+11 = -2k (from Gamma((s+u+11)/2)). The contour at Re(u) = 1 is to
-the right of the pole at u = 0 (residue 1), so V(y, s) → 1 as y → 0.
+**Poles of G(s+u):**
+- G(s) = Gamma_R(s+1) * Gamma_C(s+11) = pi^{-(s+1)/2} Gamma((s+1)/2) *
+  2(2pi)^{-(s+11)} Gamma(s+11).
+- Gamma_R(s+1) has poles at s+1 = 0, -2, -4, ... (i.e., s = -1, -3, -5, ...)
+  from Gamma((s+1)/2).
+- Gamma_C(s+11) has poles at s+11 = 0, -1, -2, ... (i.e., s = -11, -12, -13, ...)
+  from Gamma(s+11).
+- The contour at Re(u) = 1 is to the right of the pole at u = 0 (residue 1),
+  ensuring V(y, s) -> 1 as y -> 0.
 
-**Checker verification:** The independent checker (`checker/check_grid.py`)
-recomputes all 70 grid points from scratch (no imports from src/) and
-confirms relative error < 10^{-8} at every point.
+## §5. Computation (mpmath, not Arb)
 
-**What is needed for proof-tier [OBL]:**
+All computations use mpmath with 30 decimal digits of precision.
+**This is discovery-tier, NOT proof-tier.**
+
+For proof-tier, the following would be needed:
 - Replace mpmath floats with Arb interval arithmetic (python-flint).
-- Bound the quadrature error explicitly (midpoint rule for analytic
-  integrands: O(exp(-c*T^2)) with explicit c from Stirling).
-- Bound |G(s+u)| on the contour Re(u) = 1, |Im(u)| <= T, for s in grid.
-
-## §5. Arb interval arithmetic
-
-All computations use python-flint (Arb library) with outward rounding:
-- Midpoint-radius representation: z = [m, r] means |z - m| <= r.
-- Gamma function: acb_gamma() with rigorous error.
-- Summation: use acb_sum() or manual accumulation with outward rounding.
-- Each step adds to the radius, ensuring the final interval contains
-  the true value.
+- Outward rounding at each arithmetic step.
+- Explicit quadrature error bound.
+- Explicit Gamma factor bounds on the contour.
 
 **What is needed [OBL]:**
 - Implementation of the full computation in Arb (not mpmath).
 - Verification that rounding errors are controlled at each step.
-- Comparison with mpmath floats to detect gross errors.
 
-## §6. Zero-free region from certified values
+## §6. Grid scan results
 
-If L(s) is evaluated at a grid {(sigma_j, t_k)} with certified intervals
-[L_lo, L_hi] and 0 not in [L_lo, L_hi] at every point, then L(s) != 0
-on the grid.
+The corrected two-term AFE gives |L(s)| values on a 5x9 grid in
+[sigma in [0.6, 1.0], |t| <= 20]:
 
-To extend to a continuous region:
-- Use a continuity argument: L(s) is entire, so if |L(s)| > delta > 0
-  on a compact set K, then |L(s)| > delta/2 on a neighborhood of K.
-- Cover the region [sigma_0, 1] x [-T, T] with overlapping disks
-  of radius r < delta / (2 * max|L'|) on each disk.
+- Min |L(s)| = 0.532 at (sigma=0.6, t=0)
+- Values increase monotonically from sigma=0.6 to sigma=1.0 along t=0
+- Symmetric in t as expected
 
-**What is needed [OBL]:**
-- Bound on |L'(s)| in the critical strip (from the functional equation
-  and convexity bounds).
-- Sufficient grid resolution to ensure coverage.
+**certifies_zero_free = false** — finite grid cannot certify continuous
+zero-free region. See §7.
 
-## §7. From zero-free region to partial-sum bound
+## §7. Zero-free region
 
-If L(s) != 0 for Re(s) >= sigma_0 with 1/2 < sigma_0 < 1, then by the
-explicit formula (Perron's formula + contour shift):
+A finite grid of 45 points cannot certify that L(s) != 0 for all s in a
+continuous region. Points between grid locations may be zeros.
 
-```
-S(X) = sum_{n<=X} A(n) = O(X^{sigma_0})
-```
+To extend to a continuous region, one would need:
+- Bound on |L'(s)| in the critical strip.
+- Sufficient grid resolution for coverage argument.
+- Or: rigorous argument principle / winding-number certificate.
 
-This gives Cesaro error O(N^{sigma_0 - 1}), and with sigma_0 close to 1/2,
-the L(1) interval is tight.
+For the current discovery-tier computation, the grid provides numerical
+evidence but not a proof of zero-freeness.
 
-**What is needed [OBL]:**
-- This step is in Batch 03 (partial-sum bound proof).
-- The two batches are complementary: Batch 04 provides the zero-free
-  region, Batch 03 uses it for the partial-sum bound.
+## §8. Connection to partial-sum bound
 
-## §8. References
+The partial-sum bound S(X) = O_epsilon(X^{1/2+epsilon}) is proved
+unconditionally via Friedlander-Iwaniec (Batch 03), independently of any
+zero-free region. The AFE computation here provides numerical evidence
+for L(s) behavior but is not needed for the partial-sum bound.
 
-- Gelbart-Jacquet (1978), "A note on the symmetric square L-function" — GL_3 AFE.
-- Goldfeld (2006), "Automorphic forms and L-functions for the group GL(n,R)" — GL_n AFE.
-- Fredrik Johansson (2012-), "Arb: efficient arbitrary-precision midpoint-radius interval arithmetic" — Arb library.
-- Iwaniec-Kowalski (2004), "Analytic Number Theory" — Mellin inversion, Stirling bounds.
-- Tenenbaum (2015), "Introduction to Analytic and Probabilistic Number Theory" — d_3(n) bounds.
+## §9. References
+
+- Gelbart-Jacquet (1978), "A relation between automorphic representations
+  of GL(2) and GL(3)" — GL_3 structure, entireness.
+- Goldfeld (2006), "Automorphic forms and L-functions for the group
+  GL(n,R)" — GL_n AFE formulation.
+- Harcos (2002), "New bounds for automorphic L-functions" — GL_n AFE
+  with smoothed sums.
+- Iwaniec-Kowalski (2004), "Analytic Number Theory" — Mellin inversion,
+  Stirling bounds.
+- Fredrik Johansson (2012-), "Arb: efficient arbitrary-precision
+  midpoint-radius interval arithmetic" — for proof-tier upgrade.

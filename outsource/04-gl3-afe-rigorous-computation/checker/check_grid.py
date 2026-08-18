@@ -127,6 +127,7 @@ def _G(s):
 
 
 def _afe_weight(y, s, T=30.0, n_quad=500):
+    """V(y, s) = (1/2pi i) int G(s+u)/G(s) y^{-u} h(u)/u du, h(u)=exp(u^2)."""
     y_mp = mp.mpf(y)
     Gs = _G(s)
     dt = 2 * T / n_quad
@@ -139,16 +140,50 @@ def _afe_weight(y, s, T=30.0, n_quad=500):
     return integral / (2 * mp.pi)
 
 
-def _L_afe(a, s, X=12.0, N_terms=60):
-    total = mp.mpc(0)
+def _afe_weight_dual(y, s, T=30.0, n_quad=500):
+    """V_tilde(y, s) = (1/2pi i) int G(1-s+v)/G(s) y^{-v} h(-v)/v dv."""
+    y_mp = mp.mpf(y)
+    Gs = _G(s)
+    s1 = mp.mpc(1, 0) - s
+    dt = 2 * T / n_quad
+    integral = mp.mpc(0)
+    for i in range(n_quad):
+        tau = -T + (i + 0.5) * dt
+        v = mp.mpc(1, tau)
+        Gv = _G(s1 + v)
+        integral += (Gv / Gs) * mp.power(y_mp, -v) * mp.exp(v * v) / v * dt
+    return integral / (2 * mp.pi)
+
+
+def _L_afe(a, s, X=12.0, N_terms=60, T=30.0, n_quad=500):
+    """L(s) via GL_3 AFE with dual sum (self-dual, root number +1, Q=1).
+
+    L(s) = Sigma A(n)/n^s V(n/X, s) + Sigma A(n) n^{s-1} V_tilde(n*X, s).
+    """
+    s = mp.mpc(s)
+    # Main sum
+    main_total = mp.mpc(0)
     for n in range(1, min(N_terms + 1, len(a) + 1)):
         an = mp.mpf(a[n - 1])
         if an == 0:
             continue
         y = mp.mpf(n) / mp.mpf(X)
-        V = _afe_weight(y, s)
-        total += an * mp.power(mp.mpf(n), -s) * V
-    return total
+        V = _afe_weight(y, s, T=T, n_quad=n_quad)
+        main_total += an * mp.power(mp.mpf(n), -s) * V
+
+    # Dual sum: Sigma A(n) * n^{s-1} * V_tilde(n*X, s)
+    s_m1 = s - mp.mpc(1, 0)
+    dual_total = mp.mpc(0)
+    for n in range(1, min(N_terms + 1, len(a) + 1)):
+        an = mp.mpf(a[n - 1])
+        if an == 0:
+            continue
+        y_dual = mp.mpf(n) * mp.mpf(X)
+        V_d = _afe_weight_dual(y_dual, s, T=T, n_quad=n_quad)
+        nsm1 = mp.power(mp.mpf(n), s_m1)
+        dual_total += an * nsm1 * V_d
+
+    return main_total + dual_total
 
 
 # ===================================================================
