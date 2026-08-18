@@ -36,9 +36,11 @@ For each grid point (sigma, t):
    L(s) = sum_{n<=N} A(n)/n^s * V(n/X, s) + dual_sum + tail,
    where V is the weight function from Mellin inversion.
 
-2. **Weight function**: V(y, s) = (1/2pi i) int G(s+u)/G(s) * y^{-u} * h(u)/u du.
-   Computed via contour shift to Re(u) = -m (m = 2 or 3), picking up
-   residues from Gamma poles.
+2. **Weight function**: V(y, s) = (1/2pi) int G(s+u)/G(s) * y^{-u} * h(u)/u du.
+   Computed via direct midpoint quadrature at Re(u) = 1 over [-T, T]
+   with T = 20 and h(u) = exp(u^2) as Gaussian cutoff. The integrand
+   decays super-exponentially due to h, so the contour is NOT shifted;
+   poles of G(s+u) at Re(u) < 1 are avoided by staying at Re(u) = 1.
 
 3. **Truncation** [corrected per 2026-08-19 review]: with y = n/X and a
    proved bound V(y) <= exp(-c*y^{2/3}), solving exp(-c*(N/X)^{2/3}) < eps
@@ -50,5 +52,6 @@ For each grid point (sigma, t):
 4. **Tail bound**: |tail| <= A_m * sum_{n>N} d_3(n)/n^sigma * |V(n/X, s)|,
    bounded by the exponential decay of V and the Abel sum bound on d_3.
 
-5. **Arb arithmetic**: All computations in outward-rounded interval
-   arithmetic to guarantee containment.
+5. **Arb arithmetic** [OBL — not yet implemented]: All computations should use
+   outward-rounded interval arithmetic to guarantee containment. Currently
+   uses mpmath floats (discovery-tier).

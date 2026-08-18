@@ -54,7 +54,15 @@ Composite labels are forbidden. Status is derived by the checker, never self-dec
 
 ## Engineering Conventions
 
-- Long computations (>30 s): use ~/.local/bin/run_and_wait.sh -t <sec> -- <cmd>
+- Long computations (>30 s): use job_manager.sh for background execution:
+  - `job_manager.sh start --name grid_scan -- python3 dense_grid_scan.py`
+  - `job_manager.sh status <job_id>`
+  - `job_manager.sh tail <job_id>` (last 40 lines)
+  - `job_manager.sh kill <job_id>`
+  - Jobs run detached; Agent retains control immediately
+- All long scripts must include heartbeat output (Heartbeat class from src/heartbeat.py):
+  - Print progress every 30 seconds: current stage, processed/total, elapsed
+  - This prevents false "stuck" perception during正常 computation
 - Certified bounds: python-flint / Arb with outward rounding; mpmath/floats are discovery-tier only.
 - discovery/ is untrusted: never imported by proof/, checker/, or src/.
 - Commit messages in English. git status before commit.

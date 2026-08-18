@@ -56,8 +56,9 @@ The key properties:
 ## Suggested implementation
 
 1. Use python-flint (Arb library) for interval arithmetic.
-2. Compute the weight function V(y, s) via the Mellin integral with
-   rigorous error bounds (contour shift, gamma factor bounds).
+2. Compute the weight function V(y, s) via the Mellin integral at Re(u)=1
+   with rigorous error bounds (quadrature error, truncation at Re(u)=1,
+   Gamma factor bounds on the contour).
 3. Compute the truncated sum sum_{n<=N} A(n)/n^s * V(n/X, s) with
    interval endpoints rounded OUTWARD at both ends (lower end toward -inf,
    upper end toward +inf) — 'inward for lower' is unsafe and has been

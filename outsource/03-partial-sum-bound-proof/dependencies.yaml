@@ -36,7 +36,9 @@ dependencies:
       parameters (kappa_1, kappa_2, kappa_3) = (1, 11, 12).
     source: >
       Standard for symmetric square L-functions of cusp forms; follows from
-      Gelbart-Jacquet (1978) and Iwaniec-Michel.
+      Gelbart-Jacquet (1978), "A relation between automorphic representations
+      of GL(2) and GL(3)" (Ann. Sci. ENS 11, 1978), and Iwaniec-Michel,
+      "Derivatives of L-functions of symmetric square" (Acta Arith. 2000).
     mathematical: REFEREED
     peer_reviewed: true
     computational: NONE

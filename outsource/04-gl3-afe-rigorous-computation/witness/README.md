@@ -17,8 +17,10 @@ This is a DISCOVERY-TIER diagnostic, NOT a certified L(s) value.
 - NOT a zero-free region certificate (finite grid, no continuity argument).
 - NOT suitable as a premise for downstream proofs.
 
-**Spot-check:** L(2) = 0.805913 via truncated Dirichlet (N=200).
-The tail error is O(N^{-1}) ~ 5e-3, so this matches to ~3 digits.
+**Spot-check (discovery-tier only):** L(2) = 0.805913 via truncated Dirichlet
+(N=200). The tail is bounded by sum_{n>N} d_3(n)/n^2, whose leading term
+is O((log N)^2/N) ~ 5e-3. This matches the Dirichlet-series value to ~3
+digits, confirming arithmetic consistency. This is NOT a rigorous bound.
 
 **Coefficient computation:** Uses exact tau(n) from Euler product, but
 computes c_p = tau(p)/p^{5.5} in floating point. For proof-tier,

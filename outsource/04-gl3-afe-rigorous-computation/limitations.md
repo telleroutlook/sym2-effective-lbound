@@ -17,5 +17,12 @@
 5. For large |t|, the Gamma factors grow exponentially, making the
    computation harder. The practical limit is |t| ~ 100.
 
-6. The dual sum weight V_tilde(n*X, s) decays as ~(nX)^{-1} for large n,
-   ensuring convergence. With X=12, N=60: V_tilde(720, s) ~ 4e-6.
+6. The dual sum weight V_tilde(n*X, s) decays faster than any power of
+   (nX)^{-1} for large nX due to the h(-v) = exp(v^2) cutoff in the
+   Mellin integral (the integrand's Gaussian decay produces stretched-
+   exponential or faster decay of V_tilde). The actual decay rate depends
+   on the Gamma ratio G(1-s+v)/G(s) and must be proved from a uniform
+   bound on the Mellin integrand. A weaker statement V_tilde = O((nX)^{-A})
+   for any A > 0 follows from shifting the contour to Re(v) = A, picking
+   up Gamma poles. The claimed "V_tilde(720, s) ~ 4e-6" is a discovery-
+   tier observation, not a proved bound.

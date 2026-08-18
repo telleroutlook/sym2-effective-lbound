@@ -14,12 +14,13 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
 
 from flint import acb, arb, ctx
 from afe_sym2_arb import (
     compute_tau, compute_sym2_coeffs, _compute_weight,
-    G_func, Gamma_R, Gamma_C, PREC
 )
+from heartbeat import Heartbeat
 ctx.prec = 256  # higher precision for error analysis
 
 N_COEFFS = 200
@@ -140,9 +141,13 @@ def grid_min_modulus():
     min_mod = float('inf')
     min_pt = None
     all_results = []
+    n_total = len(sigmas) * len(t_all)
+    hb = Heartbeat(interval=30)
 
-    for s_re in sigmas:
-        for s_im in t_all:
+    for i, s_re in enumerate(sigmas):
+        for j, s_im in enumerate(t_all):
+            idx = len(all_results) + 1
+            hb.tick(f"grid {idx}/{n_total} ({100*idx/n_total:.0f}%) s={s_re}+{s_im}i")
             L = acb(0, 0)
             main = acb(0, 0)
             dual = acb(0, 0)
@@ -171,6 +176,7 @@ def grid_min_modulus():
                 min_mod = mod_mid - mod_rad
                 min_pt = {"sigma": s_re, "t": s_im}
 
+    hb.done()
     return {
         "min_modulus_lower_bound": min_mod,
         "min_modulus_point": min_pt,
