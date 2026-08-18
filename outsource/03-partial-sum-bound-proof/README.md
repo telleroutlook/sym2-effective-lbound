@@ -23,8 +23,6 @@ multiplicative with the GL_3 Hecke recurrence for prime powers.
 
 ## Why this is needed
 
-The L(1) value is computed as L(1) = S1 - J where:
-- S1 is the "main sum" (certified to [0.548298, 0.548305]).
 - J is the Abel summation truncation error from approximating L(1) by
   a finite Dirichlet sum.
 

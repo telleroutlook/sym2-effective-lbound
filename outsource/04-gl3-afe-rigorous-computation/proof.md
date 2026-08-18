@@ -98,7 +98,11 @@ For proof-tier, the following would be needed:
 The corrected two-term AFE gives |L(s)| values on a 5x9 grid in
 [sigma in [0.6, 1.0], |t| <= 20]:
 
-- Min |L(s)| = 0.532 at (sigma=0.6, t=0)
+- Min |L(s)| = 0.33403921 at (sigma=0.6, t=-20)  [machine-derived by
+  checker/recompute_stats.py from witness/grid_values.json; hand-copied
+  statistics are forbidden. The earlier value 0.532 at (0.6, 0) was a
+  stale transcription error — 0.334 < 0.532, and the true minimizer sits
+  at the grid corner t=-20.]
 - Values increase monotonically from sigma=0.6 to sigma=1.0 along t=0
 - Symmetric in t as expected
 

@@ -9,7 +9,7 @@ dependencies:
       equation expressing L(s) as a smoothed sum of A(n)/n^s with
       exponentially decaying weight.
     source: >
-      Gelbart-Jacquet (1978), "A note on the symmetric square L-function";
+      Gelbart-Jacquet (1978), "A relation between automorphic representations of GL(2) and GL(3)";
       standard in the theory of automorphic L-functions.
     mathematical: REFEREED
     peer_reviewed: true
@@ -45,8 +45,10 @@ dependencies:
       Empirical scan shows |L(s)| >= 0.127 for sigma in [0.6, 1.0],
       |t| <= 20, via smoothed sum with X = 4000 and N = 20000.
     source: >
-      Computed in src/zero_free_arb.py; certificate in
-      baseline/zero_free_scan.json.
+      Computed by the batch's own discovery code; no external certificate
+      file exists in this bundle (the earlier reference to
+      src/zero_free_arb.py and baseline/zero_free_scan.json pointed at
+      files that were never shipped and has been removed).
     mathematical: EMPIRICAL
     peer_reviewed: false
     computational: DISCOVERY

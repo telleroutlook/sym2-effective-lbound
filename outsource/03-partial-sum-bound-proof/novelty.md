@@ -1,15 +1,22 @@
 # Novelty — Partial-sum bound
 
-The partial-sum bound |S(X)| << X^{1/2+epsilon} for symmetric-square
-coefficients is a standard consequence of the Riemann hypothesis for
-L(s, sym^2 Delta). What is new here is:
+There is NO new theorem in this package. The universal bound
+|S(X)| <<_epsilon X^{1/2+epsilon} for the symmetric-square coefficients of
+Delta is an instantiation of existing literature: Friedlander-Iwaniec
+(Can. J. Math. 57 (2005), Proposition 3.2, degree m = 3 specialization)
+together with Iwaniec-Michel's Euler factors, Gamma factors, entireness,
+and functional equation for sym^2 of a primitive holomorphic cusp form.
 
-1. The instance-specific computation for Delta (weight 12, level 1):
-   exact A(n) up to X = 20000, showing the bound holds with C = 0.259.
+The package's contribution is limited to:
 
-2. The connection to the effective L(1) problem: this bound directly
-   yields the Cesàro truncation error and hence a certified L(1) interval.
+1. Verifying the hypotheses explicitly for the concrete instance
+   (k = 12, N = 1, kappa = (1, 11, 12), D = 1) and wiring the result into
+   this repository's later effective-computation framework.
 
-3. The question of whether the bound can be proved UNCONDITIONALLY
-   (without GRH) for this specific L-function, using its particular
-   arithmetic structure (level 1, weight 12, known Euler factors).
+2. A discovery-tier finite experiment (exact A(n), X <= 5000 measured;
+   maximum |S(X)|/sqrt(X) = 0.258953 at X = 196) motivating — but not
+   proving — the stronger empirical sqrt(X)-scale model.
+
+No claim is made that the bound was previously open, and no certified L(1)
+interval is claimed here; the explicit C(epsilon) and rigorous L(1) tails
+remain the actual open work.

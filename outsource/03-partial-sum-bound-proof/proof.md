@@ -20,8 +20,11 @@ J. B. Friedlander and H. Iwaniec, "Summation Formulae for Coefficients
 of L-functions", Canadian Journal of Mathematics 57 (2005), 494–505,
 Proposition 3.2.
 
-For any degree-m Dirichlet series satisfying a functional equation with
-archimedean parameters kappa_1, ..., kappa_m, and with coefficients
+For degree m = 3 — the specialization used here — Proposition 3.2 of
+Friedlander-Iwaniec gives (the general Proposition 1.1 exponent is
+D^{1/(m+1)} x^{(m-1)/(m+1)+epsilon}, which is NOT what this package
+uses): for a degree-3 Dirichlet series satisfying a functional equation
+with archimedean parameters kappa_1, kappa_2, kappa_3 and coefficients
 a(n) <<_epsilon n^epsilon, the partial sums satisfy:
 
 ```
@@ -52,13 +55,18 @@ Gamma_C(s+11) = Gamma_R(s+11) * Gamma_R(s+12)
 the three archimedean parameters are kappa_1 = 1, kappa_2 = 11, kappa_3 = 12.
 [THM, Iwaniec-Michel; standard normalization for sym^2 of weight-k form with k=12]
 
-**Coefficient bound:** By Deligne's bound |tau(p)| <= 2*p^{5.5}, we have
-|c_p| <= 2, so |A(p)| = |c_p^2 - 1| <= 3. By multiplicativity and the
-Hecke recurrence, |A(n)| <= d_3(n) <<_epsilon n^epsilon. [THM, DEL-D.1]
+**Coefficient bound:** the local Satake parameters of sym^2 Delta at p
+are alpha_p^2, 1, beta_p^2 with |alpha_p| = |beta_p| = 1 (Deligne), so
+A(p^r) is the degree-r complete homogeneous symmetric polynomial in
+three unit-modulus parameters — a sum of exactly binom(r+2,2) = d_3(p^r)
+unit-modulus terms. Hence |A(p^r)| <= d_3(p^r), and multiplicativity
+gives |A(n)| <= d_3(n) <<_epsilon n^epsilon. [THM, DEL-D.1; local
+structure per Iwaniec-Michel]
 
-**Entireness:** L(s, sym^2 Delta) is entire (no pole at s=1, since the
-symmetric square of a cusp form has no exceptional spectrum). Therefore
-R(X) = 0 in the Friedlander-Iwaniec formula. [THM]
+**Entireness:** the completed symmetric-square L-function of a
+primitive holomorphic cusp form is entire (Iwaniec-Michel state this
+explicitly, with the s <-> 1-s functional equation). Therefore
+R(X) = 0 in the Friedlander-Iwaniec formula. [THM, IM]
 
 ## §3. Conclusion
 
@@ -76,7 +84,7 @@ over zeros is needed. [THM]
 
 1. **Explicit constant C:** Friedlander-Iwaniec proves C(epsilon) exists
    but does not give a numerical value. The empirical value
-   max |S(X)|/X^{0.5} = 0.259 for X in [100, N] is discovery-tier.
+   max |S(X)|/X^{0.5} = 0.258953 (at X = 196) for X in [100, 5000] is discovery-tier.
 
 2. **Fixed exponent epsilon = 0:** The theorem gives O(X^{1/2+epsilon})
    for every epsilon > 0, not O(X^{1/2}). The question of whether
@@ -104,8 +112,12 @@ Therefore:
 
 For alpha = 1/2: the bound is <= 3C / sqrt(N).
 
-With the empirical C = 0.259 and N = 10^8: error <= 3 * 0.259 / 10^4
-= 7.8e-5, giving L(1) in approximately [0.6317, 0.6326].
+If one CONJECTURALLY assumes the global bound |S(X)| <= 0.259*sqrt(X)
+for all X >= N (observed only on the finite computed range), then with
+N = 10^8 the truncation term would be <= 3 * 0.259 / 10^4 = 7.8e-5.
+This is NOT an error bound: C = 0.259 is a discovery-tier constant,
+and no numeric L(1) interval is claimed in this batch (explicit
+C(epsilon) and rigorous L(1) tails belong to a dedicated batch).
 
 ## §6. References
 

@@ -4,7 +4,7 @@
    unconditionally via Friedlander-Iwaniec Proposition 3.2 (2005).
 
 2. The explicit constant C(epsilon) is NOT available from the theorem.
-   The empirical value max |S(X)|/X^{0.5} = 0.259 for X in [100, N]
+   The empirical value max |S(X)|/X^{0.5} = 0.258953 (at X = 196) for X in [100, 5000]
    is discovery-tier only.
 
 3. The exponent 1/2+epsilon is proved; the stronger natural scale

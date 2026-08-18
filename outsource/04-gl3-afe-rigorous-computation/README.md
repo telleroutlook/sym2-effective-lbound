@@ -59,7 +59,10 @@ The key properties:
 2. Compute the weight function V(y, s) via the Mellin integral with
    rigorous error bounds (contour shift, gamma factor bounds).
 3. Compute the truncated sum sum_{n<=N} A(n)/n^s * V(n/X, s) with
-   rigorous rounding (outward for upper bound, inward for lower).
+   interval endpoints rounded OUTWARD at both ends (lower end toward -inf,
+   upper end toward +inf) — 'inward for lower' is unsafe and has been
+   removed; once Arb is adopted, use acb/arb ball arithmetic throughout
+   and let the library maintain the enclosure.
 4. Bound the tail sum via the decay of V(y, s) and |A(n)| <= d_3(n).
 
 ## Contents

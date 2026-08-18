@@ -9,7 +9,7 @@
    - 5x9 = 45 points in critical strip [0.6, 1.0] x [-20, 20] (two-term AFE)
    - 5x5 = 25 points in Re(s) > 1 region [1.01, 2.0] x [0, 20] (Dirichlet)
 
-**Key finding:** min |L(s)| = 0.532 at (sigma=0.6, t=0) via two-term AFE.
+**Key finding (machine-derived, checker/recompute_stats.py):** min |L(s)| = 0.33403921 at (sigma=0.6, t=-20) via the TWO-TERM (main + dual) AFE — the grid values were produced by the dual-sum code; the old 'single-sum only / dual sum present' note in the JSON was stale metadata from a previous version and has been corrected in this README. All statistics are recomputed from the JSON; hand-copied values are forbidden.
 This is a DISCOVERY-TIER diagnostic, NOT a certified L(s) value.
 
 **What this is NOT:**

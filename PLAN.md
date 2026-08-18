@@ -525,3 +525,32 @@ log-derivative/Taylor 系数界来给出 \(c_2/\log N\)，仍为 `[OBL]`。
 | P1 | Booker / Blomer (近期) | 显式子凸性界和显式无零区域（M-3 参考）|
 | P2 | Shimura (1975) | sym² 全纯延拓 |
 | P2 | Gelbart–Jacquet (1978) | sym² 自守性（GL₃ 提升） |
+
+## 2026-08-19 — external review verdicts on batches 03/04 (records in outsource/solutions/)
+
+- **Batch 03 (partial-sum bound, Q-11): PASS WITH MINOR REVISIONS, core theorem
+  CONFIRMED** — S(X) = O_eps(X^{1/2+eps}) unconditionally via Friedlander–Iwaniec
+  Prop. 3.2 (degree-3 specialization) + Iwaniec–Michel. All nine required
+  revisions applied (m=3 specialization, Satake-parameter d_3 argument,
+  entireness citation, novelty rewrite as instantiation-not-new-theorem,
+  checker README theorem/conjecture split, honest X<=5000/0.26 test range,
+  removal of unshipped file references, conjectural-only status for C=0.259
+  beyond the computed range, removal of the conflicting L(1)/S1 numeric
+  intervals). Q-11 math gate: CLOSED/THEOREM; 0.259 stays discovery-tier.
+- **Batch 04 (GL(3) AFE): FAIL — discovery-tier only.** P0 repairs applied:
+  machine-derived statistics (new checker/recompute_stats.py; true grid min
+  0.33403921 at (0.6,-20); the hand-copied 0.532 retracted), N=60 truncation
+  claim retracted (independent N-sweep shows order-0.1 variation), stale
+  single-sum witness metadata corrected, novelty downgraded, Gelbart–Jacquet
+  title corrected, unshipped-file references removed, unsafe inward-rounding
+  wording removed, complex output switched to an acb-ball schema, and the
+  N~X^{3/2} scale claim replaced by the corrected N >= X(log(1/eps)/c)^{3/2}.
+- **Roadmap (reviewer's P1–P4, adopted):** P1 ONE-point rigorous AFE
+  certificate (exact A(n) = lambda(p)^2 with exact tau(p)^2/p^11, rigorous
+  V and V-tilde, main tail + dual tail + quadrature error; output L(s) in B,
+  |L(s)| > delta) BEFORE any grid expansion; P2 Arb/acb implementation
+  (exact coefficients, ball arithmetic throughout); P3 proved uniform weight
+  bounds V, V-tilde <= C_A(s) y^{-A} (or stretched-exponential) on
+  0.6<=sigma<=1, |t|<=20 with computable tail sums; P4 only then the
+  zero-free rectangle via argument-principle certificates (preferred) or
+  derivative covers. Do not expand the grid before P1 closes.

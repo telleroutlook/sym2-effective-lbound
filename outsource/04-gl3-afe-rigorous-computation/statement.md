@@ -24,8 +24,11 @@ certified error bounds using Arb interval arithmetic.
 ## Output
 
 For each grid point (sigma, t):
-1. An Arb interval [L_lo, L_hi] enclosing L(sigma + it).
-2. A certification that L(sigma + it) != 0 (i.e., 0 not in [L_lo, L_hi]).
+1. A complex ball enclosure L(sigma+it) in [x0 +/- rx] + i[y0 +/- ry] (an Arb
+   acb) — a real ordered interval is meaningless for complex values at
+   t != 0. [corrected per 2026-08-19 review]
+2. A certification that 0 notin B_s, equivalently a rigorous lower bound
+   |L(sigma+it)| >= delta_s > 0.
 
 ## Method
 
@@ -37,7 +40,11 @@ For each grid point (sigma, t):
    Computed via contour shift to Re(u) = -m (m = 2 or 3), picking up
    residues from Gamma poles.
 
-3. **Truncation**: N ~ X^{3/2} ensures exp(-c*N^{2/3}) < target_precision.
+3. **Truncation** [corrected per 2026-08-19 review]: with y = n/X and a
+   proved bound V(y) <= exp(-c*y^{2/3}), solving exp(-c*(N/X)^{2/3}) < eps
+   gives N >= X*(log(1/eps)/c)^{3/2} — the earlier N ~ X^{3/2} scale did not
+   follow from the weight bound and is retracted; N must come from a proved
+   uniform weight bound with an error budget.
    For target 10^{-6}: N ~ 100, X ~ 20 suffices.
 
 4. **Tail bound**: |tail| <= A_m * sum_{n>N} d_3(n)/n^sigma * |V(n/X, s)|,
