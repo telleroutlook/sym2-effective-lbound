@@ -39,7 +39,7 @@ def compute_L_via_AFE(s_re: float, s_im: float, N_afe: int, X: float,
     dual_sum = acb(0, 0)
 
     for n in range(1, N_afe + 1):
-        an = A[n]
+        an = A[n - 1]
         if an == 0.0:
             continue
         an_ball = acb(float(an))
