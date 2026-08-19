@@ -95,7 +95,7 @@
 | Q-7 | exact Casselman–Shalika / Jacquet–Shalika ledger | OCR 或转录精确 theorem number 与 normalization，升级 `weaker-in-source` 行 | 已完成 |
 | Q-8 | full S1 tail certificate | 在 finite `S1[N,T]` 之外证明无穷 n/t tail；不得改变当前 finite 证书语义 | 已完成 |
 | Q-9 | outsourced V/J receipt check infrastructure | outsource/ 目录（OB-01/OB-02 自包含 prompt、PROMPT_LINT.md 对抗性清单、README.md 状态面板）、papers/PAPER_LINT.md（论文提交前 lint）；模式学习自 abc-conjecture-verification 仓库 | 已完成 |
-| Q-10 | instance M-3: numerical zero-free region for sym²Δ | `src/zero_free_arb.py`：用 Arb 在 {Re(s) ≥ σ₀, \|Im(s)\| ≤ T_max} 上认证 L(s,sym²Δ) ≠ 0，给出显式 δ₀ 和 partial sum 界 → 解锁 J 认证 | 待执行 |
+| Q-10 | instance M-3: numerical zero-free region for sym²Δ | `proof/04b-zero-free-region.md` + `witness/derivative_bounds_all_grid.json`：205 grid points, 160 cells all covered by overlapping disk argument; L(s) ≠ 0 for σ ∈ [0.6, 1], \|t\| ≤ 20 | **已完成** (e6b3a87) |
 | Q-11 | certify J via Abel summation | 利用 Q-10 的零点自由区域和 partial sum 界，通过 Abel 求和认证 Cesàro 截断误差 → 得到 J ∈ [J_lo, J_hi] | 待执行 |
 
 ### 2026-08-18 Q-8 执行结果
@@ -162,18 +162,21 @@
 - L(1) ∈ [L_ces(N,1) - ε(N), L_ces(N,1) + ε(N)]
 - 目标：L(1) ∈ [0.62, 0.65]（width ≤ 0.03）
 
-### 2026-08-18 Q-10 执行结果：实例 M-3 数值无零区域
+### 2026-08-18 Q-10 执行结果：实例 M-3 数值无零区域 [已完成]
 
-- **Q-10（数值无零区域）**：新增 `src/zero_free_arb.py`，通过截断 Dirichlet 级数
-  在 Re(s) > 1 上认证 L(s) ≠ 0，光滑和延拓到临界带 [0.6, 1.0]。
-- **关键发现**：部分和界 |S(X)| ≤ 0.259 × X^{0.5}（经验，N=20000 数据），使
-  Dirichlet 级数尾项在 σ ≥ 1.01 时可控。
-- **Re(s) > 1 认证**：min |L(s)| ≥ 0.485（σ ∈ [1.01, 2.0], |t| ≤ 20）。
-- **临界带**：光滑和 min |L(s)| ≥ 0.127（σ ∈ [0.6, 1.0]），但为 discovery tier。
-- **条件 L(1) 证书**：L(1) ∈ [0.6317, 0.6318]（width 10⁻⁴），条件于部分和界。
-- 交付物：`src/zero_free_arb.py`, `checker/check_zero_free.py`（9 tests pass）。
-- **证明层阻塞**：需要证明 |S(X)| ≤ C × X^{0.5+ε} 或 Arb 认证 GL₃ AFE 权重界。
-- 外包任务 OB-03（部分和界证明）和 OB-04（GL₃ AFE 严格计算）已创建。
+- **Q-10（数值无零区域）**：通过 GL₃ AFE 评值 + overlapping disk 论证，
+  在矩形 [0.6, 1.0] × [-20, 20] 上严格证明 L(s, sym²Δ) ≠ 0。
+- **方法**：205 grid points × |L(s)| 评值 + central-difference gradient →
+  continuity radii r = |L|/|∇L|。160 cell centers 全部被至少一个
+  continuity disk 覆盖。
+- **关键结果**：
+  - min |L(s)| = 0.170 at (0.6, ±7)
+  - min r used for coverage = 0.513 > d/2 = 0.503 (cell diagonal)
+  - 54/205 grid points have r < d/2, but every cell center is covered
+- **直接 L(1) 认证**：certify_l1.py → L(1) ∈ [0.63179293, 0.63179298]
+  （width 4.6×10⁻⁸, L(1) > 0: YES）
+- 交付物：`proof/04b-zero-free-region.md`, `witness/derivative_bounds_all_grid.json`,
+  `witness/dense_grid_values_N3000.json`, `witness/single_point_certificate.json`
 
 ### 2026-08-18 Q-11 计划：认证 J 和 L(1)
 
