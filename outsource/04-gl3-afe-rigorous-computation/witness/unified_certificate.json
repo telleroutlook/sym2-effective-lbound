@@ -1,0 +1,69 @@
+{
+  "L1": {
+    "interval": [
+      0.6317929293606211,
+      0.6317929754634303
+    ],
+    "width": 4.6102809125869726e-08,
+    "positive": true,
+    "center": 0.6317929524120257,
+    "N_afe": 3000,
+    "truncation_error": 2.3051404557747087e-08
+  },
+  "S1": {
+    "interval": [
+      0.5482983905166945,
+      0.5483054364106607
+    ],
+    "width": 7.0458939661621756e-06,
+    "N": 20000,
+    "T": 8.0
+  },
+  "J": {
+    "interval": [
+      -0.08349458494673578,
+      -0.0834874929499605
+    ],
+    "width": 7.091996775288045e-06,
+    "negative": true,
+    "abs_interval": [
+      0.0834874929499605,
+      0.08349458494673578
+    ]
+  },
+  "zero_free_region": {
+    "domain": "sigma in [0.6, 1.0], |t| <= 20",
+    "n_grid_points": 205,
+    "n_cells": 160,
+    "min_L": 0.33403920763852823,
+    "min_r": 0.09890885830044123,
+    "proved": true
+  },
+  "grid_scan": {
+    "n_points": 205,
+    "sigma_range": [
+      0.6,
+      1.0
+    ],
+    "t_range": [
+      -20.0,
+      20.0
+    ],
+    "min_L": 0.17048540914520216
+  },
+  "summary": {
+    "status": "CERTIFIED",
+    "theorem": "L(1, sym^2 Delta) > 0",
+    "L1_lower_bound": 0.6317929293606211,
+    "zero_free_region": "sigma in [0.6, 1.0], |t| <= 20",
+    "method": "GL3 AFE with Arb interval arithmetic",
+    "precision_bits": 256,
+    "files": {
+      "L1_certificate": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/single_point_certificate.json",
+      "S1_certificate": "/Users/I041705/github/sym2-effective-lbound/baseline/s1_full_certificate.json",
+      "J_certificate": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/j_certificate.json",
+      "derivative_bounds": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/derivative_bounds_all_grid.json",
+      "grid_scan": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/dense_grid_values_N3000.json"
+    }
+  }
+}
