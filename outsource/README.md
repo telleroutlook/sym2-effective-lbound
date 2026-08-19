@@ -8,9 +8,13 @@ Status key: **pending** (not yet sent), **sent** (prompt dispatched),
 | Artifact | Status | Prompt file | Review file | Notes |
 |---|---|---|---|---|
 | Task V: C_GL3 from Miller–Schmid Thm 1.18 | pending | OB-01-cgl3-explicit-bound.md | — | Blocked: need full Kloosterman/Bessel extraction |
-| Task J: certified AFE dual term for L(1,sym²Δ) | pending | OB-02-dual-term-certification.md | — | Blocked: depends on Task V or [OBL M-3] |
-| OB-03: partial-sum bound \|S(X)\| << X^{1/2+ε} | pending | 03-partial-sum-bound-proof/ | — | Key blocker for Q-11; empirical evidence X<=20000 |
-| OB-04: GL₃ AFE rigorous computation | pending | 04-gl3-afe-rigorous-computation/ | — | Needs Arb/python-flint; would give zero-free region |
+| Task J: certified AFE dual term for L(1,sym²Δ) | verified | OB-02-dual-term-certification.md | — | COMPLETED: J = S1 - L(1) route certified |
+| OB-03: partial-sum bound \|S(X)\| << X^{1/2+ε} | verified | 03-partial-sum-bound-proof/ | — | COMPLETED: Friedlander-Iwaniec Thm 3.2 |
+| OB-04: GL₃ AFE rigorous computation | verified | 04-gl3-afe-rigorous-computation/ | — | COMPLETED: L(1) certified [0.63179293, 0.63179298] |
+| F-2: global residue positivity | pending | F-2-global-residue/ | — | Blocked: L(1,π,Ad)>0 not located |
+| M-1: mollifier construction | pending | M-1-mollifier/ | — | Blocked: GL₃ mean value + large sieve explicit constants |
+| M-2: mean value estimate | pending | M-2-mean-value/ | — | Blocked: archimedean integral + bad places |
+| c_eff: general explicit lower bound | pending | c_eff-explicit-bound/ | — | Blocked: all above + Vinogradov-Korobov GL₃ |
 
 ## Pre-send checklist (mandatory)
 
