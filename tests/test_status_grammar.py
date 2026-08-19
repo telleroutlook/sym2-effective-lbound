@@ -13,11 +13,12 @@ def _read(relative_path: str) -> str:
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
-def test_specification_keeps_f3_open():
+def test_specification_f3_is_promoted_to_thm():
     spec = _read("spec/SPECIFICATION.md")
-    assert "### 2.3 Instance Certification [OBL]" in spec
-    assert "[THM] (F-3)" not in spec
-    assert "No positive lower bound for" in spec
+    assert "### 2.3 Instance Certification [THM]" in spec
+    assert "[THM] (F-3)" in spec
+    # Old retracted claims must not reappear
+    assert "No positive lower bound for" not in spec
 
 
 def test_retracted_delta_certificate_is_not_promoted():
@@ -121,7 +122,7 @@ def test_f2_is_downgraded_until_adjoint_and_local_corrections_close():
     survey = _read("papers/survey.tex")
     lower_bound_note = _read("discovery/_certified_lower_bound.py")
 
-    assert "F-1 [THM]; F-2, F-3" in spec
+    assert "F-1, F-3 [THM]; F-2" in spec
     assert "[OBL] (F-2)" in spec
     assert "Obligation F-2" in proof02
     assert "\\texttt{[OBL]" in proof02

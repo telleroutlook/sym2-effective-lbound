@@ -2,7 +2,7 @@
 
 **Document type:** authoritative mathematical specification
 **Scope:** symmetric square L-functions of primitive holomorphic Hecke eigenforms over Q
-**Completion state:** F-1 [THM]; F-2, F-3, mollifier, and explicit-constant layers [OBL]
+**Completion state:** F-1, F-3 [THM]; F-2, mollifier, and explicit-constant layers [OBL]
 
 ---
 
