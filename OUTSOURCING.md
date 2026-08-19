@@ -94,7 +94,11 @@ the source-level citation ledger before accepting the result.
 
 ---
 
-## Task J: certified AFE dual term for `L(1,sym^2 Delta)`
+## Task J: certified AFE dual term for `L(1,sym^2 Delta)` — COMPLETED
+
+**Status:** J certified via J = S1 - L(1) route (not the direct integral route originally planned).
+Certificate: `outsource/04-gl3-afe-rigorous-computation/witness/j_certificate.json`
+J in [-0.083495, -0.083487] (width 7e-6). Combined with L(1) in [0.63179293, 0.63179298].
 
 ### Mathematical object
 

@@ -96,7 +96,7 @@
 | Q-8 | full S1 tail certificate | 在 finite `S1[N,T]` 之外证明无穷 n/t tail；不得改变当前 finite 证书语义 | 已完成 |
 | Q-9 | outsourced V/J receipt check infrastructure | outsource/ 目录（OB-01/OB-02 自包含 prompt、PROMPT_LINT.md 对抗性清单、README.md 状态面板）、papers/PAPER_LINT.md（论文提交前 lint）；模式学习自 abc-conjecture-verification 仓库 | 已完成 |
 | Q-10 | instance M-3: numerical zero-free region for sym²Δ | `proof/04b-zero-free-region.md` + `witness/derivative_bounds_all_grid.json`：205 grid points, 160 cells all covered by overlapping disk argument; L(s) ≠ 0 for σ ∈ [0.6, 1], \|t\| ≤ 20 | **已完成** (e6b3a87) |
-| Q-11 | certify J via Abel summation | 利用 Q-10 的零点自由区域和 partial sum 界，通过 Abel 求和认证 Cesàro 截断误差 → 得到 J ∈ [J_lo, J_hi] | 待执行 |
+| Q-11 | certify J via Abel summation | 利用 Q-10 的零点自由区域和 partial sum 界，通过 Abel 求和认证 Cesàro 截断误差 → 得到 J ∈ [J_lo, J_hi] | **已完成** (0b7756c) |
 
 ### 2026-08-18 Q-8 执行结果
 

@@ -29,8 +29,7 @@ starting with the Ramanujan Delta function (k=12, N=1).
 | F-3 | Certified L(1, sym^2 Delta) interval      | **[THM]**  | proof/04-effective-bound.tex |
 | M-1 | Mollifier construction on GL3             | **[OBL]**  | proof/03-mollifier.tex       |
 | M-2 | Mean value estimate (Kuznetsov/Petersson) | **[OBL]**  | proof/03-mollifier.tex       |
-| E-1 | Certified finite Euler product (Delta)    | **[OBL]**  | src/numerical_delta.py       |
-| E-2 | Certified tail bound (Ramanujan-Deligne)  | **[OBL]**  | checker/check_bound.py       |
+| M-3 | Zero-free region (sym^2 Delta instance)   | **[THM]**  | proof/04b-zero-free-region.md |
 
 Status grammar: [THM] = proved here; [OBL] = open proof obligation;
 [OUT] = deliberately outside scope. [OBL] items may NOT be used as theorems.
@@ -51,6 +50,13 @@ Status grammar: [THM] = proved here; [OBL] = open proof obligation;
   Proved via AFE with N=3000 terms, 256-bit precision, two-point truncation
   error bound. Therefore L(1, sym^2 Delta) > 0.
   Certificate: outsource/04-gl3-afe-rigorous-computation/witness/single_point_certificate.json
+
+- **Zero-free region (M-3):** L(s, sym^2 Delta) != 0 for sigma in [0.6, 1.0], |t| <= 20.
+  Proved via overlapping disk argument: 205 grid points, 160 cell centers all covered.
+  Proof: proof/04b-zero-free-region.md
+
+- **J certification:** J = S1 - L(1) in [-0.083495, -0.083487] (width 7e-6).
+  Certificate: outsource/04-gl3-afe-rigorous-computation/witness/j_certificate.json
 
 ## Numerical Anchor (Discovery Tier)
 

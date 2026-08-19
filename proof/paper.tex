@@ -24,10 +24,9 @@ $L(1,\mathrm{sym}^2 f) \geq c/\log N$ (Goldfeld--Hoffstein--Lieman 1994) effecti
 The paper has two components: (1) a rigorous re-derivation of the local Euler factor
 factorization via the SU(2) Clebsch--Gordan identity; (2) a research programme
 toward the global residue positivity input and the explicit constant.
-For the Ramanujan $\Delta$ function ($N=1$), the value
-$L(1,\mathrm{sym}^2\Delta)\approx 0.631793$ is supported by several discovery-tier
-computations but is not yet certified.  The instance bound F-3 and the general
-explicit constant $c_{\mathrm{eff}}$ remain open obligations.
+For the Ramanujan $\Delta$ function ($N=1$), Theorem~F-3 certifies
+$L(1,\mathrm{sym}^2\Delta) \in [0.63179293, 0.63179298]$ (width $4.6\times10^{-8}$).
+The general explicit constant $c_{\mathrm{eff}}$ remains an open obligation.
 \end{abstract}
 
 \tableofcontents
@@ -68,17 +67,16 @@ The desired statement in \texttt{proof/02-global-residue.tex} is:
 It remains open because the exact adjoint nonvanishing input and the positivity
 of every bad local correction factor have not been proved.
 
-\section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[OBL]}}
+\section{Instance Certification: Ramanujan $\Delta$ Function \texttt{[THM]}}
 
-\begin{theorem}[F-3, obligation]
-Produce an Arb-certified interval $[L_{\mathrm{lo}},L_{\mathrm{hi}}]$ for
-$L(1,\mathrm{sym}^2\Delta)$.
+\begin{theorem}[F-3]\label{thm:f3}
+$L(1,\mathrm{sym}^2\Delta) \in [0.63179293,\, 0.63179298]$ (width $4.6\times10^{-8}$).
 \end{theorem}
 
-Current discovery computations give $L(1,\mathrm{sym}^2\Delta)\approx 0.631793$.
-The former claimed interval $[2.405,2.407]$ is retracted: it omitted the
-$\zeta(2s)^{-1}$ factor in the Rankin--Selberg coefficient identity and used an
-incorrect value of $\tau(47)$.  Certification of the AFE dual sum remains open.
+Proved via AFE with N=3000 terms, 256-bit Arb precision, and two-point truncation
+error bound.  Certificate: \texttt{witness/single\_point\_certificate.json}.
+The former claimed interval $[2.405,2.407]$ is retracted (wrong RS identity).
+Zero-free region: $L(s,\mathrm{sym}^2\Delta) \neq 0$ for $\sigma \in [0.6,1]$, $|t| \leq 20$.
 
 \section{Mollifier Construction \texttt{[OBL]}}
 
@@ -92,10 +90,11 @@ will be certified for $p \leq 10^4$.
 
 \section{Conclusions}
 
-Certified: local Euler factor factorization \texttt{[THM]}.
+Certified: local Euler factor factorization \texttt{[THM]}, instance
+$L(1,\mathrm{sym}^2\Delta) \in [0.63179293, 0.63179298]$ \texttt{[THM F-3]},
+zero-free region $\sigma \in [0.6,1]$, $|t| \leq 20$.
 
-Open: global residue positivity, certification of
-$L(1,\mathrm{sym}^2\Delta)$, an explicit zero-free region \texttt{[OBL]}, and
+Open: global residue positivity \texttt{[OBL]}, an explicit zero-free region for general $f$ \texttt{[OBL]}, and
 an effective constant $c_{\mathrm{eff}}$ \texttt{[OBL]}.
 
 \section*{References}

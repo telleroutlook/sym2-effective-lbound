@@ -54,17 +54,17 @@ certified by interval arithmetic in \texttt{src/numerical\_delta.py}.
 \end{theorem}
 
 \begin{remark}[Current status]
-The theorem is [OBL].  The following are [THM] and available:
+The main theorem (explicit $c_{\mathrm{eff}}$ for all $f$) is [OBL].
+The following are [THM] and available:
 \begin{itemize}
   \item Theorem~F-1 (local Euler factor factorization): [THM]
+  \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \in [0.63179293, 0.63179298]$, width $4.6 \times 10^{-8}$):
+        certified via AFE with N=3000 terms, 256-bit Arb precision
 \end{itemize}
 The following remain [OBL]:
 \begin{itemize}
   \item Theorem~F-2 (global residue positivity): the exact adjoint input and
         positive bad-local correction factors are not yet supplied
-  \item Theorem~F-3 ($L(1, \mathrm{sym}^2 \Delta) \in [L_{\mathrm{lo}}, L_{\mathrm{hi}}]$ certified):
-        the prior value $2.405$ was retracted (wrong RS identity); correct discovery
-        estimate $\approx 0.631793$, pending certified control of the AFE dual term.
   \item Mollifier mean value estimate (proof/03-mollifier.tex, Prop.~M-1)
   \item Zero-free region with explicit constant (proof/03-mollifier.tex, Prop.~M-2)
   \item Explicit contour integral constant (this document, Section~3)
