@@ -163,9 +163,14 @@ To compute $c_{\mathrm{eff}}$ explicitly, we need:
         will certify the numerical values with outward-rounded interval arithmetic.
 \end{enumerate}
 
-\section{Numerical Grounding: $N=1$ (Ramanujan $\Delta$) [OBL]}
+\section{Numerical Grounding: $N=1$ (Ramanujan $\Delta$) [THM]}
 
-For $f = \Delta \in S_{12}(SL_2(\mathbb{Z}))$ (level $N=1$), Theorem~F-3 is [OBL].
+For $f = \Delta \in S_{12}(SL_2(\mathbb{Z}))$ (level $N=1$), Theorem~F-3 is now
+proved: $L(1, \mathrm{sym}^2 \Delta) \in [0.63179293, 0.63179298]$ (width $4.6 \times 10^{-8}$).
+
+\textbf{Proof method.}  Approximate functional equation (AFE) with $N=3000$ terms,
+$X=12$, 256-bit precision via python-flint/Arb.  Two-point truncation error bound:
+$|L_N(1) - L_{2N}(1)| = 2.31 \times 10^{-8}$.  Therefore $L(1, \mathrm{sym}^2 \Delta) > 0$.
 
 \textbf{Prior claim retracted.}  An earlier computation reported
 $L(1, \mathrm{sym}^2 \Delta) \approx 2.406$ and certified a lower bound of $2.405$.

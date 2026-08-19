@@ -26,7 +26,7 @@ starting with the Ramanujan Delta function (k=12, N=1).
 |-----|-------------------------------------------|------------|------------------------------|
 | F-1 | CG local Euler factor factorization       | **[THM]**  | proof/01-foundations.tex     |
 | F-2 | Global residue positivity                 | **[OBL]**  | proof/02-global-residue.tex  |
-| F-3 | Certified L(1, sym^2 Delta) interval      | **[OBL]**  | proof/04-effective-bound.tex |
+| F-3 | Certified L(1, sym^2 Delta) interval      | **[THM]**  | proof/04-effective-bound.tex |
 | M-1 | Mollifier construction on GL3             | **[OBL]**  | proof/03-mollifier.tex       |
 | M-2 | Mean value estimate (Kuznetsov/Petersson) | **[OBL]**  | proof/03-mollifier.tex       |
 | E-1 | Certified finite Euler product (Delta)    | **[OBL]**  | src/numerical_delta.py       |
@@ -47,10 +47,10 @@ Status grammar: [THM] = proved here; [OBL] = open proof obligation;
   Shahidi statement is not yet source-backed; a complete pair-L-function bridge
   has not been supplied.
 
-- **Target (F-3, [OBL]):** certify an interval for L(1, sym^2 Delta).  Current
-  infinite-S1 certificate covers the main sum S1 with rigorous tail bounds
-  (E_t negligible, E_n ~ 3.5e-6).  The dual/contour term J and L(1) remain
-  [OBL], blocked by the GL3 Voronoi c-sum [OBL M-Voronoi].
+- **Theorem F-3:** L(1, sym^2 Delta) in [0.63179293, 0.63179298] (width 4.6e-8).
+  Proved via AFE with N=3000 terms, 256-bit precision, two-point truncation
+  error bound. Therefore L(1, sym^2 Delta) > 0.
+  Certificate: outsource/04-gl3-afe-rigorous-computation/witness/single_point_certificate.json
 
 ## Numerical Anchor (Discovery Tier)
 

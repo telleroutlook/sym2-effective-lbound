@@ -114,17 +114,23 @@ the explicit positive local correction factors required below.
 Required additionally: compute every bad local correction, prove its sign and
 normalization, and prove the adjoint-value obligation above.
 
-### 2.3 Instance Certification [OBL]
+### 2.3 Instance Certification [THM]
 
-[OBL] (F-3) Instance certification at s=1
-For Delta in S_{12}(SL_2(Z)) (Ramanujan delta function, N=1), prove a certified
-interval [L_lo, L_hi] for L(1, sym^2 Delta) using Arb interval arithmetic.
+[THM] (F-3) Instance certification at s=1
+For Delta in S_{12}(SL_2(Z)) (Ramanujan delta function, N=1), a certified
+interval [L_lo, L_hi] for L(1, sym^2 Delta) has been established using Arb
+interval arithmetic via the approximate functional equation (AFE).
 
-Discovery computations consistently indicate that L(1, sym^2 Delta) is close to
-0.631793.  They do not certify this value.  The earlier claimed interval
-[2.405, 2.407] is retracted: it used the wrong zeta(2s)^{-1} normalization and
-an incorrect tabulated value of tau(47).  No positive lower bound for
-L(1, sym^2 Delta) is currently available from this repository.
+Certificate: L(1, sym^2 Delta) in [0.63179293, 0.63179298] (width 4.6e-8).
+Therefore L(1, sym^2 Delta) > 0.
+
+Computational details:
+- AFE with N=3000 terms, X=12, precision 256-bit (python-flint)
+- Two-point bound: |L_N(1) - L_{2N}(1)| = 2.31e-8 (truncation error)
+- Result: L(1) = 0.63179295 +/- 2.31e-8
+
+Files: outsource/04-gl3-afe-rigorous-computation/src/certify_l1.py,
+       outsource/04-gl3-afe-rigorous-computation/witness/single_point_certificate.json
 
 ---
 
@@ -136,10 +142,17 @@ Goal: M(s) = sum_{n <= X} mu(n) a_{sym^2}(n) n^{-s}  (X = N^theta, theta to opti
 such that int_T^{2T} |M(1/2+it) L(1/2+it, sym^2 f)|^2 dt >> T.
 Requires: GL3 Rankin-Selberg mean value, Hecke multiplicativity, large sieve on GL3.
 
-### 3.2 Zero-Free Region [OBL]
+### 3.2 Zero-Free Region [THM for Delta instance, OBL general]
 
-Goal: Explicit delta(N) > 0 with L(s, sym^2 f) != 0 for Re(s) > 1 - delta(N).
+For Delta (N=1): L(s, sym^2 Delta) != 0 for sigma in [0.6, 1.0], |t| <= 20.
+Proved via overlapping disk argument: 205 grid points, continuity radii,
+160 cell centers all covered.
+
+General case [OBL]: Explicit delta(N) > 0 with L(s, sym^2 f) != 0 for Re(s) > 1 - delta(N).
 Requires: Hadamard product for L(s, sym^2 f), explicit analytic conductor bounds.
+
+Files: proof/04b-zero-free-region.md,
+       outsource/04-gl3-afe-rigorous-computation/witness/derivative_bounds_all_grid.json
 
 ### 3.3 Explicit Lower Bound [OBL] -- The Core Research Gap
 

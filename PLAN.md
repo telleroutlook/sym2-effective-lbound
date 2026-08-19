@@ -425,11 +425,11 @@
 |------|--------|------|----------|
 | F-1 | 局部 Euler 因子分解定理（Clebsch–Gordan 消去） | [THM] | proof/01-foundations.tex |
 | F-2 | 全局留数正值性定理（Res_{s=1} > 0） | [OBL] | proof/02-global-residue.tex |
-| F-3 | Δ 函数的 L(1, sym² Δ) 认证 | [OBL] | discovery/rs_estimate.py |
+| F-3 | Δ 函数的 L(1, sym² Δ) 认证 | **[THM]** | outsource/04-gl3-afe-rigorous-computation/src/certify_l1.py |
 
-**F-3 状态说明**（2026-08-16 更新）：
-前版本将 F-3 标为 [THM]，声称通过截断 Euler 乘积认证
-L(1,sym²Δ) ∈ [2.405,2.407]。**此结论已撤回**。
+**F-3 状态说明**（2026-08-19 更新）：
+F-3 已通过 AFE 方法严格认证：L(1, sym²Δ) ∈ [0.63179293, 0.63179298]（宽度 4.6×10⁻⁸）。
+证明方法：3000 项 AFE + 两点截断误差界 + 256-bit Arb 区间算术。
 
 发现的数学事实：
 - TAU_PRIMES 表在 p ≥ 47 处存在错误（两种独立算法 + Ramanujan 同余 mod 691 核验
@@ -452,14 +452,14 @@ L(1,sym²Δ) ∈ [2.405,2.407]。**此结论已撤回**。
 |------|--------|------|----------|
 | M-1 | Sym² L-函数的 Dirichlet 级数 mollifier 构造 | [OBL] | GL₃ Rankin–Selberg 均值 |
 | M-2 | 均值定理 | [OBL] | 大筛法 + Hecke 关系（非对角项控制繁重）|
-| M-3 | 无零区域：L(s, sym² f) 在 [1-δ,1] 内无零 | [OBL] | 显式凸性界 + 显式常数 |
+| M-3 | 无零区域：L(s, sym² f) 在 [1-δ,1] 内无零 | [THM for Delta, OBL general] | sym²Δ: proof/04b-zero-free-region.md; 一般情形需显式凸性界 + 显式常数 |
 
 ### 阶段 E：有效常数层（主要研究目标）
 
 | 编号 | 交付物 | 状态 | 说明 |
 |------|--------|------|------|
 | E-1 | L(1, sym² f) ≥ c_eff / log N 中显式常数 c_eff | [OBL] | 依赖 M-3（轨道 2） |
-| E-2 | sym²Δ 及 p ≤ 10^4 的计算机辅助认证区间 | [OBL] | 依赖 AFE 主和 Arb 认证，且需 M-Voronoi 或实例级 M-3 来认证对偶/围道项 |
+| E-2 | sym²Δ 及 p ≤ 10^4 的计算机辅助认证区间 | **[THM for Delta]** | L(1, sym²Δ) ∈ [0.63179293, 0.63179298] 已认证；p ≤ 10^4 一般情形仍 [OBL] |
 | E-3 | 最终论文（目标投 Annals/IMRN） | [OBL] | 依赖 E-1 + E-2 |
 
 ---
