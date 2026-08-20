@@ -1,0 +1,67 @@
+# GL₃ Shifted Convolution Dependencies
+
+# Dependency chain
+dependency_chain:
+  - stage: "Input: AFE structure"
+    status: "[THM]"
+    description: "Two-term AFE for L(½+it, Π) with degree-3 length N ≍ T^{3/2}"
+    source: "04-gl3-afe, 06-M-1"
+  - stage: "Core estimate"
+    status: "[OBL]"
+    description: "S(h,N,Π) = C_Π(h)·N + O(N^{1-δ}) for h ≍ T^{1/2}, N ≍ T^{3/2}"
+  - stage: "Output: second moment"
+    status: "[OBL]"
+    description: "Powersaving error in ∫|L(½+it,Π)|²dt for M-1 and M-2"
+
+# What blocks this
+blockers:
+  - id: GL3-KLOOSTERMAN
+    description: "GL₃ Kloosterman sums are not well-enough understood for power-saving"
+    status: "[OBL] — current best: |S₃(m,n;c)| ≪ c^{3/2+ε}"
+  - id: GL3-SPECTRAL-THEORY
+    description: "GL₃ spectral theory is far less developed than GL₂"
+    status: "[OBL] — non-absolute convergence of spectral sums"
+  - id: CRITICAL-SCALE
+    description: "Shift h ≍ T^{1/2} is at the critical scale where main term ≈ error"
+    status: "[OBL] — no method gives separation"
+
+# What this provides
+provides:
+  - id: OFF-DIAGONAL-BOUND
+    description: "Power-saving off-diagonal bound for AFE expansion"
+    status: "[OBL]"
+  - id: M1-ERROR-CONTROL
+    description: "Error control for mollified second moment (M-1)"
+    status: "[OBL]"
+  - id: M2-OFF-DIAGONAL
+    description: "Off-diagonal control for unmollified second moment (M-2)"
+    status: "[OBL]"
+
+# References
+references:
+  - id: DASGUPTA-LEUNG-YOUNG-2024
+    title: "The second moment of the GL₃ standard L-function on the critical line"
+    authors: "Dasgupta, Leung, Young"
+    source: "arXiv:2407.06962"
+    evidence: "preprint"
+    note: "Upper bound T^{4/3+ε}, NOT asymptotic; hybrid method"
+
+  - id: PAL-2025
+    title: "Second moment of degree three L-functions"
+    authors: "Pal"
+    journal: "Int. Math. Res. Not. (IMRN), 2025"
+    source: "arXiv:2212.14620v3"
+    evidence: "refereed"
+    note: "Upper bound T^{3/2-3/32+ε} for Hecke–Maaß GL₃ (not holomorphic)"
+
+  - id: IWANIEC-KOWALSKI
+    title: "Analytic Number Theory"
+    authors: "Iwaniec, Kowalski"
+    publisher: "AMS, 2004"
+    note: "GL₃ Kuznetsov formula, Voronoi summation, spectral theory"
+
+  - id: GOLDFELD-2006
+    title: "Automorphic Forms and L-Functions for the Group GL(n,R)"
+    authors: "Goldfeld"
+    publisher: "Cambridge, 2006"
+    note: "GL₃ AFE formulation, spectral decomposition"
