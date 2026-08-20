@@ -8,7 +8,8 @@
     "positive": true,
     "center": 0.6317929524120257,
     "N_afe": 3000,
-    "truncation_error": 2.3051404557747087e-08
+    "truncation_error": 2.3051404557747087e-08,
+    "note": "DISCOVERY-TIER: quadrature + tail errors not bounded"
   },
   "S1": {
     "interval": [
@@ -17,7 +18,8 @@
     ],
     "width": 7.0458939661621756e-06,
     "N": 20000,
-    "T": 8.0
+    "T": 8.0,
+    "note": "DISCOVERY-TIER: not independently certified in this batch"
   },
   "J": {
     "interval": [
@@ -29,41 +31,35 @@
     "abs_interval": [
       0.0834874929499605,
       0.08349458494673578
-    ]
+    ],
+    "note": "BLOCKED: depends on uncertified L1 and S1"
   },
   "zero_free_region": {
     "domain": "sigma in [0.6, 1.0], |t| <= 20",
     "n_grid_points": 205,
-    "n_cells": 160,
-    "min_L": 0.33403920763852823,
-    "min_r": 0.09890885830044123,
-    "proved": true
+    "min_L_numerical": 0.17048540914520216,
+    "proved": false,
+    "note": "NOT PROVED: finite differences != derivative bounds, inconsistent N values"
   },
   "grid_scan": {
     "n_points": 205,
-    "sigma_range": [
-      0.6,
-      1.0
-    ],
-    "t_range": [
-      -20.0,
-      20.0
-    ],
-    "min_L": 0.17048540914520216
+    "sigma_range": [0.6, 1.0],
+    "t_range": [-20.0, 20.0],
+    "min_L": 0.17048540914520216,
+    "note": "DISCOVERY-TIER: numerical observation only"
   },
   "summary": {
-    "status": "CERTIFIED",
-    "theorem": "L(1, sym^2 Delta) > 0",
-    "L1_lower_bound": 0.6317929293606211,
-    "zero_free_region": "sigma in [0.6, 1.0], |t| <= 20",
-    "method": "GL3 AFE with Arb interval arithmetic",
-    "precision_bits": 256,
+    "status": "DISCOVERY",
+    "theorem": "NONE — method description only",
+    "zero_free_region": "NOT PROVED",
+    "method": "GL3 AFE with mpmath floats (not Arb-certified)",
+    "precision_bits": 100,
     "files": {
-      "L1_certificate": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/single_point_certificate.json",
-      "S1_certificate": "/Users/I041705/github/sym2-effective-lbound/baseline/s1_full_certificate.json",
-      "J_certificate": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/j_certificate.json",
-      "derivative_bounds": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/derivative_bounds_all_grid.json",
-      "grid_scan": "/Users/I041705/github/sym2-effective-lbound/outsource/04-gl3-afe-rigorous-computation/witness/dense_grid_values_N3000.json"
-    }
+      "L1_certificate": "single_point_certificate.json",
+      "J_certificate": "j_certificate.json",
+      "derivative_bounds": "derivative_bounds_all_grid.json",
+      "grid_scan": "dense_grid_values_N3000.json"
+    },
+    "note": "All values are discovery-tier. Error闭 not closed."
   }
 }

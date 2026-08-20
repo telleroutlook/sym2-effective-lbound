@@ -1,15 +1,17 @@
 # Proof — GL_3 AFE computation for L(s, sym^2 Delta)
 
-**Status:** [THM] — L(1, sym^2 Delta) certified > 0 via Arb interval arithmetic.
+**Status:** METHOD-DESCRIPTION + DISCOVERY (not a theorem; all rigorous layers are [OBL]).
 
 ## §1. Method overview
 
 The goal is to compute L(s, sym^2 Delta) at points in the critical strip
-to establish numerical bounds.
+using the GL_3 approximate functional equation (AFE), as a stepping stone
+toward rigorous certified evaluation.
 
-The method uses the GL_3 approximate functional equation (AFE), which
-expresses L(s) as two smoothed sums with weight functions derived from
-the Gamma factors.
+**Current status:** The AFE structure is correct. The numerical values are
+discovery-tier. The rigorous error闭 (quadrature error, contour tail, AFE
+tail, exact coefficients) is NOT yet closed. No THM or CERTIFIED labels
+apply to any result in this batch.
 
 ## §2. The two-term AFE identity
 
@@ -36,98 +38,131 @@ V_tilde(y,s) = (1/2pi i) int_{Re(v)=1} G(1-s+v)/G(s) * y^{-v} * h(-v)/v dv
 
 with h(u) = exp(u^2) as cutoff and G(s) = Gamma_R(s+1) * Gamma_C(s+11).
 
-**Key property:** The gamma ratio in V_tilde is G(1-s+v)/G(s), NOT
-G(1-s+v)/G(1-s). There is NO external chi factor — the gamma ratio is
-inside the contour integral.
+**Self-duality:** Since sym^2 Delta is self-dual with root number +1,
+the dual Dirichlet series B(s) = A(s), so b(n) = A(n). [BASE, standard]
 
-## §3. Truncation and tail bound
+## §3. Hypotheses verification
 
-Choose X=12, N=3000:
-- The main sum captures L(s) with weight V(n/X, s) ~ 1 for n << X.
-- The dual sum converges with weight V_tilde(n*X, s) decaying for large nX.
-- Two-point truncation error: |L_N(1) - L_{2N}(1)| = 2.31e-8.
+**Degree m = 3:** L(s, sym^2 Delta) is a degree-3 L-function. [THM, GJ78]
 
-## §4. Weight function computation
+**Conductor D = 1:** Level 1, no ramified primes. [THM]
 
-The weight functions V and V_tilde are computed via Mellin contour integration
-at Re(u) = Re(v) = 1, using h(u) = exp(u^2) as cutoff.
+**Archimedean parameters:** kappa = (1, 11, 12) from
+Gamma_R(s+1) * Gamma_C(s+11). [THM, Iwaniec-Michel]
 
-**Implementation:** `src/afe_sym2_arb_single.py` computes V_arb and V_tilde_arb
-via trapezoidal quadrature (n_quad = 2000 points over [-T, T] with T = 20).
-The Gaussian decay of exp(u^2) ensures rapid convergence.
+**Coefficient bound:** |A(n)| <= d_3(n) << n^epsilon. [THM, Deligne]
 
-**Poles of G(s+u):**
-- G(s) = Gamma_R(s+1) * Gamma_C(s+11) = pi^{-(s+1)/2} Gamma((s+1)/2) *
-  2(2pi)^{-(s+11)} Gamma(s+11).
-- Gamma_R(s+1) has poles at s+1 = 0, -2, -4, ... (i.e., s = -1, -3, -5, ...)
-  from Gamma((s+1)/2).
-- Gamma_C(s+11) has poles at s+11 = 0, -1, -2, ... (i.e., s = -11, -12, -13, ...)
-  from Gamma(s+11).
-- The contour at Re(u) = 1 is to the right of the pole at u = 0 (residue 1),
-  ensuring V(y, s) -> 1 as y -> 0.
+**Entireness:** L(s, sym^2 Delta) is entire (root number +1). [THM, IM]
 
-## §5. Computation (Arb, proof-tier)
+## §4. [OBL] Rigorous error layers — NOT YET CLOSED
 
-All computations use python-flint Arb with 256-bit precision and outward rounding.
+The following error layers must ALL be closed before any certified
+statement can be made:
 
-**Certified results:**
-- L(1, sym^2 Delta) in [0.63179293, 0.63179298] (width 4.6e-8)
-- S1 in [0.548298, 0.548305] (main sum, N=20000, T=8)
-- J = S1 - L(1) in [-0.083495, -0.083488] (dual sum, width 7e-6)
+### 4a. Exact coefficients [OBL]
 
-**Certificate files:**
-- `witness/single_point_certificate.json`: L(1) certification
-- `src/certify_l1.py`: L(1) computation script
+Current code uses float c_p = tau(p)/p^5.5, then acb(float(an)).
+This does NOT prove A_exact(n) in A_Arb(n).
 
-## §6. Grid scan results
+**Required:** Use exact rational c_p^2 = tau(p)^2/p^11 throughout the
+prime-power recurrence, producing rigorous Arb enclosures for each A(n).
 
-The AFE computation gives |L(s)| values on a 5x41 grid in
-[sigma in [0.6, 1.0], |t| <= 20]:
+### 4b. Mellin quadrature error [OBL]
 
-- Min |L(s)| = 0.170 at (sigma=0.6, t=+-7)
-- All 205 grid points have |L(s)| > 0
-- Values increase monotonically from sigma=0.6 to sigma=1.0 along t=0
-- Symmetric in t as expected
+The weight function V(y,s) is computed by trapezoidal quadrature at
+Re(u)=1 over [-T,T]. The error E_quad = |integral - Q_h| is NOT bounded.
 
-**Certificate:** `witness/dense_grid_values_N3000.json`
+**Required:** Prove E_quad <= explicit bound using:
+- h''(u) bound on the integrand
+- Euler-Maclaurin or Poisson summation remainder
+- Super-exponential decay of exp(u^2) ensuring rapid convergence
 
-## §7. Zero-free region [THM]
+### 4c. Contour tail [OBL]
 
-**Theorem:** L(s, sym^2 Delta) != 0 for sigma in [0.6, 1.0], |t| <= 20.
+The integral is truncated at |t|=T. The error
+E_contour = |int_{|t|>T} ... dt| is NOT bounded.
 
-**Proof method:** Overlapping disk argument.
-1. Compute |L(s)| at all 205 grid points (all > 0).
-2. Compute continuity radius r = |L(s)| / |grad L(s)| at each grid point
-   via central finite differences (h = 0.01).
-3. Show every cell center is within distance r of some grid point.
-4. By the mean value theorem, L != 0 on each continuity disk.
-5. Since every cell is covered, L != 0 everywhere in the rectangle.
+**Required:** Prove exponential decay of integrand for large |t| using
+Stirling bounds on Gamma factors, giving explicit T-dependent bound.
 
-**Key parameters:**
-- Grid spacing: Delta_sigma = 0.1, Delta_t = 1.0
-- Cell diagonal: d = sqrt(0.1^2 + 1.0^2) = 1.005
-- Minimum r used for coverage: 0.513 > d/2 = 0.503
-- 54/205 grid points have r < d/2, but every cell center is covered
+### 4d. AFE tail (n>N) [OBL]
 
-**Certificate:** `witness/derivative_bounds_all_grid.json`
-**Proof document:** `proof/04b-zero-free-region.md`
+The main sum is truncated at N. The tail
+E_tail = sum_{n>N} |A(n)|/n^sigma * |V(n/X,s)| is NOT bounded.
 
-## §8. Connection to partial-sum bound
+**Required:** Use |A(n)| <= d_3(n) and proved decay of V(y,s) to get
+explicit N-dependent bound. The "N vs 2N difference" currently used
+is NOT a rigorous tail bound (|S_{2N}-S_N| does not bound |S_inf-S_N|).
+
+### 4e. Dual sum tail [OBL]
+
+Similarly, the dual sum truncation error is NOT bounded.
+
+### 4f. Unified error budget [OBL]
+
+All five layers must be combined:
+
+```
+L(1) in B_arithmetic + B_quadrature + B_contour + B_AFE_tail + B_dual_tail
+```
+
+where each B is a certified interval. This does NOT exist yet.
+
+## §5. Discovery-tier numerical results
+
+The following are numerical observations, NOT certified results:
+
+- L(1, sym^2 Delta) ~ 0.63179295 (mpmath 30-digit floats)
+- S1 ~ 0.5483 (main sum, N=20000, T=8)
+- J = S1 - L(1) ~ -0.0835
+- Min |L(s)| ~ 0.170 on 5x41 grid in [0.6,1] x [-20,20]
+- All 205 grid points have |L(s)| > 0 (numerical observation)
+
+**None of these are certified.** The certificates in witness/ are
+generated from code that has the gaps described in §4.
+
+## §6. Zero-free region — NOT PROVED
+
+The claim "L(s) != 0 for sigma in [0.6,1], |t| <= 20" is NOT proved.
+
+**Why the current argument fails:**
+
+1. Finite differences (L(s+h)-L(s-h))/(2h) approximate L'(s) but do NOT
+   give a rigorous supremum bound on the derivative over each cell.
+
+2. The continuity radius r = |L(s)|/|L'(s)| is computed from this
+   approximation, not from a rigorous derivative bound.
+
+3. Different N values (N=60 for derivative scan, N=3000 for grid) produce
+   different |L(s)| values at the same point — the approximations are
+   not mutually consistent.
+
+4. "Every cell center is covered by some disk" does not imply "every
+   point in the cell is covered" — the cell may extend beyond the disk.
+
+**The 205-point nonzero observation is discovery-tier only.**
+
+## §7. Connection to partial-sum bound
 
 The partial-sum bound S(X) = O_epsilon(X^{1/2+epsilon}) is proved
 unconditionally via Friedlander-Iwaniec (2005), independently of any
-zero-free region. The explicit constant C is not available.
+zero-free region. [THM, FI2005 — see batch 03]
+
+## §8. What is NOT available
+
+1. **Certified L(1) interval:** Error闭 not closed (§4).
+2. **Proved zero-free region:** Derivative bounds not rigorous (§6).
+3. **Certified J value:** Depends on certified L(1) and S1.
+4. **Explicit C(epsilon) for partial sums:** Not from this batch.
+5. **Self-contained reproducibility:** Missing dependencies
+   (heartbeat.py, tail_bound.py, baseline/s1_full_certificate.json).
 
 ## §9. References
 
-- Gelbart-Jacquet (1978), "A relation between automorphic representations
-  of GL(2) and GL(3)" — GL_3 structure, entireness.
-- Goldfeld (2006), "Automorphic forms and L-functions for the group
-  GL(n,R)" — GL_n AFE formulation.
-- Harcos (2002), "New bounds for automorphic L-functions" — GL_n AFE
-  with smoothed sums.
-- Iwaniec-Kowalski (2004), "Analytic Number Theory" — Mellin inversion,
-  Stirling bounds.
-- Fredrik Johansson (2012-), "Arb: efficient arbitrary-precision
-  midpoint-radius interval arithmetic" — proof-tier implementation.
-- Friedlander-Iwaniec (2005), "Linear equations in primes" — partial sum bound.
+- Gelbart-Jacquet (1978), GL_3 structure, entireness.
+- Goldfeld (2006), GL_n AFE formulation.
+- Harcos (2002), GL_n AFE with smoothed sums.
+- Iwaniec-Kowalski (2004), Mellin inversion, Stirling bounds.
+- Johansson (2012-), Arb interval arithmetic library.
+- Friedlander-Iwaniec (2005), "Summation Formulae for Coefficients of
+  L-functions", Canad. J. Math. 57, 494-505 — partial sum bound.

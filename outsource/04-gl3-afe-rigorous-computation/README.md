@@ -1,100 +1,59 @@
-# Batch 04 — Rigorous GL_3 AFE computation for L(s, sym^2 Delta)
+# Batch 04 — GL_3 AFE computation for L(s, sym^2 Delta)
 
-This directory is a self-contained review batch. Send all files in this
-directory to the reviewer.
+**Status:** METHOD-DESCRIPTION + DISCOVERY (not a theorem).
+
+## What this batch is
+
+A computational method description and discovery-tier numerical prototype
+for evaluating L(s, sym^2 Delta) via the GL_3 approximate functional
+equation. The AFE structure is correct. All rigorous error layers are
+[OBL] (not yet closed).
+
+## What this batch is NOT
+
+- NOT a certified computation of L(1)
+- NOT a proved zero-free region
+- NOT a premise for downstream obligations
+- NOT self-contained (missing heartbeat.py, tail_bound.py, baseline/)
 
 ## Mathematical goal
 
-Compute L(s, sym^2 Delta) at specific points in the critical strip
-{sigma + it : 0.5 <= sigma <= 1.0, |t| <= T_max} using the GL_3
-approximate functional equation, with RIGOROUS error bounds that
-certify L(s) != 0 at every grid point.
-
-## Why this is needed
-
-The L(1) value requires the Cesàro truncation error J, which depends on
-the partial sums S(X). The partial-sum bound |S(X)| << X^{1/2} follows
-from a zero-free region for L(s, sym^2 Delta). The GL_3 AFE provides a
-way to:
-
-1. Evaluate L(s) at any point in the critical strip.
-2. Bound the truncation error rigorously.
-3. Show L(s) != 0 on a region, giving the zero-free region.
-
-## The GL_3 AFE formula
-
-For Re(s) > 0, the smoothed-sum identity gives:
+Evaluate L(s, sym^2 Delta) at points in the critical strip using the
+two-term AFE:
 
 ```
-sum_{n>=1} A(n)/n^s * V(n/X, s) = L(s) + error(X, s)
+L(s) = sum_{n<=N} A(n)/n^s * V(n/X, s) + dual_sum + tails
 ```
 
-where V(y, s) is the weight function from Mellin inversion:
+with weight functions from Mellin inversion.
 
-```
-V(y, s) = (1/2pi i) int_{Re(u)=c} G(s+u)/G(s) * y^{-u} * h(u)/u du
-```
+## Discovery-tier results
 
-with G(s) = Gamma_R(s+1) * Gamma_C(s+11) and h(u) a suitable
-cutoff function (e.g., h(u) = exp(u^2)).
+- L(1) ~ 0.63179295 (mpmath, not certified)
+- Min |L(s)| ~ 0.170 on 5x41 grid (numerical observation, not proved)
 
-The key properties:
-- V(y, s) decays exponentially for large y (like exp(-c*y^{2/3})).
-- The truncated sum with N ~ X^{3/2} captures L(s) to precision
-  exp(-c*N^{2/3}).
-- The dual sum contributes O(X^{-1/2}) via Stirling + convexity.
+## Critical gaps [OBL]
 
-## What the reviewer should produce
+1. Exact coefficient chain (float -> exact rational)
+2. Mellin quadrature error bound
+3. Contour tail bound
+4. AFE tail bound (N vs 2N is NOT rigorous)
+5. Zero-free region (finite differences != derivative bounds)
+6. Unified error budget
 
-1. A rigorous computation of L(s) at a grid of points in the critical
-   strip, with certified error bounds (e.g., using Arb/python-flint).
-2. Verification that L(s) != 0 at every grid point (|L(s)| > delta > 0).
-3. An explicit zero-free region: L(s) != 0 for Re(s) >= sigma_0 with
-   sigma_0 < 1 (the smaller the better).
-4. Any gaps in the error analysis must be clearly identified.
-
-## Suggested implementation
-
-1. Use python-flint (Arb library) for interval arithmetic.
-2. Compute the weight function V(y, s) via the Mellin integral at Re(u)=1
-   with rigorous error bounds (quadrature error, truncation at Re(u)=1,
-   Gamma factor bounds on the contour).
-3. Compute the truncated sum sum_{n<=N} A(n)/n^s * V(n/X, s) with
-   interval endpoints rounded OUTWARD at both ends (lower end toward -inf,
-   upper end toward +inf) — 'inward for lower' is unsafe and has been
-   removed; once Arb is adopted, use acb/arb ball arithmetic throughout
-   and let the library maintain the enclosure.
-4. Bound the tail sum via the decay of V(y, s) and |A(n)| <= d_3(n).
+See `limitations.md` for full details.
 
 ## Contents
 
-- `statement.md` — formal statement of the computation goal
-- `proof.md` — description of the method and error analysis
-- `src/afe_sym2.py` — self-contained AFE implementation (tau sieve, Gamma factors, weight function, grid scan)
-- `checker/check_grid.py` — independent verifier (recomputes L(s) at all grid points, spot-checks L(2))
-- `checker/README.md` — checker documentation
-- `witness/grid_values.json` — discovery-tier L(s) values on 5x9+5x5 grid (mpmath floats)
-- `witness/README.md` — witness documentation
-- `dependencies.yaml` — dependency graph with evidence levels
+- `statement.md` — method description
+- `proof.md` — method and gap analysis
+- `src/` — AFE implementation (discovery-tier)
+- `checker/` — independent verifier
+- `witness/` — numerical certificates (discovery-tier)
+- `dependencies.yaml` — dependency graph
 - `limitations.md` — scope and limitations
 - `novelty.md` — what is new
-- `_REVIEW_RETURN_TEMPLATE.md` — structured review checklist
-- `tests/test_gl3_afe.py` — test file
-- `MANIFEST.sha256` — integrity hashes
-
-## Reviewer requirements
-
-Please review the mathematical method and error analysis first, against
-the checkpoints in `_REVIEW_RETURN_TEMPLATE.md`. The finite checker
-verifies the arithmetic but not the analytic bounds. Return the completed
-template with one of: PASS, PASS WITH MINOR REVISIONS, FAIL, INCONCLUSIVE.
-
-## Optional local checks
-
-`python3 -m pytest tests/ -q` inside a fresh unpack of this batch.
-Test count as measured in this exact bundle: to be determined.
 
 ## Integrity
 
-`MANIFEST.sha256` lists SHA-256 hashes for every sent source file except the
-manifest itself.
+MANIFEST.sha256 lists SHA-256 hashes for all source files.

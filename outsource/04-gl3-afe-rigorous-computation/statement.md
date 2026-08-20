@@ -1,57 +1,44 @@
-# Statement — Rigorous GL_3 AFE computation
+# Statement — GL_3 AFE computation for L(s, sym^2 Delta)
 
 **Theorem ID:** gl3-afe-rigorous-sym2-delta
-**Mathematical status:** METHOD-DESCRIPTION (not a theorem; a computational method)
-**Computational status:** DISCOVERY (mpmath floats, not Arb intervals)
+**Mathematical status:** METHOD-DESCRIPTION (not a theorem)
+**Computational status:** DISCOVERY (discovery-tier numerical values)
 **Program ref:** sym2-effective-lbound Q-11
-**Paper target:** Paper A (effective L(1) bound)
 
 ---
 
 ## Goal
 
-Implement a rigorous computation of L(s, sym^2 Delta) at points in the
-critical strip using the GL_3 approximate functional equation, with
-certified error bounds using Arb interval arithmetic.
+Describe a computational method for evaluating L(s, sym^2 Delta) at points
+in the critical strip using the GL_3 approximate functional equation (AFE).
 
-## Input
+## Current results (discovery-tier)
 
-- The symmetric-square coefficients A(n) for n = 1..N (computed from
-  the Ramanujan tau function via the Euler sieve).
-- The gamma factor G(s) = Gamma_R(s+1) * Gamma_C(s+11).
-- A grid of points {(sigma_j, t_k)} in [0.5, 1.0] x [-T_max, T_max].
+Numerical evaluation using mpmath floats (30 digits) with the two-term AFE:
 
-## Output
+- L(1, sym^2 Delta) ~ 0.63179295
+- S1 ~ 0.5483 (main sum, N=20000, T=8)
+- J = S1 - L(1) ~ -0.0835
+- Min |L(s)| ~ 0.170 on 5x41 grid in [0.6,1] x [-20,20]
 
-For each grid point (sigma, t):
-1. A complex ball enclosure L(sigma+it) in [x0 +/- rx] + i[y0 +/- ry] (an Arb
-   acb) — a real ordered interval is meaningless for complex values at
-   t != 0. [corrected per 2026-08-19 review]
-2. A certification that 0 notin B_s, equivalently a rigorous lower bound
-   |L(sigma+it)| >= delta_s > 0.
+**These are NOT certified values.** The error闭 is not closed.
 
-## Method
+## What is NOT claimed
 
-1. **Smoothed-sum identity**: For Re(s) > 0,
-   L(s) = sum_{n<=N} A(n)/n^s * V(n/X, s) + dual_sum + tail,
-   where V is the weight function from Mellin inversion.
+1. No certified L(1) interval (quadrature + tail errors not bounded)
+2. No proved zero-free region (derivative bounds not rigorous)
+3. No certified J value (depends on certified L(1))
+4. No THM or CERTIFIED labels on any result
 
-2. **Weight function**: V(y, s) = (1/2pi) int G(s+u)/G(s) * y^{-u} * h(u)/u du.
-   Computed via direct midpoint quadrature at Re(u) = 1 over [-T, T]
-   with T = 20 and h(u) = exp(u^2) as Gaussian cutoff. The integrand
-   decays super-exponentially due to h, so the contour is NOT shifted;
-   poles of G(s+u) at Re(u) < 1 are avoided by staying at Re(u) = 1.
+## Method (for reference)
 
-3. **Truncation** [corrected per 2026-08-19 review]: with y = n/X and a
-   proved bound V(y) <= exp(-c*y^{2/3}), solving exp(-c*(N/X)^{2/3}) < eps
-   gives N >= X*(log(1/eps)/c)^{3/2} — the earlier N ~ X^{3/2} scale did not
-   follow from the weight bound and is retracted; N must come from a proved
-   uniform weight bound with an error budget.
-   For target 10^{-6}: N ~ 100, X ~ 20 suffices.
+The two-term AFE expresses L(s) as main + dual sums with weight functions
+from Mellin inversion. The weight V(y,s) decays super-exponentially for
+large y, ensuring convergence of the truncated sums.
 
-4. **Tail bound**: |tail| <= A_m * sum_{n>N} d_3(n)/n^sigma * |V(n/X, s)|,
-   bounded by the exponential decay of V and the Abel sum bound on d_3.
+## Status
 
-5. **Arb arithmetic** [OBL — not yet implemented]: All computations should use
-   outward-rounded interval arithmetic to guarantee containment. Currently
-   uses mpmath floats (discovery-tier).
+This batch is a METHOD-DESCRIPTION + DISCOVERY prototype. The AFE
+framework is consistent with the standard derivation. All rigorous
+error layers (exact coefficients, quadrature error, contour tail,
+AFE tails) remain [OBL].
