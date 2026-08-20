@@ -9,11 +9,10 @@
 
 ## What is NOT achieved
 
-- No numerical c₀ is computed
-- No interval [a, b] with a > 0 is certified
-- No machine-readable witness exists
-- The explicit constant extraction (Stage D) is [OBL]
-- All constants c_ZF, C_*, A_0, B, c(B), C, c_eff are formulas, not numbers
+- No Arb-certified interval [a, b] exists (only numerical estimates)
+- The GHL c_ZF and HL c(B) formulas need verification against originals
+- No machine-readable witness/replay script exists
+- c_eff ≈ 0.029 is a numerical estimate, not a certified bound
 
 ## Corrected from v2
 
@@ -60,6 +59,16 @@
 10. **Δ upper bound claim removed**: Δ is level 1, outside prime-level
     scope. Its L(1) value is a sanity check only, not an upper bound
     for the prime-level universal constant.
+
+## Stage D computation (v4)
+
+11. **Numerical estimates computed**: c_eff ≈ 0.029 from Stirling + HL/GHL
+    formulas. B=2.5, C_*=39.48, c_ZF=0.1111, c(B)=3.82, C=9.0.
+    These are NOT Arb-certified; need outward rounding for rigor.
+
+12. **Computation script**: src/compute_constants.py produces the numerical
+    estimates. For a certified result, replace float arithmetic with
+    Arb interval arithmetic.
 
 ## Downstream impact
 

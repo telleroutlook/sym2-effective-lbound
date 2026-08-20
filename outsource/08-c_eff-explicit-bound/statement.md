@@ -53,11 +53,11 @@ concrete numerical value has been computed.
 - Therefore L(1,F) ≥ 1/(c(B)·C) · 1/log(kp+1)
 - c_eff = 1/(c(B)·C) > 0 (all absolute constants)
 
-### Stage D — Numerical constant extraction [OBL]
-- Compute c_ZF, C_*, A_0, B, c(B) numerically
-- Set C = max(A_0 + log C_*/log 5, c_ZF⁻¹), c_eff = 1/(c(B)·C)
-- Certified interval [a,b] with a > 0 via Arb/python-flint
-- No separate infimum argument needed (constants are absolute)
+### Stage D — Numerical constant extraction [PARTIAL]
+- Computation script: src/compute_constants.py
+- c_eff ≈ 0.029 > 0 (numerical estimate, not yet Arb-certified)
+- B=2.5, C_*=39.48, c_ZF=0.1111, c(B)=3.82, C=9.0
+- Needs: Arb interval certification, GHL/HL formula verification
 
 ## What is NOT needed (corrected from previous version)
 
@@ -69,7 +69,8 @@ concrete numerical value has been computed.
 
 ## Status: [OBL]
 
-The main tasks are:
-1. Compute c_ZF from GHL zero-count lemma (Stage B)
-2. Compute C_*, A_0, B, c(B) from functional equation + HL contour (Stage C)
-3. Certified interval [a, b] with a > 0 using Arb (Stage D)
+The main tasks remaining are:
+1. Verify c_ZF formula against GHL Appendix
+2. Verify c(B) formula against HL Proposition 1.1 proof
+3. Arb interval certification of c_eff ∈ [a,b] with a > 0
+4. Machine-readable certificate with SHA-256 + replay script

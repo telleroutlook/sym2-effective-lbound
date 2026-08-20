@@ -12,8 +12,8 @@ dependency_chain:
     status: "[THM, constants OBL]"
     description: "A(s)=ζ(s)L(s,F), growth with C_*, M=K^C matching, HL Prop 1.1 ⟹ L(1)≥c_eff/log(kp+1)"
   - stage: "D. Numerical constants"
-    status: "[OBL]"
-    description: "Compute c_ZF, C_*, A_0, B, c(B) numerically; c_eff=1/(c(B)·C)"
+    status: "[PARTIAL — numerical estimates computed, Arb certification pending]"
+    description: "c_eff ≈ 0.029 from Stirling+HL/GHL formulas; needs Arb interval verification"
 
 # What is NOT a dependency
 not_dependencies:

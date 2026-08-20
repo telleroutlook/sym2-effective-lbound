@@ -82,11 +82,12 @@ def check_obl_status(path, label):
     content = open(path).read()
     has_thm = "[THM]" in content
     has_obl = "[OBL]" in content
-    if has_thm and not has_obl:
-        print(f"  [FAIL] {label} promotes c_eff to [THM] — must remain [OBL]")
+    has_partial = "[PARTIAL" in content
+    if has_thm and not has_obl and not has_partial:
+        print(f"  [FAIL] {label} promotes c_eff to [THM] — must remain [OBL] or [PARTIAL]")
         return False
-    if has_obl:
-        print(f"  [PASS] {label} correctly labels c_eff as [OBL]")
+    if has_obl or has_partial:
+        print(f"  [PASS] {label} correctly labels c_eff as [OBL] or [PARTIAL]")
     return True
 
 

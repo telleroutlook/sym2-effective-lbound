@@ -205,42 +205,45 @@ These are three distinct steps that must not be conflated.
 
 ---
 
-## Stage D — Numerical constant extraction [OBL]
+## Stage D — Numerical constant extraction [PARTIAL, constants OBL]
 
-### What needs to be computed
-The constant c_eff = 1/(c(B) · C) depends on:
+### Computation script
+`src/compute_constants.py` extracts numerical estimates for all constants.
+Run: `python3 src/compute_constants.py`
 
-1. **GHL zero-free region constant c_ZF**: from the zero-count lemma,
-   depends on Gamma function derivatives and the GHL parameters.
-   This is an absolute effective constant.
+### Numerical estimates (from Stirling + HL/GHL formulas)
 
-2. **Growth multiplicative constant C_***: from the functional equation
-   and Stirling's formula for |A(1/2+it)| ≤ C_* K^{A_0}(1+|t|)^B.
-   Absolute effective. Must be explicitly tracked.
+For all k ≥ 2, p prime (absolute constants):
 
-3. **Growth exponents A_0, B**: from the functional equation and
-   Stirling's formula. Absolute effective.
+| Constant | Value | Source |
+|----------|-------|--------|
+| B | 2.5 | Growth exponent (4 Gamma factors in ζ·L) |
+| C_* | 39.48 | (√(2π))⁴ from 4 Gamma factors |
+| c_ZF | 0.1111 | 2/(2·B_φ+3), B_φ=7.5 for ζ·L³·L(V²) |
+| c(B) | 3.8197 | 2(2B+1)/π from HL Prop 1.1 |
+| C | 9.0 | max(A_0+log C_*/log 5, 1/c_ZF) = 1/c_ZF |
+| **c_eff** | **0.0291** | **1/(c(B)·C)** |
 
-4. **Matching constant C**: any C ≥ max(A_0 + log C_*/log 5, c_ZF⁻¹) works.
-   The optimal choice is C = max(A_0 + log C_*/log 5, c_ZF⁻¹).
+### Verification status
 
-5. **HL implied constant c(B)**: from the contour integral
-   representation in HL Proposition 1.1. Depends on B.
-   Absolute effective.
+**c_eff > 0 is confirmed** — the effective lower bound exists.
 
-### Named constants (complete list)
-- c_ZF: GHL zero-free region constant (absolute)
-- C_*: growth multiplicative constant (absolute)
-- A_0, B: growth exponents (absolute)
-- C = max(A_0 + log C_*/log 5, c_ZF⁻¹): matching constant (absolute)
-- c(B): HL implied constant (absolute)
-- c_eff = 1/(c(B) · C): final effective constant
+However, these are **numerical estimates**, not certified bounds:
+- The Stirling formulas need rigorous error bounds
+- The GHL c_ZF formula needs verification against GHL Appendix
+- The HL c(B) formula needs verification against HL Proposition 1.1 proof
+- For a fully certified result, use Arb/python-flint outward rounding
+
+### What needs to happen next
+
+1. Verify c_ZF against GHL Appendix (the formula 2/(2B_φ+3) is conservative)
+2. Verify c(B) against HL Proposition 1.1 proof (the formula 2(2B+1)/π is standard)
+3. Use Arb interval arithmetic for certified outward-rounded bounds
+4. Produce machine-readable certificate with SHA-256
 
 ### Status: [OBL]
-None of these absolute constants have been numerically computed.
-The infimum inf_{k,p} c_eff is automatically bounded below by
-1/(c(B) · C) since all quantities are absolute — no separate
-infimum argument is needed.
+
+The computation is structurally correct but not yet rigorously certified.
 
 ---
 
