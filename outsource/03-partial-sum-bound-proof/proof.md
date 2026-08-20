@@ -35,8 +35,8 @@ where D is the conductor and R(X) = 0 when L(s) is entire.
 
 ## §2. Verification of hypotheses for sym^2 Delta
 
-**Degree m = 3:** L(s, sym^2 Delta) is a degree-3 L-function (GL_3 automorphic
-form on GL_3 x GL_1). [THM, Gelbart-Jacquet 1978]
+**Degree m = 3:** L(s, sym^2 Delta) is a degree-3 L-function (automorphic
+representation on GL_3). [THM, Gelbart-Jacquet 1978]
 
 **Conductor D = 1:** Level 1, no ramified primes. [THM]
 
@@ -106,7 +106,7 @@ over zeros is needed. [THM]
 
 ## §5. Connection to L(1) (Abel summation)
 
-If |S(X)| <= C * X^alpha with alpha < 1, Abel summation gives:
+If |S(X)| <= C * X^alpha with 0 < alpha < 1, Abel summation gives:
 
 ```
 L(1) = sum_{n<=N} A(n)/n - S(N)/N + integral_N^inf S(x)/x^2 dx
@@ -120,7 +120,16 @@ Therefore:
 |L(1) - sum_{n<=N} A(n)/n| <= C * (1 + 1/(1-alpha)) * N^{alpha-1}
 ```
 
-For alpha = 1/2: the bound is <= 3C / sqrt(N).
+For the proven bound alpha = 1/2 + epsilon with 0 < epsilon < 1/2:
+the factor is 1 + 1/(1/2 - epsilon), and the bound becomes
+
+```
+C(epsilon) * (1 + 1/(1/2 - epsilon)) * N^{-1/2 + epsilon}
+```
+
+In big-O notation this is C(epsilon) * N^{-1/2+epsilon}, but for any
+future effective certificate the factor (1 + 1/(1/2-epsilon)) must be
+explicitly retained.
 
 If one CONJECTURALLY assumes the global bound |S(X)| <= 0.259*sqrt(X)
 for all X >= N (observed only on the finite computed range), then with

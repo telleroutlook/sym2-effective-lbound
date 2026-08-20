@@ -8,10 +8,12 @@ dependencies:
       |A(n)| <= d_3(n) for all n >= 1, where d_3 is the 3-divisor function.
       In particular, |A(p)| <= 3 for all primes p.
     source: >
-      Follows from Deligne's bound |tau(p)| <= 2*p^{5.5} giving |c_p| <= 2,
-      hence |A(p)| = |c_p^2 - 1| <= 3. Multiplicativity and the Hecke
-      recurrence then give |A(n)| <= d_3(n). Baseline REFERENCE_BASELINE.md
-      entry DEL-D.1.
+      The local Satake parameters of sym^2 Delta at p are alpha_p^2, 1,
+      beta_p^2 with |alpha_p| = |beta_p| = 1 (Deligne). A(p^r) is the
+      degree-r complete homogeneous symmetric polynomial in these three
+      unit-modulus parameters — a sum of exactly C(r+2,2) = d_3(p^r)
+      unit-modulus terms. Hence |A(p^r)| <= d_3(p^r), and multiplicativity
+      gives |A(n)| <= d_3(n). Baseline REFERENCE_BASELINE.md entry DEL-D.1.
     mathematical: REFEREED
     peer_reviewed: true
     computational: VERIFIED

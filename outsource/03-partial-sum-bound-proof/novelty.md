@@ -13,7 +13,7 @@ The package's contribution is limited to:
    (k = 12, N = 1, kappa = (1, 11, 12), D = 1) and wiring the result into
    this repository's later effective-computation framework.
 
-2. A discovery-tier finite experiment (exact A(n), X <= 5000 measured;
+2. A discovery-tier finite experiment (floating-point A(n), X <= 5000 measured;
    maximum |S(X)|/sqrt(X) = 0.258953 at X = 196) motivating — but not
    proving — the stronger empirical sqrt(X)-scale model.
 

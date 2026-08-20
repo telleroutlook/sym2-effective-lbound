@@ -64,7 +64,7 @@ for some absolute constant C, remains open.
 
 ## Empirical evidence
 
-For X in [100, N], computed from exact A(n) via tau(n):
+For X in [100, N], computed from floating-point A(n) via tau(n):
 
 ```
 max |S(X)| / X^{0.5} approx 0.259
