@@ -45,11 +45,17 @@ which equals ζ_p(s) · L_p(s, π, Ad) as expected (degree 4 = 1 + 3).
 
 ## Unramified places
 
-For p ∤ N, the local Godement–Jacquet integral gives:
+For p ∤ N, the local Whittaker integral gives:
 
     Ψ_p(s, W_p, W_p, Φ_p) = L_p(s, π_p × π̃_p)
 
 using the Casselman–Shalika formula for spherical vectors.
+
+**Attribution (corrected per 2026-08-20 review):** The local integral Ψ_v
+is a JS/Rankin–Selberg type Whittaker local integral (JS81 §4.7), NOT
+"the local Godement–Jacquet integral". Godement–Jacquet (Ann. Math. Studies
+26, 1972) provides background on GL₂ local factors, but the specific Ψ_v
+here comes from JS81's own construction in Sections 1 and 3.
 
 ## Ramified places (bad primes) [OBL]
 
@@ -65,19 +71,27 @@ Haar measure, and test function Φ_p.
 ## Archimedean place
 
 The archimedean local integral Ψ_∞ depends on the representation π_∞.
-The full Rankin–Selberg completion has degree 4, so Z_∞(s) must include
-the ζ_∞(s) factor as well:
+For π_∞ = holomorphic discrete series of weight k, the archimedean Langlands
+parameter gives:
 
     Z_∞(s) = Γ_R(s) · Γ_R(s+1) · Γ_C(s+k-1)
 
-where Γ_R(s) = π^{-s/2} Γ(s/2) and Γ_C(s) = 2(2π)^{-s} Γ(s).
+**Derivation (sketch):** The Rankin–Selberg local integral at ∞ produces
+Gamma factors from the archimedean Whittaker model. For D_k, the integral
+gives Γ_R(s)·Γ_R(s+1) from the ζ_∞ part and Γ_C(s+k-1) from the adjoint
+part. Total degree 4 = 1+1+2. [OBL: full derivation from local integral]
 
-**Note**: The degree is 1 + 1 + 2 = 4, matching the Rankin–Selberg degree.
-The previous version had degree 3 (missing the ζ_∞ factor).
+**At s = 1:**
+
+    Z_∞(1) = 2^{1-k} · π^{-(k+1)} · Γ(k)
+
+For k = 12: Z_∞(1) = 2^{-11} · π^{-13} · 11! ≈ 0.00671239369377.
+
+**Previous error:** v2 wrote 2π^{-k-1}Γ(k), differing by 2^k = 4096 for k=12.
 
 ## Status: [OBL]
 
 Main obstructions:
 1. Explicit computation of ramified local factors Z_p(1) for each type
 2. Consistent normalization of all Haar measures, Whittaker functions, Φ_v
-3. Archimedean factor with correct degree 4
+3. Full archimedean derivation from local integral (not just degree counting)

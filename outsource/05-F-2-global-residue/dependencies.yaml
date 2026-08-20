@@ -1,16 +1,21 @@
-# F-2 Dependencies — v2
+# F-2 Dependencies — v3
 
 F-2A:
   status: "[THM/REFEREED candidate]"
   sources:
-    - id: JS81-LEMMA-4.4
-      description: "Eisenstein series pole at s=1 with residue proportional to Φ̂(0)·∫|φ|²dg"
-      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), 499–558, Lemma 4.4"
+    - id: JS81-§4.3-eq.2
+      description: "Automorphic integral I(s) pole at s=1, residue ∝ Φ̂(0)·∫|φ|²dg"
+      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), §4.3 eq. (2), ~p.548"
       evidence: "refereed"
       status: "verified against original text"
-    - id: JS81-LEMMA-4.6I
-      description: "Whittaker unfolding identifies Rankin–Selberg L-function; diagonal π'=π"
-      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), 499–558, Lemma 4.6(i)"
+    - id: JS81-§4.5-eq.5
+      description: "Unfolding identity I(s) = Ψ(s) via Whittaker–Fourier expansion"
+      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), §4.5 eq. (5), ~p.550"
+      evidence: "refereed"
+      status: "verified against original text"
+    - id: JS81-§4.6-i
+      description: "Pole of Ψ(s) at s=1 from §4.3 + §4.5"
+      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), §4.6(i), ~p.551"
       evidence: "refereed"
       status: "verified against original text"
     - id: NORM-SQUARE-POSITIVITY
@@ -22,13 +27,13 @@ F-2A:
 F-2B:
   status: "[OBL]"
   sources:
-    - id: GJ-LOCAL-FACTORS
-      description: "Godement–Jacquet local zeta integrals for GL₂"
-      source: "Godement–Jacquet, Ann. Math. Studies 26 (1972)"
+    - id: JS81-§4.7-FACTORIZATION
+      description: "Product factorization for decomposable vectors via pure tensor + Fubini"
+      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), §4.7"
       evidence: "refereed"
     - id: CASSELMAN-NEWVECTOR
       description: "Local newvector theory for GL₂"
-      source: "Casselman, Canad. J. Math. 26 (1974), 1030–1037"
+      source: "Casselman, Math. Ann. 201 (1973), 301–314"
       evidence: "refereed"
     - id: RS-ADJOINT-FACTORIZATION
       description: "L(s, π × π̃) = ζ(s) · L(s, π, Ad) for GL₂, trivial central char"
@@ -38,8 +43,12 @@ F-2B:
       description: "Adjoint representation: parameters {1, αβ⁻¹, βα⁻¹}, degree 3"
       source: "Standard representation theory"
       evidence: "textbook"
+    - id: ARCHIMEDESAN-LANGLANDS
+      description: "Archimedean Langlands parameter for discrete series D_k"
+      source: "Iwaniec–Kowalski §13.1; Goldfeld–Hundley Vol. 1 §4.7"
+      evidence: "textbook"
   blockers:
-    - "Archimedean factor with correct degree 4 (including ζ_∞)"
+    - "Archimedean factor derivation from local integral (not just degree counting)"
     - "Ramified finite factors Z_p(1) for each local type"
     - "Consistent normalization of Haar measures and Whittaker functions"
     - "Pure-tensor hypothesis for ∏_v factorization"
@@ -47,12 +56,12 @@ F-2B:
 F-2C:
   status: "[OBL]"
   sources:
-    - id: GHL-UNIFORMITY
-      description: "Uniformity of local factors for level ≤ N₀"
-      source: "Goldfeld–Hoffstein–Lieman (1994), Appendix"
+    - id: GHL-HL94
+      description: "Effective lower bound for L(1, sym²f) via mollifier (Hoffstein–Lockhart 1994, with Goldfeld–Hoffstein–Lieman appendix)"
+      source: "Hoffstein–Lockhart, Ann. Math. 140(1) (1994), 1–42; appendix by Goldfeld–Hoffstein–Lieman"
       evidence: "refereed"
   blockers:
-    - "Explicit computation of Z_∞(1) with π^{-1} factor"
+    - "Explicit computation of Z_∞(1) = 2^{1-k}π^{-(k+1)}Γ(k)"
     - "Explicit computation of Z_p(1) for each local type"
     - "Direct nonvanishing proof from explicit formulas"
-    - "Product bound C(N₀) = min_N ∏_p |Z_p(1)| > 0"
+    - "Product bound C(F_{N_0}) > 0 for target family (not just min over N)"
