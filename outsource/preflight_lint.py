@@ -13,6 +13,8 @@ Catches error categories identified in review cycles:
 8. Scope errors (missing parameters)
 9. Status label integrity
 10. Reference verification
+11. Package-specific required mathematical objects (OBJ-004)
+12. Mathematical formula structural checks (MATH-001..003)
 
 Usage:
     python3 preflight_lint.py <package_dir>
@@ -148,6 +150,14 @@ WRONG_CITATION_PATTERNS = [
         "severity": "WARNING",
         "fix": "GHL uses auxiliary Dirichlet series with non-negative coefficients, not mollifiers",
     },
+    {
+        "id": "CITE-006",
+        "desc": "Jacquet–Shalika 1981 cited as Ann. Math. 114 (wrong journal)",
+        "pattern": r"[Aa]nn\.?\s*[Mm]ath\.?\s*\.?\s*114.*1981|[Aa]nn\.?\s*[Mm]ath\.?\s*\.?\s*114.*459",
+        "exclude_if": r"\bnot\b|\bwrong\b|\bfix\b|\bincorrect\b|\bsee\s+limitations\b|\bcorrected\b",
+        "severity": "FATAL",
+        "fix": "JS81 is Am. J. Math. 103(3) (1981), 499–558, NOT Ann. Math. 114",
+    },
 ]
 
 
@@ -267,6 +277,86 @@ ALL_PATTERNS = (
 )
 
 
+# ============================================================================
+# Category 10: Key mathematical object presence (package-specific)
+# ============================================================================
+
+# Maps package name prefix -> required objects (at least one must appear in proof files)
+REQUIRED_OBJECTS = {
+    "F-2": {
+        "F-2A": [
+            {"id": "OBJ-004a", "pattern": r"N\(A\).*GL", "desc": "Integral over N(A)\\GL₂(A)", "severity": "ERROR",
+             "fix": "F-2A integral must be over N(A)\\GL₂(A), not N(A)G(Q)\\G(A)"},
+            {"id": "OBJ-004b", "pattern": r"[Φφ].*e.?[2₂]\s*g", "desc": "Test function Φ(e₂g)", "severity": "ERROR",
+             "fix": "Unfolded integral uses Φ(e₂g), not Φ(g)"},
+            {"id": "OBJ-004c", "pattern": r"[Jj]acquet.*[Ss]halika|[Ss]halika.*[Jj]acquet", "desc": "Jacquet–Shalika attribution", "severity": "WARNING",
+             "fix": "F-2A is a specialization of JS81; must cite it"},
+        ],
+        "F-2B": [
+            {"id": "OBJ-004d", "pattern": r"[Pp]ure.?tensor|[Dd]ecomposable|[⊗⊕]\s*v", "desc": "Pure-tensor hypothesis", "severity": "ERROR",
+             "fix": "Factorization ∏_v requires W = ⊗_v W_v"},
+            {"id": "OBJ-004e", "pattern": r"[Aa]dj|adjoint", "desc": "Adjoint representation mentioned", "severity": "WARNING",
+             "fix": "F-2B must discuss the Adjoint L-function"},
+        ],
+        "F-2C": [
+            {"id": "OBJ-004f", "pattern": r"Γ_R\(2\)|π\^\{?-1\}?|π⁻¹|π\*\*\{-1\}", "desc": "Γ_R(2) = π⁻¹ correction", "severity": "ERROR",
+             "fix": "Z_∞(1) must include Γ_R(2) = π⁻¹ factor"},
+            {"id": "OBJ-004g", "pattern": r"[Nn]onvanish|explicit.*formula|direct.*comput", "desc": "Nonvanishing from explicit formulas", "severity": "WARNING",
+             "fix": "Uniformity: min>0 requires explicit nonvanishing first"},
+        ],
+    },
+    "M-1": [
+        {"id": "OBJ-004h", "pattern": r"4.?variable|quadruple|convolution", "desc": "4-variable convolution structure", "severity": "ERROR",
+         "fix": "M-1 must describe 4-variable convolution (ns≈mr)"},
+        {"id": "OBJ-004i", "pattern": r"mollif", "desc": "Mollifier concept", "severity": "WARNING",
+         "fix": "M-1 is the mollifier construction"},
+    ],
+    "M-2": [
+        {"id": "OBJ-004j", "pattern": r"[Xx]_\{?.Π\}?.*\([st]\)|[Xx]_Π\([st]\)", "desc": "t-dependent dual factor X_Π(s/t)", "severity": "ERROR",
+         "fix": "M-2 must use t-dependent X_Π(t/s), not constant χ(Π)"},
+        {"id": "OBJ-004k", "pattern": r"H_\{?.Π.*p\}|H_Π", "desc": "Prime-specific H_{Π,p} factor", "severity": "ERROR",
+         "fix": "M-2 must define H_{Π,p}(x) per prime"},
+    ],
+    "c_eff": [
+        {"id": "OBJ-004l", "pattern": r"1.*log\(.*k.*p.*\+.*1\)|1.*log\(kp\+1\)", "desc": "Correct 1/log(kp+1) scope", "severity": "ERROR",
+         "fix": "c_eff uses 1/log(kp+1), not 1/log p"},
+        {"id": "OBJ-004m", "pattern": r"[Hh]offstein.*[Ll]ockhart|HL\s*1994", "desc": "Hoffstein–Lockhart route attribution", "severity": "WARNING",
+         "fix": "c_eff follows HL1994 mollifier route"},
+    ],
+}
+
+
+# ============================================================================
+# Category 11: Mathematical formula correctness (structural checks)
+# ============================================================================
+
+FORMULA_CHECKS = [
+    {
+        "id": "MATH-001",
+        "desc": "Adjoint L-function: single factor (should be 3 factors for GL₂)",
+        "pattern": r"adjoint.*=.*\(1\s*[-−]\s*\w+\s*\w*\s*p\^\{-?s\}\)\^\{-?1\}\s*$",
+        "context_hint": r"adjoint",
+        "severity": "WARNING",
+        "fix": "GL₂ adjoint has degree 3: [(1-x)(1-αβ⁻¹x)(1-βα⁻¹x)]⁻¹. Single factor is incomplete.",
+    },
+    {
+        "id": "MATH-002",
+        "desc": "Archimedean factor degree 3 (should be 4 for Rankin–Selberg)",
+        "pattern": r"degree\s*:?\s*3.*rankin|z_∞.*degree\s*:?\s*3",
+        "severity": "WARNING",
+        "fix": "L(s,π×π̃) has degree 4 for GL₂. Z_∞ must include ζ_∞ factor.",
+    },
+    {
+        "id": "MATH-003",
+        "desc": "Continuity+compactness claimed to give min>0 without nonvanishing",
+        "pattern": r"continuity.*compact.*min.*>|compact.*continuity.*positive|achieves?\s+min.*>.*0",
+        "exclude_if": r"nonvanish|non.?zero|explicit.*formula|direct.*comput|known.*nonzero",
+        "severity": "WARNING",
+        "fix": "Continuity+compactness gives min≥0. To get min>0, must first prove nonvanishing.",
+    },
+]
+
+
 def scan_file(filepath, patterns):
     """Scan a single file against all patterns."""
     if not os.path.exists(filepath):
@@ -300,6 +390,61 @@ def scan_file(filepath, patterns):
     return findings
 
 
+def scan_required_objects(pkg_dir, pkg_name):
+    """Check that key mathematical objects appear in proof files."""
+    findings = []
+    # Match package name prefix (e.g. "F-2" from "F-2-global-residue")
+    matched_key = None
+    for key in REQUIRED_OBJECTS:
+        if pkg_name.startswith(key):
+            matched_key = key
+            break
+    if matched_key is None:
+        return findings
+
+    entries = REQUIRED_OBJECTS[matched_key]
+    # If entries is a dict (sub-packages like F-2A/F-2B/F-2C), iterate each
+    if isinstance(entries, dict):
+        for sub_key, required in entries.items():
+            # Find matching proof/statement files
+            proof_file = os.path.join(pkg_dir, f"proof-{sub_key}.md")
+            stmt_file = os.path.join(pkg_dir, f"statement-{sub_key}.md")
+            targets = []
+            if os.path.exists(proof_file):
+                targets.append(proof_file)
+            if os.path.exists(stmt_file):
+                targets.append(stmt_file)
+            if not targets:
+                # No sub-package files found; skip
+                continue
+            # Use RAW content (not .lower()) to preserve Unicode subscripts/symbols
+            combined = " ".join(open(f).read() for f in targets)
+            for req in required:
+                if not re.search(req["pattern"], combined, re.IGNORECASE):
+                    findings.append({
+                        "id": req["id"],
+                        "severity": req["severity"],
+                        "desc": req["desc"],
+                        "fix": req["fix"],
+                        "file": f"{sub_key} (statement/proof)",
+                    })
+    else:
+        # Flat list (e.g. M-1, M-2, c_eff)
+        # Check all .md files in the package
+        md_files = list(Path(pkg_dir).glob("*.md"))
+        combined = " ".join(open(f).read() for f in md_files)
+        for req in entries:
+            if not re.search(req["pattern"], combined, re.IGNORECASE):
+                findings.append({
+                    "id": req["id"],
+                    "severity": req["severity"],
+                    "desc": req["desc"],
+                    "fix": req["fix"],
+                    "file": f"{pkg_name} (*.md)",
+                })
+    return findings
+
+
 def scan_package(pkg_dir):
     """Scan all files in a package."""
     findings = []
@@ -308,7 +453,7 @@ def scan_package(pkg_dir):
     yaml_files = list(Path(pkg_dir).rglob("*.yaml"))
 
     for f in md_files + py_files + yaml_files:
-        findings.extend(scan_file(str(f), ALL_PATTERNS))
+        findings.extend(scan_file(str(f), ALL_PATTERNS + FORMULA_CHECKS))
     return findings
 
 
@@ -443,6 +588,7 @@ def main():
         pkg_name = pkg.name
         findings = []
         findings.extend(scan_package(str(pkg)))
+        findings.extend(scan_required_objects(str(pkg), pkg_name))
         findings.extend(check_checker_quality(str(pkg)))
         findings.extend(check_test_coverage(str(pkg)))
         findings.extend(check_manifest(str(pkg)))

@@ -16,3 +16,4 @@ discovery/*.pkl
 .venv/
 venv/
 *.DS_Store
+.serena/
