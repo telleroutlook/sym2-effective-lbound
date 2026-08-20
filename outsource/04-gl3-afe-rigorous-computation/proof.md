@@ -1,6 +1,7 @@
 # Proof — GL_3 AFE computation for L(s, sym^2 Delta)
 
 **Status:** METHOD-DESCRIPTION + DISCOVERY (not a theorem; all rigorous layers are [OBL]).
+v4: 3 code bugs fixed (C_V G-factor, X-direction, dual tail). Still DISCOVERY-tier.
 
 ## §1. Method overview
 
@@ -109,45 +110,42 @@ L(1) in B_arithmetic + B_quadrature + B_contour + B_AFE_tail + B_dual_tail
 
 where each B is a certified interval. This does NOT exist yet.
 
-## §5. Code-level bugs found in review (v3)
+## §5. Code-level bugs found in review (v3) — v4 FIXES APPLIED
 
-### 5a. C_V computation missing G factor [BUG]
+### 5a. C_V computation missing G factor [FIXED in v4]
 
-`afe_sym2_arb_final.py::compute_C_V_rigorous()` computes:
+`afe_sym2_arb_final.py::compute_C_V_numerical()` now includes the
+|G(s+1+it)/G(s)| Gamma-ratio factor via `_G_ratio_abs()`. Uses
+Stirling approximation for log|Γ(σ+iτ)|. Still NOT rigorous (10% safety
+margin, float arithmetic), but structurally correct.
 
-```python
-f = exp(1-t*t) / sqrt(1+t*t)
-```
-
-but the actual integrand for the AFE tail bound should include
-|G(s+1+it)/G(s)|. The function name claims to bound this integral
-but the Gamma-ratio factor is entirely absent.
-
-### 5b. AFE tail X-direction error [BUG]
+### 5b. AFE tail X-direction error [FIXED in v4]
 
 From the contour at Re(u)=1:
 
 ```
-|V(n/X, s)| <= C(s) * (X/n)^1
+|V(n/X, s)| <= C_V * (X/n)^1
 ```
 
-since |(n/X)^{-1-it}| = X/n. But the code writes:
+The main tail is now correctly computed as:
 
 ```python
-main_tail = C_V / X * exact_part
+main_tail = C_V * X * exact_part  # v4: X in numerator
 ```
 
-which divides by X instead of multiplying. The correct majorant should
-have X in the numerator for the main tail.
+v3 had `C_V / X * exact_part` (X in denominator) — wrong direction.
 
-### 5c. Dual tail hardcoded [BUG]
+### 5c. Dual tail hardcoded [FIXED in v4]
+
+The dual tail is now computed from an integral majorant:
 
 ```python
-dual_tail = 1e-12
+C_V_dual = compute_C_V_numerical(1.0 - sigma, T=20.0, M=2000)
+dual_tail = C_V_dual / X * exact_part_dual  # v4: derived, not hardcoded
 ```
 
-This is a magic constant with no derivation. The dual tail must be
-bounded using the same style of integral majorant as the main tail.
+Uses the same `_G_ratio_abs()` function with the dual Gamma ratio
+G(1-s+v)/G(s). The dual contour has Re(v)=1, giving 1/(nX) decay.
 
 ## §6. Discovery-tier numerical results
 
