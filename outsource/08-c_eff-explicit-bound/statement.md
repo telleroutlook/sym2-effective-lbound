@@ -1,4 +1,4 @@
-# c_eff: Explicit Lower Bound for L(1, sym² f) — Rewritten v3
+# c_eff: Explicit Lower Bound for L(1, sym² f) — Rewritten v4
 
 ## Theorem Statement
 
@@ -35,24 +35,27 @@ concrete numerical value has been computed.
 - Auxiliary series φ(s) = ζ(s) L(s,F)³ L(s,F,V²)
 - Factorization: L(s,F×F) = L(s,F) L(s,F,V²)
 - Non-dihedral ⟹ L(s,F,V²) has simple pole at s=1
+- **L(1,F) ≠ 0** (Jacquet–Shalika / standard GL₃ non-vanishing)
 - Therefore φ has double pole at s=1
-- φ has non-negative Dirichlet coefficients (GHL)
+- φ has non-negative Dirichlet coefficients (GHL; good-prime local factors
+  of ζ(s)L(s,F) are (1−α_q²q^{-s})⁻¹(1−q^{-s})⁻²(1−β_q²q^{-s})⁻¹)
 - GHL zero-count lemma: at most 2 zeros near 1
 - Triple zero from L(β,F)=0 contradicts this
 - Result: L(s,F) ≠ 0 for 1 − c_ZF/log(kp+1) < s < 1
 
 ### Stage C — HL lower bound [THM, constants OBL]
 - A(s) = ζ(s) L(s,F) has non-negative coefficients and simple pole
-- Growth: |A(1/2+it)| ≤ K^{A_0}(1+|t|)^B, K=kp+1
-- Set M = K^C with C ≥ max(A_0, c_ZF⁻¹)
+- Growth: |A(1/2+it)| ≤ C_* K^{A_0}(1+|t|)^B, K=kp+1
+  (C_* is the growth multiplicative constant, essential for numerics)
+- Set M = K^C with C ≥ max(A_0 + log C_*/log 5, c_ZF⁻¹)
 - Then 1/log M ≤ c_ZF/log K, so GHL zero-free covers HL requirement
 - HL Prop 1.1: R⁻¹ ≤ c(B)·log M = c(B)·C·log K
 - Therefore L(1,F) ≥ 1/(c(B)·C) · 1/log(kp+1)
 - c_eff = 1/(c(B)·C) > 0 (all absolute constants)
 
 ### Stage D — Numerical constant extraction [OBL]
-- Compute c_ZF, A_0, B, c(B) numerically
-- Set C = max(A_0, c_ZF⁻¹), c_eff = 1/(c(B)·C)
+- Compute c_ZF, C_*, A_0, B, c(B) numerically
+- Set C = max(A_0 + log C_*/log 5, c_ZF⁻¹), c_eff = 1/(c(B)·C)
 - Certified interval [a,b] with a > 0 via Arb/python-flint
 - No separate infimum argument needed (constants are absolute)
 
@@ -68,5 +71,5 @@ concrete numerical value has been computed.
 
 The main tasks are:
 1. Compute c_ZF from GHL zero-count lemma (Stage B)
-2. Compute A_0, B, c(B) from functional equation + HL contour (Stage C)
+2. Compute C_*, A_0, B, c(B) from functional equation + HL contour (Stage C)
 3. Certified interval [a, b] with a > 0 using Arb (Stage D)

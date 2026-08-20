@@ -1,4 +1,4 @@
-# c_eff Dependencies — v3 (corrected per reviewer feedback)
+# c_eff Dependencies — v4 (corrected per reviewer feedback)
 
 # Corrected dependency chain
 dependency_chain:
@@ -7,13 +7,13 @@ dependency_chain:
     description: "f ∈ S_k^new(Γ₀(p)), F=sym²f, q_ar=p², Λ(s,F)=p^s L_∞(s) L(s,F)"
   - stage: "B. GHL zero-free region"
     status: "[THM, constants OBL]"
-    description: "φ(s)=ζ(s)L(s,F)³L(s,F,V²), double pole, non-negative coefficients, triple-zero contradiction"
+    description: "φ(s)=ζ(s)L(s,F)³L(s,F,V²), double pole (requires L(1,F)≠0), non-negative coefficients, triple-zero contradiction"
   - stage: "C. HL lower bound"
     status: "[THM, constants OBL]"
-    description: "A(s)=ζ(s)L(s,F), M=K^C matching, HL Prop 1.1 ⟹ L(1)≥c_eff/log(kp+1)"
+    description: "A(s)=ζ(s)L(s,F), growth with C_*, M=K^C matching, HL Prop 1.1 ⟹ L(1)≥c_eff/log(kp+1)"
   - stage: "D. Numerical constants"
     status: "[OBL]"
-    description: "Compute c_ZF, A_0, B, c(B) numerically; c_eff=1/(c(B)·C)"
+    description: "Compute c_ZF, C_*, A_0, B, c(B) numerically; c_eff=1/(c(B)·C)"
 
 # What is NOT a dependency
 not_dependencies:
@@ -33,19 +33,25 @@ not_dependencies:
 # Verified dependencies
 dependencies:
   - id: HL-1994
-    source: "Hoffstein–Lockhart (1994), Annals of Mathematics 140, pp. 161–181 (main paper 161–176, appendix 177–181)"
+    source: "Hoffstein–Lockhart (1994), Annals of Mathematics 140, pp. 161–181"
     evidence: "refereed"
     status: "[THM]"
     note: "Theorem 0.1 (main bound) + Proposition 1.1 (zero-free → residue lower bound)"
 
   - id: GHL-1994
-    source: "Goldfeld–Hoffstein–Lieman (1994), appendix to 'Effective estimates for L-functions...' in Annals 140, pp. 177–181"
+    source: "Goldfeld–Hoffstein–Lieman (1994), appendix in Annals 140, pp. 177–181"
     evidence: "refereed"
     status: "[THM]"
-    note: "Generic zero-free region via auxiliary series with non-negative coefficients; effective constants"
+    note: "Generic zero-free region via auxiliary series with non-negative coefficients"
+
+  - id: JW-NONVANISHING
+    source: "Jacquet–Shalika (1981), Am. J. Math. 103(3), 499–558"
+    evidence: "refereed"
+    status: "[THM]"
+    note: "L(1, sym²f) ≠ 0 for cuspidal non-CM/non-dihedral f; standard GL₃ boundary non-vanishing"
 
   - id: IWANIEC-MICHEL-2001
-    source: "Iwaniec–Michel (2001), 'The Second Moment of the Symmetric Square L-functions,' Annales Academiae Scientiarum Fennicae Mathematica 26, pp. 465–482"
+    source: "Iwaniec–Michel (2001), Ann. Acad. Sci. Fenn. Math. 26, pp. 465–482"
     evidence: "refereed"
     status: "[THM]"
     note: "Symmetric-square L-functions: archimedean factors, bad-prime normalization, conductor=p²; formula 2.22"
@@ -54,4 +60,4 @@ dependencies:
     source: "Hoffstein–Lockhart (1994), Proposition 1.1, pp. 168–170"
     evidence: "refereed"
     status: "[THM]"
-    note: "Non-negative coefficients + zero-free region + growth ⟹ residue lower bound; parameter M=K^C matching"
+    note: "Non-negative coefficients + zero-free region + growth ⟹ residue lower bound"

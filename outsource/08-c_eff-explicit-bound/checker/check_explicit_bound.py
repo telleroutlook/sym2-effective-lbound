@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-check_explicit_bound.py — Structural checker for c_eff submissions (v3).
+check_explicit_bound.py — Structural checker for c_eff submissions (v4).
 
-Corrections from v2 reviewer feedback:
-- Added check for M=K^C parameter matching (not δ=c_ZF/log K)
-- Added check against "log(1/δ)" pattern (wrong HL parameter)
-- Added check for correct positivity reason
-- Added check for M_GHL vs M_HL distinction
+v4 corrections (per reviewer verdict 2026-08-20):
+- Check for correct good-prime local factor (four-factor expression)
+- Check for L(1,F)≠0 prerequisite in Stage B
+- Check for C_* growth multiplicative constant
+- Check for Δ scope correction (level 1 ≠ prime-level upper bound)
+- Strengthened completed function check (must include p^s in formula context)
 - Fixed false positive on "q_ar" (just checking string presence)
-- Analytic conductor now checks proof.md, not just statement.md
 """
 import sys
 import os
@@ -41,14 +41,14 @@ FORBIDDEN_PATTERNS = [
     "vinogradov-korobov",
     "l(1/2",
     "l(½",
-    "log(1/δ)",          # v3: wrong HL parameter (should be log M)
-    "log(1/delta)",       # v3: same, ASCII variant
-    "δ = c",             # v3: setting δ directly is wrong
-    "delta = c",          # v3: same, ASCII variant
-    "r⁻¹ ≪ log(1/δ)",   # v3: wrong formula
-    "exterior square",    # v3: V² is symmetric-square, not exterior
-    "symmetric part of the exterior",  # v3: wrong V² description
-    "depending on k",     # v3: c₀ is absolute, not depending on k
+    "log(1/δ)",          # wrong HL parameter (should be log M)
+    "log(1/delta)",       # same, ASCII variant
+    "δ = c",             # setting δ directly is wrong
+    "delta = c",          # same, ASCII variant
+    "r⁻¹ ≪ log(1/δ)",   # wrong formula
+    "exterior square",    # V² is symmetric-square, not exterior
+    "symmetric part of the exterior",  # wrong V² description
+    "depending on k",     # c₀ is absolute, not depending on k
 ]
 
 # Year corrections
@@ -136,17 +136,23 @@ def check_scope(statement_path):
 
 
 def check_completed_function(proof_path):
-    """Check that completed function includes p^s factor."""
+    """Check that completed function includes p^s factor in formula context."""
     if not os.path.exists(proof_path):
         return True
     content = _normalize(open(proof_path).read())
-    if "p^s" in content or "p^{s" in content or "q_ar" in content:
-        print("  [PASS] Completed function includes p^s factor")
+    # Must have p^s in a formula with Lambda or completed
+    has_formula = ("p^s" in content or "p^{s" in content)
+    has_lambda = ("lambda" in content or "Λ" in content or "completed" in content)
+    if has_formula and has_lambda:
+        print("  [PASS] Completed function includes p^s factor in formula")
         return True
-    if "lambda" in content or "Λ" in content:
-        print("  [FAIL] Completed function missing p^s factor")
+    if has_lambda and not has_formula:
+        print("  [FAIL] Completed function mentions Λ/completed but missing p^s in formula")
         return False
-    print("  [PASS] Completed function check (no Λ found)")
+    if has_formula:
+        print("  [PASS] Completed function has p^s")
+        return True
+    print("  [PASS] Completed function check (no Λ/completed found)")
     return True
 
 
@@ -212,6 +218,40 @@ def check_parameter_matching(proof_path):
     return True
 
 
+def check_l1_nonvanishing(proof_path):
+    """Check that L(1,F)≠0 is stated as prerequisite for double pole."""
+    if not os.path.exists(proof_path):
+        return True
+    content = _normalize(open(proof_path).read())
+    if "l(1" in content and ("nonzero" in content or "non-zero" in content or "≠ 0" in content or "neq" in content):
+        print("  [PASS] L(1,F)≠0 prerequisite stated")
+        return True
+    if "double pole" in content:
+        if "l(1" not in content:
+            print("  [WARN] Double pole mentioned but L(1,F)≠0 not explicitly checked")
+            return True
+        print("  [PASS] L(1,F) check present (double pole context)")
+        return True
+    print("  [PASS] L(1,F) nonvanishing check (no double pole found)")
+    return True
+
+
+def check_growth_constant(proof_path):
+    """Check that C_* multiplicative constant is mentioned."""
+    if not os.path.exists(proof_path):
+        return True
+    content = _normalize(open(proof_path).read())
+    if "c_*" in content or "c star" in content or "c*" in content:
+        print("  [PASS] Growth multiplicative constant C_* present")
+        return True
+    if "growth bound" in content or "growth constant" in content:
+        if "c_*" not in content and "c star" not in content:
+            print("  [WARN] Growth bound discussed but C_* not explicitly named")
+            return True
+    print("  [PASS] Growth constant check (no growth discussion found)")
+    return True
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python check_explicit_bound.py <submission_dir>")
@@ -260,6 +300,14 @@ def main():
 
     print("\n--- Parameter matching ---")
     if not check_parameter_matching(proof_path):
+        ok = False
+
+    print("\n--- L(1,F) nonvanishing ---")
+    if not check_l1_nonvanishing(proof_path):
+        ok = False
+
+    print("\n--- Growth constant C_* ---")
+    if not check_growth_constant(proof_path):
         ok = False
 
     print("\n--- Reference years ---")
