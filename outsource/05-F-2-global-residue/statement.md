@@ -1,49 +1,51 @@
-# F-2: Global Residue Positivity — Combined Statement
+# F-2: Global Residue Positivity — Combined Statement (v2)
 
-**Status**: [OBL] (restructured 2026-08-20)
+**Status**: [OBL] (restructured v2, 2026-08-20)
 
 ## Overview
 
 This obligation establishes that the global Rankin–Selberg residue is strictly
-positive, and extracts the exact Euler factors for use in explicit lower bounds.
+positive and extracts the exact Euler factors for use in explicit lower bounds.
 
 ## F-2A: Diagonal global residue positivity
 
-See `statement-F-2A.md` for the detailed statement.
+See `statement-F-2A.md`. Core思想 correctly established in v1.
 
-**Summary**: For unitary cuspidal π ⊂ GL₂(A_Q), same vector W, conjugate(W) ∈ W(π̃, ψ⁻¹),
-Φ̂(0) > 0:
+**Key correction (v2)**: Integral definition fixed:
+- Quotient: N(A)\GL₂(A) (NOT N(A)G(Q)\G(A))
+- Test function: Φ(e₂ g) (NOT Φ(g))
+- Citation: Am. J. Math. 103(3) (1981), 499–558 (NOT Ann. Math. 114)
 
-    Res_{s=1} Ψ(s, W, W, Φ) = c_Q · Φ̂(0) · |φ|² > 0
-
-**Status**: [THM/REFEREED candidate] — specialization of Jacquet–Shalika 1981.
+**Status**: [THM/REFEREED candidate] — specialization of JS81.
 
 ## F-2B: Exact Euler-factor extraction
 
-See `statement-F-2B.md` for the detailed statement.
+See `statement-F-2B.md`.
 
-**Summary**: The global integral factors as:
-
-    Ψ(s) = L^S(s, π × π̃) · ∏_{v∈S} Z_v(s)
-
-with L(s, π × π̃) = ζ(s) · L(s, π, Ad). All normalization explicit.
+**Key corrections (v2)**:
+1. Adjoint Euler factor now has 3 factors: [(1-x)(1-αβ⁻¹x)(1-βα⁻¹x)]⁻¹
+   (original had only 1 factor — a load-bearing error)
+2. Pure-tensor hypothesis W = ⊗_v W_v added (required for ∏_v factorization)
+3. Satake parameters: use inverses α⁻¹, β⁻¹ for π̃ (not complex conjugates)
+4. Archimedean factor: degree 4 (was degree 3, missing ζ_∞ factor)
 
 **Status**: [OBL] — the real technical obligation.
 
 ## F-2C: Target-family local positivity/uniformity
 
-See `statement-F-2C.md` for the detailed statement.
+See `statement-F-2C.md`.
 
-**Summary**: For the specific modular form family (fixed level, weight, nebentypus,
-newvector normalization, Haar measures, archimedean vector, bad-prime type):
+**Key corrections (v2)**:
+1. Z_∞(1) now has π^{-1} factor: Γ_R(1)·Γ_R(2)·Γ_C(k) = 2π^{-k-1}Γ(k)
+2. Uniformity: nonvanishing must come from explicit formulas, NOT continuity
+3. Product bound: C(N₀) = min_N ∏_p |Z_p(1)| > 0, not just individual min
+4. Local type classification uses conductor of π (not symmetric-square)
 
-    Z_p(1) and Z_∞(1) computed explicitly; product bounded below uniformly.
-
-**Status**: [OBL] — interfaces with downstream (M-1, M-2, c_eff).
+**Status**: [OBL] — interfaces with downstream.
 
 ## Dependencies
 
-- JS81 Lemma 4.4, 4.6(i) (verified against original text)
+- JS81 Lemma 4.4, 4.6(i) (Am. J. Math. 103(3) (1981), 499–558)
 - Godement–Jacquet local zeta integrals
 - Casselman newvector theory
 - L(s, π × π̃) = ζ(s) · L(s, π, Ad) factorization
@@ -51,5 +53,5 @@ newvector normalization, Haar measures, archimedean vector, bad-prime type):
 ## What is NOT claimed
 
 - GRH is NOT assumed
-- L(1, π, Ad) > 0 is NOT a prerequisite (residue is positive by norm-square)
+- L(1, π, Ad) > 0 is NOT a prerequisite
 - An explicit general lower bound is NOT given (that is c_eff)

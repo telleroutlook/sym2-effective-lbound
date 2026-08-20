@@ -4,46 +4,69 @@
 
 For the specific modular form family needed downstream (L(1, sym² f) ≥ c/log N):
 
-**Statement**: Fix:
+**Statement [OBL]**: Fix:
 - Level N (conductor of the symmetric square)
 - Weight k (holomorphic weight of f)
 - Nebentypus χ (if applicable)
-- Newvector normalization (Petersson-normalized or Whittaker-normalized)
-- Haar measures on GL₂(A_Q) (modular normalizations)
+- Newvector normalization
+- Haar measures on GL₂(A_Q)
 - Archimedean vector φ_∞ (holomorphic discrete series of weight k)
-- Bad-prime types (spherical/Iwahori at each p | N)
+- Local type at each p | N (Steinberg, ramified principal, supercuspidal)
 
-Then the local corrections satisfy:
+Then:
 
 1. **Archimedean correction**: Z_∞(1) is computed explicitly in terms of k
+   (with correct degree-4 factorization from F-2B)
 
-2. **Ramified corrections**: For each p | N, Z_p(1) is computed explicitly in terms
-   of the local newvector type
+2. **Ramified corrections**: For each p | N, Z_p(1) is computed explicitly
+   for the specific local type
 
-3. **Uniformity**: For the family of forms with level ≤ N₀, the corrections satisfy:
+3. **Local nonvanishing**: For each local type that occurs, Z_v(1) ≠ 0.
+   This must be proved by DIRECT COMPUTATION of the local formula,
+   NOT by continuity+compactness.
 
-    min_{p | N} |Z_p(1)| ≥ c' > 0
+4. **Uniform lower bound**: For the family of forms with level ≤ N₀:
 
-   for some explicit constant c' depending on N₀ but not on the individual form.
+    C(N₀) = min_{N ≤ N₀} ∏_{v | N∞} |Z_v(1)| > 0
 
-## What remains
+   where the product is over ALL places (finite and archimedean) that vary.
 
-This is the final link between the abstract F-2A/F-2B and the concrete lower bound
-c/log N. The key tasks are:
+## Why the original uniformity argument was wrong
 
-1. **Fix the archimedean vector**: For weight k, the holomorphic discrete series
-   vector has a specific normalization. Compute Z_∞(1) explicitly.
+The original argued: "Z_p(1) is continuous → compact set → achieves minimum → minimum > 0."
+This is INVALID because:
 
-2. **Fix the newvector type**: For each p | N, determine whether the local representation
-   is spherical, Iwahori, or higher level. Compute Z_p(1) accordingly.
+- Continuity + compactness gives min ≥ 0, NOT min > 0
+- To get min > 0, must first prove Z_p(1) ≠ 0 for every local type
+- The nonvanishing must come from EXPLICIT LOCAL FORMULAS, not abstract arguments
 
-3. **Prove uniformity**: Show that the product ∏_v Z_v(1) is bounded below by an
-   explicit constant depending only on N₀ (not on individual forms).
+Correct order:
+    explicit local formula → Z_p(1) ≠ 0 → quantitative lower bound
 
-4. **Interface with downstream**: The constant c' from uniformity feeds directly into
-   the M-1 mollifier construction and the c_eff explicit bound.
+## Product bound: c_loc vs C_global
+
+The downstream needs the PRODUCT bound ∏ |Z_v(1)| ≥ C > 0, not just individual
+bounds min |Z_p(1)| ≥ c' > 0.
+
+If c' < 1, then ∏ |Z_p(1)| ≥ (c')^{ω(N)} which degenerates.
+
+Correct approach: define
+
+    C(N₀) = min_{N ≤ N₀} ∏_{p | N} |Z_p(1)| > 0
+
+directly (finite minimum over finitely many N ≤ N₀).
+
+## Local type classification
+
+For level-N forms, the local representation at p | N falls into:
+- **Steinberg twist** (conductor exponent 1)
+- **Ramified principal series** (conductor exponent ≥ 1)
+- **Supercuspidal** (conductor exponent ≥ 2)
+
+Each type has a distinct Z_p(1) formula. The classification must use
+the conductor of π (NOT the symmetric-square conductor N_{sym²π}).
 
 ## Status: [OBL]
 
-This is the most concrete of the three obligations and the one that directly
-interfaces with the computational pipeline (checker/check_bound.py, F-3).
+This is the most concrete obligation and directly interfaces with the
+computational pipeline.

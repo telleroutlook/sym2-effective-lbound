@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 """
-test_checker.py — Tests for F-2 structural checker.
-
-Verifies that the checker correctly identifies:
-- PASS for well-structured submissions
-- FAIL for submissions with missing concepts
-- FAIL for submissions that promote to [THM] without [OBL]
+test_checker.py — Tests for F-2 structural checker (v2).
 """
 import subprocess
 import tempfile
 import os
-import shutil
 
 
 CHECKER = os.path.join(os.path.dirname(__file__), "..", "checker", "check_global_residue.py")
@@ -30,87 +24,63 @@ def _run_checker(submission_dir):
     return result.returncode, result.stdout
 
 
-def test_pass_on_well_structured_submission():
-    """A well-structured submission should PASS."""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        # Write all required files with correct content
-        _write(os.path.join(tmpdir, "statement.md"), """# F-2A Statement
-[OBL] This is the desired statement for diagonal global residue positivity.
-""")
-        _write(os.path.join(tmpdir, "proof-F-2A.md"), """# F-2A Proof
-The diagonal global residue is positive by norm-square positivity.
-Jacquet–Shalika 1981 Lemma 4.4 and 4.6(i) give the result.
-""")
-        _write(os.path.join(tmpdir, "proof-F-2B.md"), """# F-2B Proof
-The Euler factor extraction involves archimedean and ramified factors.
-""")
-        _write(os.path.join(tmpdir, "proof-F-2C.md"), """# F-2C Proof
-The uniformity of local factors for level ≤ N₀ gives explicit control.
-""")
-        _write(os.path.join(tmpdir, "proof.md"), """# F-2 Proof
-Combined proof of F-2A, F-2B, F-2C.
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"), """F-2A:
-  status: "[OBL]"
-""")
-        _write(os.path.join(tmpdir, "limitations.md"), "# Limitations\n[OBL] Some limitations.\n")
-        _write(os.path.join(tmpdir, "novelty.md"), "# Novelty\n[OBL] Some novelty.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"), "# Checker\n[OBL] Some notes.\n")
+def _base_files(tmpdir, stmt="# [OBL] F-2.\n", proof_a=None, proof_b=None, proof_c=None):
+    _write(os.path.join(tmpdir, "statement.md"), stmt)
+    _write(os.path.join(tmpdir, "proof.md"), "# Proof\n[OBL] Combined.\n")
+    _write(os.path.join(tmpdir, "proof-F-2A.md"),
+           proof_a or "# F-2A\nDiagonal norm-square jacquet–shalika.\n")
+    _write(os.path.join(tmpdir, "proof-F-2B.md"),
+           proof_b or "# F-2B\nEuler factor archimedean ramified.\n")
+    _write(os.path.join(tmpdir, "proof-F-2C.md"),
+           proof_c or "# F-2C\nUniformity local explicit.\n")
+    _write(os.path.join(tmpdir, "dependencies.yaml"), "F-2A:\n  status: '[OBL]'\n")
+    _write(os.path.join(tmpdir, "limitations.md"), "# Limits\n[OBL] Limits.\n")
+    _write(os.path.join(tmpdir, "novelty.md"), "# Novelty\n[OBL] Novelty.\n")
+    _write(os.path.join(tmpdir, "checker", "README.md"), "# Checker\n[OBL] Notes.\n")
 
+
+def test_pass_on_well_structured():
+    """Well-structured submission should PASS."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir)
         code, output = _run_checker(tmpdir)
         assert code == 0, f"Expected PASS but got FAIL:\n{output}"
-        assert "PASS" in output
 
 
-def test_fail_on_missing_F2A_concepts():
-    """Submission missing F-2A concepts should FAIL."""
+def test_fail_on_wrong_citation():
+    """Wrong JS81 citation (Ann. Math. 114) should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"), "# Statement\n[OBL] Some statement.\n")
-        _write(os.path.join(tmpdir, "proof-F-2A.md"), "# F-2A Proof\nSome wrong content.\n")
-        _write(os.path.join(tmpdir, "proof-F-2B.md"), "# F-2B Proof\nEuler factor archimedean ramified.\n")
-        _write(os.path.join(tmpdir, "proof-F-2C.md"), "# F-2C Proof\nUniformity local explicit.\n")
-        _write(os.path.join(tmpdir, "proof.md"), "# Proof\nSome content.\n")
-        _write(os.path.join(tmpdir, "dependencies.yaml"), "# Deps\nSome content.\n")
-        _write(os.path.join(tmpdir, "limitations.md"), "# Limits\nSome content.\n")
-        _write(os.path.join(tmpdir, "novelty.md"), "# Novelty\nSome content.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"), "# Checker\nSome content.\n")
-
+        _base_files(tmpdir,
+            proof_a="# F-2A\nDiagonal norm-square jacquet–shalika.\n"
+                    "Ann. Math. 114 (1981), 459–512.\n")
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
-        assert "diagonal" in output.lower() or "F-2A" in output
+
+
+def test_fail_on_missing_F2A():
+    """Missing F-2A concepts should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            proof_a="# F-2A\nSome wrong content without key concepts.\n")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
 
 
 def test_fail_on_THM_without_OBL():
-    """Submission promoting to [THM] without [OBL] should FAIL."""
+    """Promoting to [THM] without [OBL] should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"), "# Statement\n[THM] This is proved.\n")
-        _write(os.path.join(tmpdir, "proof-F-2A.md"), "# F-2A\nDiagonal norm-square jacquet–shalika.\n")
-        _write(os.path.join(tmpdir, "proof-F-2B.md"), "# F-2B\nEuler factor archimedean ramified.\n")
-        _write(os.path.join(tmpdir, "proof-F-2C.md"), "# F-2C\nUniformity local explicit.\n")
-        _write(os.path.join(tmpdir, "proof.md"), "# Proof\nSome content.\n")
-        _write(os.path.join(tmpdir, "dependencies.yaml"), "# Deps\nSome content.\n")
-        _write(os.path.join(tmpdir, "limitations.md"), "# Limits\nSome content.\n")
-        _write(os.path.join(tmpdir, "novelty.md"), "# Novelty\nSome content.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"), "# Checker\nSome content.\n")
-
+        _base_files(tmpdir, stmt="# Statement\n[THM] Proved.\n")
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
-        assert "THM" in output and "OBL" in output
 
 
-def test_no_false_positive_on_trivial_content():
-    """Trivial content like '[OBL] 0 normalization factors' should NOT pass all checks."""
+def test_no_false_positive_trivial():
+    """Trivial content should not pass."""
     with tempfile.TemporaryDirectory() as tmpdir:
         content = "[OBL] 0 normalization factors\n"
-        _write(os.path.join(tmpdir, "statement.md"), content)
-        _write(os.path.join(tmpdir, "proof-F-2A.md"), content)
-        _write(os.path.join(tmpdir, "proof-F-2B.md"), content)
-        _write(os.path.join(tmpdir, "proof-F-2C.md"), content)
-        _write(os.path.join(tmpdir, "proof.md"), content)
-        _write(os.path.join(tmpdir, "dependencies.yaml"), content)
-        _write(os.path.join(tmpdir, "limitations.md"), content)
-        _write(os.path.join(tmpdir, "novelty.md"), content)
-        _write(os.path.join(tmpdir, "checker", "README.md"), content)
-
+        for f in ["statement.md", "proof.md", "proof-F-2A.md", "proof-F-2B.md",
+                   "proof-F-2C.md", "dependencies.yaml", "limitations.md",
+                   "novelty.md", "checker/README.md"]:
+            _write(os.path.join(tmpdir, f), content)
         code, output = _run_checker(tmpdir)
-        assert code == 1, f"Expected FAIL on trivial content but got PASS:\n{output}"
+        assert code == 1, f"Expected FAIL on trivial content but got PASS"

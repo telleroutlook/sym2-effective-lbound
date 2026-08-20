@@ -1,53 +1,35 @@
-# F-2: Global Residue Positivity — Combined Proof
+# F-2: Global Residue Positivity — Combined Proof (v2)
 
-**Status**: [OBL] (restructured 2026-08-20)
-
-## Overview
-
-This document describes the proof strategy for establishing global residue
-positivity and extracting exact Euler factors.
+**Status**: [OBL] (restructured v2, 2026-08-20)
 
 ## F-2A: Diagonal global residue positivity
 
-See `proof-F-2A.md` for the detailed proof.
+See `proof-F-2A.md`. Core argument correctly established in v1.
 
-**Key insight**: The residue is positive by norm-square positivity, NOT by
-L(1, π, Ad) > 0. The Jacquet–Shalika 1981 result gives:
-
-    Res_{s=1} Ψ(s, W, W, Φ) = c_Q · Φ̂(0) · ∫|φ(g)|² dg > 0
-
-The integral ∫|φ(g)|² dg > 0 for any nonzero automorphic form φ.
-
-**Correct integral formula**: W'(g) · conj(W(g)), NOT W̃(g) · W(g).
-**Diagonal condition**: π' = π, NOT π̃ = π.
+**v2 corrections**: Integral definition fixed (N(A)\GL₂(A), Φ(e₂ g)).
+Citation corrected to Am. J. Math. 103(3) (1981).
 
 ## F-2B: Euler factor extraction
 
-See `proof-F-2B.md` for the detailed proof.
+See `proof-F-2B.md`.
 
-**Factorization**: The global integral unfolds to a product of local integrals:
-
-    Ψ(s) = ∏_v Ψ_v(s)
-
-For unramified v: Ψ_v(s) = L_v(s, π_v × π̃_v).
-For ramified v: explicit local computation required.
-For v = ∞: archimedean factor depends on weight k (NOT fixed at k=11).
-
-**L(s, π × π̃) = ζ(s) · L(s, π, Ad)**: Standard for GL₂ with trivial central character.
+**v2 corrections**:
+- Adjoint factor: 3-dimensional {1, αβ⁻¹, βα⁻¹}, not single factor
+- Pure-tensor factorization: requires W = ⊗_v W_v
+- Archimedean: degree 4 (includes ζ_∞), Z_∞(1) = 2π^{-k-1} Γ(k)
 
 ## F-2C: Target-family uniformity
 
-See `proof-F-2C.md` for the detailed proof.
+See `proof-F-2C.md`.
 
-**Uniformity**: For level ≤ N₀, the product ∏_{p|N} Z_p(1) is bounded below
-by an explicit constant c' depending only on N₀.
-
-**Interface**: The constant c' feeds into M-1 (mollifier), M-2 (mean value),
-and c_eff (explicit bound).
+**v2 corrections**:
+- Uniformity via explicit nonvanishing + finite minimum (not continuity)
+- C(N₀) = min_N ∏_p |Z_p(1)| > 0 (product bound, not individual)
+- Local type classification by conductor of π
 
 ## Blockers
 
-1. **Archimedean factor Z_∞(1)**: Must be computed for weight k (F-2B)
-2. **Ramified factors Z_p(1)**: Must be computed for each p | N (F-2B)
-3. **Uniformity constant c'**: Must be computed for level ≤ N₀ (F-2C)
-4. **Normalization consistency**: All measures, functions, test functions (F-2B)
+1. **F-2B**: Ramified local factors Z_p(1) for each type [OBL]
+2. **F-2B**: Consistent normalization of all measures/functions [OBL]
+3. **F-2C**: Explicit nonvanishing proof for each local type [OBL]
+4. **F-2C**: Finite minimum C(N₀) > 0 computation [OBL]

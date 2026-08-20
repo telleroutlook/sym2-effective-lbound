@@ -1,67 +1,63 @@
 # F-2B: Exact Euler-Factor Extraction — Proof
 
-## Mathematical content
+## Pure-tensor factorization
 
-The goal is the exact euler factor extraction for the global Rankin–Selberg integral.
-
-### Factorization of the global integral
-
-The global Rankin–Selberg integral Ψ(s, W, W, Φ) unfolds to a product of local
-integrals by the strong approximation theorem and the factorization of the Whittaker
-function:
+Choose decomposable vectors W = ⊗_v W_v, W' = ⊗_v W'_v, Φ = ⊗_v Φ_v.
+Then by strong approximation:
 
     Ψ(s, W, W, Φ) = ∏_v Ψ_v(s, W_v, W_v, Φ_v)
 
-Each local integral Ψ_v(s, W_v, W_v, Φ_v) is computed separately.
+**This factorization requires the pure-tensor hypothesis.** For general
+(non-factorizable) vectors, Ψ(s) is a finite sum of such products.
 
-### Unramified places (good primes)
+## Unramified places (good primes)
 
-For p ∤ N, the local integral at p is:
+For p ∤ N, with inverse Satake parameters α_p⁻¹, β_p⁻¹ for π̃_p:
 
-    Ψ_p(s, W_p, W_p, Φ_p) = L_p(s, π_p × π̃_p)
+    L_p(s, π_p × π̃_p) = [(1 - p⁻ˢ)(1 - p⁻ˢ)(1 - α_p β_p⁻¹ p⁻ˢ)(1 - β_p α_p⁻¹ p⁻ˢ)]⁻¹
 
-This is the standard Godement–Jacquet local zeta integral. For unramified π_p
-with Satake parameters α_p, β_p:
+For trivial central character (α_p β_p = 1):
 
-    L_p(s, π_p × π̃_p) = (1 − α_p β̄_p p^{−s})^{−1} (1 − ᾱ_p β_p p^{−s})^{−1} (1 − |α_p|² p^{−s})^{−1} (1 − |β_p|² p^{−s})^{−1}
+    = [(1 - p⁻ˢ)²(1 - α_p β_p⁻¹ p⁻ˢ)(1 - β_p α_p⁻¹ p⁻ˢ)]⁻¹
 
-For trivial central character (|α_p β_p| = 1), this simplifies to:
+This equals ζ_p(s) · L_p(s, π, Ad) where:
 
-    ζ_p(s) · L_p(s, π, Ad)
+    L_p(s, π, Ad) = [(1 - p⁻ˢ)(1 - α_p β_p⁻¹ p⁻ˢ)(1 - β_p α_p⁻¹ p⁻ˢ)]⁻¹
 
-### Ramified places (bad primes)
+**NOT** the single-factor formula from the original. The adjoint representation
+is 3-dimensional: parameters {1, αβ⁻¹, βα⁻¹}.
 
-For p | N, the local integral depends on the local newvector. The computation
-requires:
-- The local Whittaker function W_p on GL₂(Q_p)
-- The local Haar measure normalization
-- The local test function Φ_p
+## Ramified places (bad primes) [OBL]
 
-### Archimedean place
+For p | N, the local integral Ψ_p depends on the local newvector type.
+The computation requires:
+1. Local Whittaker function W_p (Casselman's formula for Iwahori)
+2. Local Haar measure normalization
+3. Local test function Φ_p
+4. The type-specific local L-factor
 
-For the archimedean integral Ψ_∞, the result depends on the archimedean representation:
-- Holomorphic discrete series of weight k: involves Γ_R(s+1)·Γ_C(s+k−1)
-- Maass form: involves different Gamma factors
+## Archimedean place
 
-**Key point**: The archimedean factor is NOT fixed at k=11. It must be parameterized
-or the theorem must be narrowed to a specific weight.
+The full Rankin–Selberg L-function has degree 4, so:
 
-### L(s, π × π̃) = ζ(s) · L(s, π, Ad)
+    Z_∞(s) = Γ_R(s) · Γ_R(s + 1) · Γ_C(s + k - 1)
 
-For GL₂ with trivial central character, the Rankin–Selberg L-function factors as:
+where:
+- Γ_R(s) = π^{-s/2} Γ(s/2) [degree 1, from ζ_∞]
+- Γ_R(s + 1) = π^{-(s+1)/2} Γ((s+1)/2) [degree 1]
+- Γ_C(s + k - 1) = 2(2π)^{-(s+k-1)} Γ(s+k-1) [degree 2]
 
-    L(s, π × π̃) = ζ(s) · L(s, π, Ad)
+Total degree: 1 + 1 + 2 = 4, matching L(s, π × π̃).
 
-This follows from:
-- Unramified computation: the Satake parameters of π × π̃ are
-  {α_p β̄_p, ᾱ_p β_p, 1, 1} (trivial central char gives |α_p β_p| = 1)
-- The adjoint L-function has parameters {α_p β_p^{−1}, β_p α_p^{−1}, 1}
-- ζ(s) contributes the pole at s = 1
+**At s = 1**:
+
+    Z_∞(1) = Γ_R(1) · Γ_R(2) · Γ_C(k)
+            = 1 · π⁻¹ · 2(2π)^{-k} Γ(k)
+            = 2π^{-k-1} Γ(k)
+
+**CORRECTION**: The original missed the Γ_R(1) = 1 factor and the π^{-1}
+from Γ_R(2). The correct value has an extra π^{-1}.
 
 ## Status: [OBL]
 
-The main obstruction is the explicit computation of ramified local factors Z_p(1)
-for each bad prime p. This requires:
-1. Identifying the local newvector type (Iwahori, spherical, etc.)
-2. Computing the local Whittaker function explicitly
-3. Evaluating the local Godement–Jacquet integral
+Main obstructions: ramified local factors, consistent normalization.

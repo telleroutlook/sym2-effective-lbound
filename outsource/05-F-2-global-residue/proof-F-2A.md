@@ -2,58 +2,51 @@
 
 ## Mathematical content
 
-### Correct integral formula
+### Two distinct integrals
 
-The Jacquet–Shalika (1981) local Rankin–Selberg integral is:
+JS81 (Jacquet–Shalika, Am. J. Math. 103(3) (1981)) defines two related but distinct integrals:
 
-    Ψ(s, W', W, Φ) = ∫_{N(A)G(Q)\G(A)} W'(g) · conj(W(g)) · Φ(εg) · |det g|^s dg
+1. **Automorphic integral** (before unfolding):
 
-**Critical correction**: The integrand contains conj(W(g)), NOT W̃(g). This produces
-a norm-square when W' = W, which is essential for the positivity argument.
+       I(s, Φ, φ, φ') = ∫_{Z(A)G(Q)\G(A)} E(g, Φ, s) · φ'(g) · φ̄(g) dg
 
-### Why the original F-2 was wrong
+   This lives on Z(A)G(Q)\G(A) and involves the Eisenstein series E.
 
-The original package wrote:
+2. **Unfolded integral** (after Whittaker–Fourier expansion):
 
-    Res_{s=1} Ψ(s, W, W̃, Φ) = Φ̂(0) · κ_F · L(1, π, Ad) · |W|²
+       Ψ(s, W', W, Φ) = ∫_{N(A)\GL₂(A)} W'(g) · W̄(g) · Φ(e₂ g) · |det g|^s dg
 
-This has two fatal errors:
+   This lives on N(A)\GL₂(A) and involves Φ(e₂ g), NOT Φ(g).
 
-1. **Scaling contradiction**: Ψ is linear in W̃, but |W|² is independent of W̃.
-   Multiplying W̃ by i multiplies the LHS by i while RHS is unchanged.
-
-2. **Variable mismatch**: The original claimed the residue depends on independent
-   W and W̃, but the correct formula uses W and conj(W) (same vector).
+The unfolding identity I(s) → Ψ(s) is the key step (JS81 §4.3).
 
 ### Correct residue formula
 
-By JS81 §4.2-4.6, for W' = W:
+By JS81 Lemma 4.4 + Lemma 4.6(i), for W' = W:
 
     Res_{s=1} Ψ(s, W, W, Φ) = c_Q · Φ̂(0) · ∫|φ(g)|² dg
 
-where c_Q > 0 is explicit, and the integral is positive by construction.
+where c_Q > 0 is explicit. The integral ∫|φ(g)|² dg > 0 for any nonzero φ.
 
-### Why this is [THM/REFEREED]
+### Why the original was wrong
 
-This is NOT a new theorem. It is a direct specialization of:
-- Jacquet & Shalika, "Euler products for the general linear group", Ann. Math. 114 (1981), 459–512
-- Specifically: Lemma 4.4 (Eisenstein pole) + Lemma 4.6(i) (Whittaker unfolding)
-
-The specialization is: take π' = π (same representation), W' = W (same vector),
-Φ̂(0) > 0 (test function with positive transform at 0).
+1. **Wrong quotient space**: Original used N(A)G(Q)\G(A, should be N(A)\GL₂(A)
+2. **Wrong test function**: Original used Φ(g), should be Φ(e₂ g)
+3. **Wrong citation**: The wrong journal was cited (see limitations.md).
+   Correct: Am. J. Math. 103(3) (1981), 499–558.
+4. **Conflated integrals**: Original mixed up I(s) and Ψ(s)
 
 ### Dependencies
 
-- **Source-backed**: JS81 Lemma 4.4, Lemma 4.6(i) (verified against original text)
-- **No GRH required**
-- **No L(1, π, Ad) > 0 required** (residue is positive by norm-square, not by adjoint)
+- JS81 Lemma 4.4 (Eisenstein pole): Am. J. Math. 103(3) (1981), 537–538
+- JS81 Lemma 4.6(i) (Whittaker unfolding): Am. J. Math. 103(3) (1981), 543–544
+- Norm-square positivity: standard
 
 ## Why this closes
 
-F-2A establishes that the diagonal global residue is strictly positive, using only:
-1. π is cuspidal (given)
-2. W ≠ 0 (by choice)
-3. Φ̂(0) > 0 (by choice)
-4. The Haar measure is positive-definite (by construction)
+F-2A is a direct specialization of JS81 with:
+- π' = π (diagonal condition)
+- W' = W (same vector, producing norm-square)
+- Φ̂(0) > 0 (by choice)
 
-This is the "easy part" that the original F-2 obscured by introducing independent W̃.
+The residue is strictly positive by construction.

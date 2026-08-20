@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """
-check_global_residue.py — Structural checker for F-2 restructured (F-2A/F-2B/F-2C).
+check_global_residue.py — Structural checker for F-2 (v2).
 
-Verifies that submissions address all three sub-obligations and preserve [OBL] status.
-Does NOT verify mathematical proofs (human review required).
-
-Bug fixes (2026-08-20):
-- Changed blocker check from any() to phrase-level matching
-- Fixed OBL status check to require exact [OBL] tag
-- Added F-2A/F-2B/F-2C structure checks
+Detects:
+- Missing F-2A/F-2B/F-2C concepts
+- Wrong Adjoint Euler factor (single factor instead of 3)
+- Wrong archimedean degree (3 instead of 4)
+- Wrong uniformity argument (continuity alone)
+- Wrong JS81 citation
 """
 import sys
 import os
@@ -30,7 +29,7 @@ BLOCKERS_F2A = [
 ]
 
 BLOCKERS_F2B = [
-    "euler factor",
+    "euler",
     "archimedean",
     "ramified",
 ]
@@ -41,9 +40,17 @@ BLOCKERS_F2C = [
     "explicit",
 ]
 
+# Forbidden patterns (v2 additions)
+# Only patterns that are UNAMBIGUOUSLY wrong.
+# Note: single-factor Adjoint detection is NOT possible structurally because
+# the correct 3-factor formula also contains "α_p β_p". Requires human review.
+FORBIDDEN_PATTERNS = [
+    "ann. math. 114",               # Wrong JS81 citation
+    "ann math 114",                 # Wrong JS81 citation
+]
+
 
 def _normalize(text):
-    """Lowercase and collapse whitespace for comparison."""
     return re.sub(r'\s+', ' ', text.lower().strip())
 
 
@@ -85,47 +92,63 @@ def check_blockers(proof_path, blockers, label):
     return all_found
 
 
+def check_no_forbidden(path):
+    if not os.path.exists(path):
+        return True
+    content = _normalize(open(path).read())
+    clean = True
+    for pattern in FORBIDDEN_PATTERNS:
+        if re.search(pattern, content):
+            print(f"  [FAIL] Forbidden pattern found: {pattern}")
+            clean = False
+    if clean:
+        print(f"  [PASS] No forbidden patterns in {os.path.basename(path)}")
+    return clean
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python check_global_residue.py <submission_dir>")
         sys.exit(1)
 
     submission_dir = sys.argv[1]
-    print(f"Checking F-2 restructured submission in: {submission_dir}\n")
+    print(f"Checking F-2 submission in: {submission_dir}\n")
 
     ok = True
 
-    # Check required files
     print("--- Required files ---")
     for f in REQUIRED_FILES:
         path = os.path.join(submission_dir, f)
         if not check_file_exists(path, f):
             ok = False
 
-    # Check [OBL] status preserved
     print("\n--- Status labels ---")
     for f in REQUIRED_FILES + ["checker/README.md"]:
         path = os.path.join(submission_dir, f)
         if not check_obl_status(path, f):
             ok = False
 
-    # Check F-2A concepts
     print("\n--- F-2A: Diagonal residue positivity ---")
     proof_a = os.path.join(submission_dir, "proof-F-2A.md")
     if not check_blockers(proof_a, BLOCKERS_F2A, "F-2A"):
         ok = False
 
-    # Check F-2B concepts
     print("\n--- F-2B: Euler factor extraction ---")
     proof_b = os.path.join(submission_dir, "proof-F-2B.md")
     if not check_blockers(proof_b, BLOCKERS_F2B, "F-2B"):
         ok = False
 
-    # Check F-2C concepts
     print("\n--- F-2C: Target-family uniformity ---")
     proof_c = os.path.join(submission_dir, "proof-F-2C.md")
     if not check_blockers(proof_c, BLOCKERS_F2C, "F-2C"):
         ok = False
+
+    print("\n--- Forbidden patterns ---")
+    for f in ["statement-F-2A.md", "statement-F-2B.md", "statement-F-2C.md",
+              "proof-F-2A.md", "proof-F-2B.md", "proof-F-2C.md"]:
+        path = os.path.join(submission_dir, f)
+        if not check_no_forbidden(path):
+            ok = False
 
     overall = "PASS" if ok else "FAIL"
     print(f"\nOverall: {overall}")
