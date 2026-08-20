@@ -1,29 +1,33 @@
-# Novelty — M-2 Rewritten v3
+# Novelty — M-2 v4
+
+## What is new in v4 (correcting v3)
+
+1. **Fixed H_{Π,p}(1/p) > 0 proof**: Uses factorization
+   (1-x)²(1+x+x²-A_px)(1+x+x²+A_px) with explicit positivity at
+   endpoint x = 1/p. v3 had open-interval → endpoint logical gap.
+
+2. **Fixed Step 2 diagonal**: R_Π T log T → (3/2)R_Π T log T per half.
+   AFE length T^{3/2} introduces factor from log(T^{3/2}).
+
+3. **Expanded A_Π = 3R_Π conditional**: Now lists three requirements:
+   (a) diagonal-weight asymptotic, (b) cross terms o(T log T),
+   (c) same-half off-diagonal o(T log T). Was only conditional on (b).
+
+4. **FE factor normalization**: Added ε_Π, q_Π.
 
 ## What is new in v3 (correcting v2)
 
-7. **Fixed AFE weight scale**: V_t(r/T^3) → W_t(r) with support r ≪ T^{3/2}.
-   The T^3 was inconsistent with degree-3 AFE length.
-
-8. **Added 4-term decomposition**: |S₁+XS_2|² = |S₁|²+|S₂|²+S₁·X̄·S̄₂+S̄₁·X·S₂.
-   v2 only described diagonal, missing cross terms with gamma phase.
-
-9. **Downgraded Step 1**: Smooth AFE with truncation error is [OBL], not [THM].
-
-10. **Made A_Π=3R_Π conditional**: Requires cross terms to be o(T log T).
-
-11. **Added H_Π(1)≠0 justification**: From positivity of D_{Π,p} and L_p.
-
-12. **Fixed checker**: Added χ(Π), (3/2)R_Π, r/T^3 forbidden patterns.
-    v2 README claimed these checks but code didn't implement them.
+5. **Fixed AFE weight scale**: V_t(r/T^3) → W_t(r).
+6. **Added 4-term decomposition**: Cross terms with gamma phase.
+7. **Downgraded Step 1**: Smooth AFE truncation error is [OBL].
+8. **Made A_Π=3R_Π conditional**: Cross terms must be o(T log T).
 
 ## What is new in v2 (correcting v1)
 
-1. **Deleted wrong main term**: c_Π T → A_Π T log T (Rankin–Selberg pole).
-2. **Deleted wrong dual factor**: χ(Π) → X_Π(t) (t-dependent gamma ratio).
-3. **Fixed H_{Π,p} formula**: Corrected to 1+O(x²) matching.
-4. **Fixed leading constant**: A_Π = 3R_Π (both AFE halves contribute).
-5. **Deleted bad-prime limitation**: Level-one forms have no bad primes.
+9. **Deleted wrong main term**: c_Π T → A_Π T log T.
+10. **Deleted wrong dual factor**: χ(Π) → X_Π(t).
+11. **Fixed H_{Π,p} formula**: 1+O(x²) matching.
+12. **Fixed leading constant**: A_Π = 3R_Π.
 
 ## What is NOT new
 

@@ -1,4 +1,4 @@
-# Limitations — M-2 Rewritten v3
+# Limitations — M-2 v4
 
 ## Scope
 
@@ -11,32 +11,35 @@
 - No explicit A_Π, B_Π, δ are computed (only formulas given)
 - The GL₃ shifted-convolution sum is at the research frontier
 - No numerical witness exists
-- Cross terms I_{+-}, I_{-+} not shown to be o(T log T)
 
 ## Corrected from v2
 
-1. **AFE weight scale fixed**: V_t(r/T^3) → W_t(r) with support r ≪ T^{3/2}.
-   The T^3 scale was inconsistent with the degree-3 AFE length.
+1. **AFE weight scale**: V_t(r/T^3) → W_t(r) with support r ≪ T^{3/2}.
+2. **4-term decomposition**: |S₁+XS_2|² = |S₁|²+|S₂|²+S₁·X̄·S̄₂+S̄₁·X·S₂.
+3. **Step 1 downgraded**: Smooth AFE with truncation error is [OBL].
+4. **A_Π=3R_Π made conditional**: Requires cross terms o(T log T).
 
-2. **4-term decomposition**: v2 wrote |L|² = (diagonal)+(off-diagonal).
-   Correct: |S₁+XS_2|² = |S₁|²+|S₂|²+S₁·X̄·S̄₂+S̄₁·X·S₂. Cross terms
-   with gamma phase X_Π(t) must be controlled.
+## Corrected from v3 (per reviewer verdict 2026-08-20)
 
-3. **Step 1 downgraded**: Smooth AFE with explicit weight and truncation
-   error is [OBL], not [THM] as v2 claimed.
+5. **H_{Π,p}(1/p) > 0**: Proof now uses factorization
+   (1-x)²(1+x+x²-A_px)(1+x+x²+A_px) with explicit endpoint positivity.
+   v3 had open-interval → endpoint gap.
 
-4. **A_Π=3R_Π made conditional**: The leading constant holds IF cross terms
-   are o(T log T). v2 stated this as [THM] without the condition.
+6. **Step 2 diagonal**: R_Π → (3/2)R_Π per half (AFE length T^{3/2}
+   introduces factor from log(T^{3/2}) = (3/2) log T).
 
-5. **H_Π(1)≠0 justification added**: From D_{Π,p}(x)>0 and L_p positivity,
-   the quotient is positive at x=1/p.
+7. **A_Π = 3R_Π conditional expanded**: Now requires diagonal-weight
+   asymptotic + cross terms + same-half off-diagonal, not just cross terms.
+
+8. **FE factor**: Added ε_Π, q_Π normalization (level one: ε_Π=1, q_Π=1).
 
 ## What this package actually proves
 
 M-2 establishes the ALGEBRAIC SETUP for the unmollified second moment:
 - Correct AFE structure with t-dependent X_Π(t) [THM]
 - Correct H_{Π,p} formula for level-one symmetric-square [THM]
-- Leading constant formula A_Π = 3R_Π [CONDITIONAL on cross terms]
+- H_{Π,p}(1/p) > 0 via factorization [THM]
+- Leading constant formula A_Π = 3R_Π [CONDITIONAL on 3 items]
 - The analytic bound with power-saving error remains [OBL]
 
 ## Downstream impact

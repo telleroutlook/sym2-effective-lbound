@@ -1,4 +1,4 @@
-# M-2: Mean Value Estimate — Proof v3
+# M-2: Mean Value Estimate — Proof v4
 
 ## Step 1: Approximate functional equation (smooth form)
 
@@ -26,9 +26,9 @@ Choosing N = T^{3/2+ε} makes this O(T^{-B}) for any B.
 
 The dual factor is:
 
-    X_Π(s) = N^{1-2s} · L_∞(Π, 1-s) / L_∞(Π, s)
+    X_Π(s) = ε_Π · q_Π^{1/2-s} · L_∞(Π, 1-s) / L_∞(Π, s)
 
-For level one (N=1):
+For level one (q_Π = 1, ε_Π = +1):
 
     X_Π(s) = L_∞(Π, 1-s) / L_∞(Π, s)
 
@@ -65,11 +65,27 @@ After integrating ∫_T^{2T} dt:
     I_{++} = ∫_T^{2T} |S₁|² dt
            = ∫_T^{2T} Σ_{r,r'} a_Π(r) ā_Π(r') (rr')^{-½} W_t(r) W_t(r') (r'/r)^{it} dt
 
-Diagonal (r = r'): each gives T · Σ |a_Π(r)|²/r · W_t(r)² → R_Π · T · log T
+**Diagonal (r = r'):** After integrating over t, the diagonal contribution is:
+
+    ∫_T^{2T} Σ_r |a_Π(r)|²/r · W_t(r)² dt
+
+The inner sum Σ_r |a_Π(r)|²/r · W_t(r)², with W_t having effective support
+r ≪ T^{3/2}, produces:
+
+    R_Π · log(T^{3/2}) + O(1) = (3/2) R_Π · log T + O(1)
+
+Therefore each half's diagonal contributes:
+
+    I_{++}^{diag} = (3/2) R_Π · T · log T + O(T)
+
+**NOT R_Π · T · log T** — the AFE length T^{3/2} introduces the factor 3/2
+from log(T^{3/2}) = (3/2) log T.
 
 ### I_{--} (dual diagonal + off-diagonal)
 
-Same structure as I_{++} with a_Π → ā_Π, giving another R_Π · T · log T.
+Same structure as I_{++} with a_Π → ā_Π, giving another:
+
+    I_{--}^{diag} = (3/2) R_Π · T · log T + O(T)
 
 ### I_{+-} and I_{-+} (primary–dual cross terms)
 
@@ -87,10 +103,23 @@ The diagonal parts of I_{++} and I_{--} together give:
 
     2 × (3/2) R_Π T log T = 3 R_Π T log T
 
-**IF the cross terms I_{+-}, I_{-+} and the off-diagonal parts of I_{++}, I_{--}
-are all o(T log T), then A_Π = 3R_Π.**
+### What A_Π = 3R_Π requires (corrected per reviewer verdict 2026-08-20)
 
-This is the CONDITIONAL status of the leading constant.
+The formula A_Π = 3R_Π requires ALL of the following to hold simultaneously:
+
+1. **Precise diagonal-weight asymptotic** [OBL]: The smooth-weighted sum
+   ∫_T^{2T} Σ_r |a_Π(r)|²/r · W_t(r)² dt must have asymptotic
+   (3/2)R_Π T log T + C_Π^{(+)} T + o(T). This requires a diagonal-weight
+   lemma (Mellin analysis of W_t, residue at s=1 of the associated Dirichlet
+   series D_Π(s)).
+
+2. **Cross terms o(T log T)** [OBL]: I_{+-} + I_{-+} = o(T log T).
+
+3. **Same-half off-diagonal o(T log T)** [OBL]: The off-diagonal parts of
+   I_{++} and I_{--} must each be o(T log T).
+
+Only the combination of all three gives A_Π = 3R_Π. The previous version
+stated this as conditional only on cross terms, which is insufficient.
 
 ## Step 3: Local Euler correction H_{Π,p}
 
@@ -106,13 +135,24 @@ z = α², 1, z⁻¹ and A_p = z + 1 + z⁻¹:
 
     H_{Π,p}(x) = 1 - A_p² x² + 2(A_p² - 1) x³ - A_p² x⁴ + x⁶
 
-Verification: H_{Π,p}(0) = 1 ✓, coefficient of x is 0 ✓ (matches 1+O(x²)).
+**Factorization** (corrected per reviewer verdict 2026-08-20):
 
-**H_{Π,p}(1/p) ≠ 0:** Since D_{Π,p}(x) > 0 for x > 0 (coefficient-square
-series has nonneg coefficients) and L_p(Π×Π̃, x) > 0 for 0 < x < 1/p
-(Rankin–Selberg local factor positivity), the quotient H_{Π,p}(x) =
-D_{Π,p}(x)/L_p(Π×Π̃, x) is positive for 0 < x < 1/p. In particular
-H_{Π,p}(1/p) > 0.
+    H_{Π,p}(x) = (1-x)² · (1+x+x² - A_p x) · (1+x+x² + A_p x)
+
+**Proof that H_{Π,p}(1/p) > 0:**
+
+Since |A_p| ≤ 3 (Deligne), for 0 < x ≤ 1/p ≤ 1/2:
+
+- (1-x)² > 0 ✓
+- 1+x+x² - |A_p|x ≥ 1+x+x² - 3x = (1-x)² > 0 ✓
+- 1+x+x² + A_p x ≥ 1+x+x² - 3x = (1-x)² > 0 ✓
+
+Therefore H_{Π,p}(x) > 0 for all 0 < x ≤ 1/p, INCLUDING the endpoint x = 1/p.
+
+**Previous error**: The v3 proof showed H_{Π,p}(x) > 0 for 0 < x < 1/p
+(open interval) and then claimed "in particular H_{Π,p}(1/p) > 0" — this
+is a logical gap (cannot deduce endpoint from open interval). The factorization
+proof above closes this gap.
 
 Since |A_p| ≤ 3 (Deligne), the product Π_p H_{Π,p}(p^{-s}) converges
 absolutely for Re s > ½, so H_Π(s) is analytic and nonzero at s = 1.
@@ -147,7 +187,7 @@ For holomorphic weight k, the correct symmetric-square archimedean L-factor
 ## Step 6: Explicit constants (last step)
 
 Only after the analytic proof is complete:
-- Compute A_Π = 3R_Π from the Rankin–Selberg residue (CONDITIONAL on cross terms)
+- Compute A_Π = 3R_Π from the Rankin–Selberg residue (CONDITIONAL on items 1-3)
 - Compute B_Π from lower-order terms (including H_Π(1), archimedean constants)
 - Determine δ from the shifted-convolution bound
 - Verify A_Π > 0
@@ -155,7 +195,8 @@ Only after the analytic proof is complete:
 ## Status: [OBL]
 
 Steps 1, 3, 5 are [THM] (standard algebra/known formulas).
-Step 2 diagonal coefficient is [CONDITIONAL: 3R_Π if cross terms are o(T log T)].
+Step 2 diagonal coefficient is [CONDITIONAL: 3R_Π requires diagonal-weight
+lemma + cross terms o(T log T) + same-half off-diagonal o(T log T)].
 Step 2 cross terms are [OBL].
 Step 4 is [OBL] (GL₃ shifted-convolution research frontier).
 Step 6 is [OBL] (downstream computation).
