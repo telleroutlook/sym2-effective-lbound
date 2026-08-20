@@ -1,6 +1,6 @@
-# Novelty — F-2 v4
+# Novelty — F-2 v5
 
-## What is new (cumulative v1→v4)
+## What is new (cumulative v1→v5)
 
 ### v1→v2
 1. **Corrected integral definition**: N(A)\GL₂(A) with Φ(e₂ g), not N(A)G(Q)\G(A) with Φ(g).
@@ -21,7 +21,16 @@
 12. **F-2A citation chain**: §4.3(2) + §4.5(5) + §4.6(i) (not "Lemma 4.4").
 13. **Z_∞ derivation**: Real Weil-group ρ_{k-1} = Ind((z/|z|)^{k-1}) parameter.
 14. **F-2C quantitative**: Existence → quantitative bound |Z_p(1)| ≥ c_v > 0.
-15. **Version drift fixed**: statement.md/proof.md now v4 with correct formulas.
+
+### v4→v5 (per reviewer verdict 2026-08-20)
+15. **F-2A upgraded**: [THM/REFEREED] — PASS (reviewer confirmed diagonal positivity correct).
+16. **Canonical L_v^{can} vs actual Ψ_v = h_v·L_v^{can}**: clearly distinguished throughout.
+    Z_∞(1) is canonical; Ψ_∞(1) = h_∞(1)·L_∞^{can}(1) is actual zeta integral.
+17. **Φ_p space corrected**: S(Q_p²) = C_c^∞(Q_p²), not C_c^∞(GL₂(Q_p)) (JS81 §4.5).
+18. **Steinberg conductor corrected**: a(χ·St) = 1 if χ unramified, 2a(χ) if χ ramified.
+    Not always conductor exponent 1.
+19. **Trivial nebentypus scope**: ω = 1 enforced throughout. For ω ≠ 1, Ad ≅ Sym²⊗ω⁻¹.
+20. **Checker updated**: v5 patterns, F-2A [THM/REFEREED] allowed, README overclaims removed.
 
 ## What is NOT new
 

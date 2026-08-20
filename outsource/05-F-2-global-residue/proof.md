@@ -1,47 +1,48 @@
-# F-2: Global Residue Positivity — Combined Proof (v4)
+# F-2: Global Residue Positivity — Combined Proof (v5)
 
-**Status**: [OBL] (restructured v4, 2026-08-20)
+**Status**: [PARTIAL] (restructured v5, 2026-08-20)
+
+**Scope:** Trivial central character ω = 1 throughout.
 
 ## F-2A: Diagonal global residue positivity
 
-See `proof-F-2A.md`. Core argument verified correct by reviewer (2026-08-20).
+See `proof-F-2A.md`.
 
-**v4 corrections (per reviewer verdict 2026-08-20):**
-- W quantifier: W_φ ∈ W⁰(π; ψ) (not ambient W(π; ψ))
-- Citation chain: §4.3(2) + §4.5(5) + §4.6(i) (not "Lemma 4.4")
+**Status: PASS / [THM/REFEREED]**
+
+The diagonal residue formula is verified correct by reviewer (2026-08-20).
+Core argument: JS81 §4.3(2) + §4.5(5) + §4.6(i), with W_φ ∈ W⁰(π; ψ),
+producing norm-square |W_φ(g)|² → positive residue.
 
 ## F-2B: Euler factor extraction
 
 See `proof-F-2B.md`.
 
-**v3 corrections:**
-- Adjoint factor: 3-dimensional {1, αβ⁻¹, βα⁻¹}, not single factor
-- Pure-tensor factorization: requires W = ⊗_v W_v
-- Archimedean: Z_∞(1) = 2^{1-k}π^{-(k+1)}Γ(k) (was 2π^{-k-1}Γ(k), off by 2^k)
-- Local integral: JS/Rankin–Selberg Whittaker (not Godement–Jacquet)
+**v5 corrections:**
+- Canonical L_v^{can} vs actual Ψ_v = h_v·L_v^{can}: clearly distinguished
+- Φ_p ∈ S(Q_p²) = C_c^∞(Q_p²), not C_c^∞(GL₂(Q_p)) (JS81 §4.5)
+- Normalization factor h_v(s) depends on W_v, Φ_v, Haar measures
+- L_∞^{can}(1) = 2^{1-k}π^{-(k+1)}Γ(k) is canonical; Ψ_∞(1) = h_∞(1)·L_∞^{can}(1)
 
-**v4 corrections (per reviewer verdict 2026-08-20):**
-- Z_∞ derivation: explicit local integral sketch (real Weil-group parameter)
-- Bad primes: explicitly documented as main blocker
-- Langlands parameter: ρ_{k-1} = Ind_{W_C}^{W_R}((z/|z|)^{k-1})
+**Status**: [OBL] — ramified local factors Z_p(1) not computed;
+h_∞(1) not computed.
 
 ## F-2C: Target-family uniformity
 
 See `proof-F-2C.md`.
 
-**v3 corrections:**
-- Uniformity via explicit nonvanishing + finite minimum (not continuity)
-- C(F_{N_0}) = min_{f ∈ F_{N_0}} ∏_p |Z_p(1;f)| > 0 (family minimum, not integer N)
-- Local type classification by conductor of π (N_π)
+**v5 corrections:**
+- Steinberg twist conductor: a(χ·St) = 1 if χ unramified, 2a(χ) otherwise
+- Trivial nebentypus scope: ω = 1 enforced throughout
+- Archimedean: Ψ_∞(1) = h_∞(1)·L_∞^{can}(1), not just L_∞^{can}(1)
 
-**v4 corrections (per reviewer verdict 2026-08-20):**
-- Existence → quantitative: explicit formula → Z_p(1)≠0 → quantitative bound
-- Downstream needs uniform C(F_{N_0}), not just existence
+**Status**: [OBL] — no explicit Z_p(1) formulas, no quantitative C(F_{N_0})
 
-## Blockers (v4)
+## Blockers (v5)
 
-1. **F-2B**: Ramified local factors Z_p(1) for each local type [OBL]
-2. **F-2B**: Consistent normalization of all measures/functions [OBL]
-3. **F-2B**: Full archimedean derivation from local integral [OBL]
-4. **F-2C**: Explicit nonvanishing proof for each local type [OBL]
-5. **F-2C**: Quantitative C(F_{N_0}) computation [OBL]
+1. **F-2B**: Ramified local factors Z_p(1) = h_p(1)·L_p^{can}(1) for each type [OBL]
+2. **F-2B**: Normalization constant h_∞(1) for archimedean place [OBL]
+3. **F-2B**: Consistent normalization of all measures/functions [OBL]
+4. **F-2B**: Full archimedean derivation from local integral [OBL]
+5. **F-2C**: Explicit nonvanishing proof for each local type [OBL]
+6. **F-2C**: Quantitative C(F_{N_0}) computation [OBL]

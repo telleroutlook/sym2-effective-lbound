@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-check_global_residue.py — Structural checker for F-2 (v4).
+check_global_residue.py — Structural checker for F-2 (v5).
 
 Detects:
 - Missing F-2A/F-2B/F-2C concepts
@@ -9,9 +9,10 @@ Detects:
 - Wrong uniformity argument (continuity alone)
 - Wrong JS81 citation
 - Old Z_∞(1) formula used as CURRENT claim (not in correction context)
-- Old HL94 page numbers used as CURRENT reference
 - Old citation chain ("Lemma 4.4") used as CURRENT citation
 - Old "min over N" used as CURRENT formulation
+- Old test function space C_c^∞(GL₂(Q_p)) (should be S(Q_p²))
+- Old Steinberg conductor claim "conductor exponent 1" without χ-dependence
 """
 import sys
 import os
@@ -45,7 +46,6 @@ BLOCKERS_F2C = [
 ]
 
 # Forbidden patterns: only patterns that are UNAMBIGUOUSLY wrong as current claims.
-# Patterns that appear in "what was wrong" / correction context are allowed.
 FORBIDDEN_PATTERNS = [
     "ann. math. 114",               # Wrong JS81 citation (never correct)
     "ann math 114",                 # Wrong JS81 citation (never correct)
@@ -69,6 +69,11 @@ CORRECTION_CONTEXT_PATTERNS = [
         "name": "Old min formulation",
         "context_regex": r"(was|insufficient|not|corrected|previous|wrong|should be)",
     },
+    {
+        "pattern": "c_c^∞(gl₂",
+        "name": "Old test function space",
+        "context_regex": r"(was|corrected|previous|error|wrong|not|should be|instead)",
+    },
 ]
 
 
@@ -88,13 +93,20 @@ def check_obl_status(path, label):
     if not os.path.exists(path):
         return True
     content = open(path).read()
+    # F-2A can be [THM/REFEREED]; F-2B and F-2C must have [OBL]
+    basename = os.path.basename(path)
+    if basename == "statement-F-2A.md" or basename == "proof-F-2A.md":
+        # F-2A is allowed to be [THM/REFEREED]
+        if "[THM/REFEREED]" in content or "[THM]" in content:
+            print(f"  [PASS] {label} has [THM/REFEREED] status (F-2A closed)")
+            return True
     has_thm = "[THM]" in content
     has_obl = "[OBL]" in content
     if has_thm and not has_obl:
-        print(f"  [FAIL] {label} promotes F-2 to [THM] — must remain [OBL]")
+        print(f"  [FAIL] {label} promotes to [THM] — must remain [OBL]")
         return False
     if has_obl:
-        print(f"  [PASS] {label} correctly labels F-2 as [OBL]")
+        print(f"  [PASS] {label} correctly labels as [OBL]")
     return True
 
 
@@ -139,10 +151,7 @@ def check_correction_context(path):
         pattern = item["pattern"]
         if pattern not in content:
             continue
-        # Check if there's a context word nearby
-        # Find all occurrences and check surrounding text
         context_re = re.compile(item["context_regex"], re.IGNORECASE)
-        # Simple heuristic: check if context word appears in the same paragraph
         paragraphs = re.split(r'\n\n+', raw_content)
         found_in_context = False
         found_at_all = False
@@ -180,7 +189,12 @@ def main():
             ok = False
 
     print("\n--- Status labels ---")
-    for f in REQUIRED_FILES + ["checker/README.md"]:
+    all_files = REQUIRED_FILES + [
+        "statement-F-2A.md", "statement-F-2B.md", "statement-F-2C.md",
+        "proof-F-2A.md", "proof-F-2B.md", "proof-F-2C.md",
+        "checker/README.md",
+    ]
+    for f in all_files:
         path = os.path.join(submission_dir, f)
         if not check_obl_status(path, f):
             ok = False
