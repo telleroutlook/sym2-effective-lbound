@@ -21,7 +21,7 @@ Numerical evaluation using mpmath floats (30 digits) with the two-term AFE:
 - J = S1 - L(1) ~ -0.0835
 - Min |L(s)| ~ 0.170 on 5x41 grid in [0.6,1] x [-20,20]
 
-**These are NOT certified values.** The error闭 is not closed.
+**These are NOT certified values.** The error closure is not closed.
 
 ## What is NOT claimed
 
@@ -30,15 +30,16 @@ Numerical evaluation using mpmath floats (30 digits) with the two-term AFE:
 3. No certified J value (depends on certified L(1))
 4. No THM or CERTIFIED labels on any result
 
-## Method (for reference)
-
-The two-term AFE expresses L(s) as main + dual sums with weight functions
-from Mellin inversion. The weight V(y,s) decays super-exponentially for
-large y, ensuring convergence of the truncated sums.
-
 ## Status
 
 This batch is a METHOD-DESCRIPTION + DISCOVERY prototype. The AFE
 framework is consistent with the standard derivation. All rigorous
 error layers (exact coefficients, quadrature error, contour tail,
 AFE tails) remain [OBL].
+
+## v3 corrections
+
+Previous versions incorrectly labeled some witness files as CERTIFIED.
+All certificates have been downgraded to DISCOVERY. Code bugs in
+C_V computation (missing G factor, X-direction error) have been
+identified and documented.

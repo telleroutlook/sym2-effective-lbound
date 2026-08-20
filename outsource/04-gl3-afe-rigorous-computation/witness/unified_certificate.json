@@ -8,8 +8,8 @@
     "positive": true,
     "center": 0.6317929524120257,
     "N_afe": 3000,
-    "truncation_error": 2.3051404557747087e-08,
-    "note": "DISCOVERY-TIER: quadrature + tail errors not bounded"
+    "convergence_diag": 2.3051404557747087e-08,
+    "note": "DISCOVERY-TIER: convergence diagnostic only, NOT a proved tail bound"
   },
   "S1": {
     "interval": [
@@ -39,7 +39,7 @@
     "n_grid_points": 205,
     "min_L_numerical": 0.17048540914520216,
     "proved": false,
-    "note": "NOT PROVED: finite differences != derivative bounds, inconsistent N values"
+    "note": "NOT PROVED: finite differences != derivative bounds, inconsistent N values, only 128/160 cells covered"
   },
   "grid_scan": {
     "n_points": 205,
@@ -54,12 +54,23 @@
     "zero_free_region": "NOT PROVED",
     "method": "GL3 AFE with mpmath floats (not Arb-certified)",
     "precision_bits": 100,
+    "critical_gaps": [
+      "Exact coefficient chain (float -> exact rational)",
+      "Mellin quadrature error bound",
+      "Contour tail bound",
+      "AFE tail bound (N vs 2N is NOT rigorous; X-direction error in C_V code)",
+      "Zero-free region (finite differences != derivative bounds)",
+      "Unified error budget",
+      "C_V missing G factor",
+      "Dual tail hardcoded"
+    ],
     "files": {
       "L1_certificate": "single_point_certificate.json",
       "J_certificate": "j_certificate.json",
       "derivative_bounds": "derivative_bounds_all_grid.json",
       "grid_scan": "dense_grid_values_N3000.json"
     },
-    "note": "All values are discovery-tier. Error闭 not closed."
+    "note": "All values are discovery-tier. Error closure not closed. "
+            "Previously labeled CERTIFIED; downgraded to DISCOVERY in v3."
   }
 }

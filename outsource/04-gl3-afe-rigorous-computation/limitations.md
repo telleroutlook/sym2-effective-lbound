@@ -1,6 +1,6 @@
-# Limitations — GL_3 AFE computation
+# Limitations — GL_3 AFE computation (v3)
 
-## Critical gaps (reviewer BLOCKED verdict, 2026-08-20)
+## Critical gaps (reviewer FAIL verdict, 2026-08-20)
 
 ### 1. Exact coefficient chain broken [OBL]
 
@@ -29,32 +29,44 @@ No monotonicity or geometric decay has been proved.
 
 - Finite differences approximate L'(s) but do NOT give rigorous sup bounds
 - Different N values (60 vs 3000) give inconsistent |L(s)| at same point
-- Cell coverage by disks does not follow from center coverage alone
+  (~20% relative difference at s=0.6+20i)
+- Cell coverage: only 128/160 cells fully covered by single-disk argument
 - Continuity radius r computed from approximate, not rigorous, derivative
+- Stale data: min radius 0.099 vs 0.133 in different JSON files
 
 ### 6. J certificate blocked [OBL]
 
 Depends on certified L(1) and S1, neither of which is rigorous.
 
-### 7. MANIFEST.sha256 failures
+### 7. Code bugs found in v3 review
 
-Multiple file hashes mismatch. Missing files referenced (grid_values.json,
-grid_values_arb.json, proof/04b-zero-free-region.md).
+- C_V computation (afe_sym2_arb_final.py) missing G(s+1+it)/G(s) factor
+- AFE tail X-direction error: divides by X instead of multiplying
+- Dual tail hardcoded as 1e-12 with no derivation
 
-### 8. Local paths in certificates
-
-unified_certificate.json contains /Users/I041705/github/... paths.
-
-### 9. Missing dependencies
+### 8. Self-containedness FAIL
 
 Code references heartbeat.py, tail_bound.py,
 baseline/s1_full_certificate.json — none provided in bundle.
+checker/check_grid.py raises FileNotFoundError on missing grid_values.json.
+
+### 9. Old witness files still say CERTIFIED
+
+single_point_certificate.json, j_certificate.json,
+zero_free_region_N3000.json all have status "CERTIFIED" despite
+the underlying computation having the gaps above.
+(Downgraded to DISCOVERY in v3.)
+
+### 10. Unified error budget not formed
+
+No combination of E_coeff + E_quad + E_contour + E_main_tail + E_dual_tail
+exists. Therefore no interval [a,b] with a>0 for L(1) is proved.
 
 ## What IS correct
 
 - AFE structure (two-term identity, gamma ratio, self-duality)
 - Symmetric-square coefficient recurrence (Hecke, degree-3)
-- Root number (+1) and Gamma factor G(s)
+- Root number (+1) and Gamma factor G(s) = Gamma_R(s+1)*Gamma_C(s+11)
 - Discovery-tier numerical values (L(1) ~ 0.6318, min |L(s)| ~ 0.170)
 - Partial-sum bound S(X) = O_eps(X^{1/2+eps}) via FI2005 (separate batch)
 

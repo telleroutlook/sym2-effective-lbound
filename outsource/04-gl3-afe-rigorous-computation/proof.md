@@ -9,8 +9,8 @@ using the GL_3 approximate functional equation (AFE), as a stepping stone
 toward rigorous certified evaluation.
 
 **Current status:** The AFE structure is correct. The numerical values are
-discovery-tier. The rigorous error闭 (quadrature error, contour tail, AFE
-tail, exact coefficients) is NOT yet closed. No THM or CERTIFIED labels
+discovery-tier. The rigorous error closure (quadrature error, contour tail,
+AFE tail, exact coefficients) is NOT yet closed. No THM or CERTIFIED labels
 apply to any result in this batch.
 
 ## §2. The two-term AFE identity
@@ -43,7 +43,8 @@ the dual Dirichlet series B(s) = A(s), so b(n) = A(n). [BASE, standard]
 
 ## §3. Hypotheses verification
 
-**Degree m = 3:** L(s, sym^2 Delta) is a degree-3 L-function. [THM, GJ78]
+**Degree m = 3:** L(s, sym^2 Delta) is a degree-3 L-function
+(automorphic representation on GL_3). [THM, GJ78]
 
 **Conductor D = 1:** Level 1, no ramified primes. [THM]
 
@@ -108,7 +109,47 @@ L(1) in B_arithmetic + B_quadrature + B_contour + B_AFE_tail + B_dual_tail
 
 where each B is a certified interval. This does NOT exist yet.
 
-## §5. Discovery-tier numerical results
+## §5. Code-level bugs found in review (v3)
+
+### 5a. C_V computation missing G factor [BUG]
+
+`afe_sym2_arb_final.py::compute_C_V_rigorous()` computes:
+
+```python
+f = exp(1-t*t) / sqrt(1+t*t)
+```
+
+but the actual integrand for the AFE tail bound should include
+|G(s+1+it)/G(s)|. The function name claims to bound this integral
+but the Gamma-ratio factor is entirely absent.
+
+### 5b. AFE tail X-direction error [BUG]
+
+From the contour at Re(u)=1:
+
+```
+|V(n/X, s)| <= C(s) * (X/n)^1
+```
+
+since |(n/X)^{-1-it}| = X/n. But the code writes:
+
+```python
+main_tail = C_V / X * exact_part
+```
+
+which divides by X instead of multiplying. The correct majorant should
+have X in the numerator for the main tail.
+
+### 5c. Dual tail hardcoded [BUG]
+
+```python
+dual_tail = 1e-12
+```
+
+This is a magic constant with no derivation. The dual tail must be
+bounded using the same style of integral majorant as the main tail.
+
+## §6. Discovery-tier numerical results
 
 The following are numerical observations, NOT certified results:
 
@@ -119,9 +160,9 @@ The following are numerical observations, NOT certified results:
 - All 205 grid points have |L(s)| > 0 (numerical observation)
 
 **None of these are certified.** The certificates in witness/ are
-generated from code that has the gaps described in §4.
+generated from code that has the gaps described in §4 and §5.
 
-## §6. Zero-free region — NOT PROVED
+## §7. Zero-free region — NOT PROVED
 
 The claim "L(s) != 0 for sigma in [0.6,1], |t| <= 20" is NOT proved.
 
@@ -135,29 +176,34 @@ The claim "L(s) != 0 for sigma in [0.6,1], |t| <= 20" is NOT proved.
 
 3. Different N values (N=60 for derivative scan, N=3000 for grid) produce
    different |L(s)| values at the same point — the approximations are
-   not mutually consistent.
+   not mutually consistent (~20% relative difference at s=0.6+20i).
 
 4. "Every cell center is covered by some disk" does not imply "every
-   point in the cell is covered" — the cell may extend beyond the disk.
+   point in the cell is covered" — only 128/160 cells are fully covered
+   by single-disk argument.
+
+5. Minimum radius in derivative_bounds_all_grid.json (~0.099 at
+   (0.6,-20)) differs from zero_free_region_N3000.json (0.133 at
+   (0.6,-7)), indicating stale data.
 
 **The 205-point nonzero observation is discovery-tier only.**
 
-## §7. Connection to partial-sum bound
+## §8. Connection to partial-sum bound
 
 The partial-sum bound S(X) = O_epsilon(X^{1/2+epsilon}) is proved
 unconditionally via Friedlander-Iwaniec (2005), independently of any
 zero-free region. [THM, FI2005 — see batch 03]
 
-## §8. What is NOT available
+## §9. What is NOT available
 
-1. **Certified L(1) interval:** Error闭 not closed (§4).
-2. **Proved zero-free region:** Derivative bounds not rigorous (§6).
+1. **Certified L(1) interval:** Error closure not closed (§4).
+2. **Proved zero-free region:** Derivative bounds not rigorous (§7).
 3. **Certified J value:** Depends on certified L(1) and S1.
 4. **Explicit C(epsilon) for partial sums:** Not from this batch.
 5. **Self-contained reproducibility:** Missing dependencies
    (heartbeat.py, tail_bound.py, baseline/s1_full_certificate.json).
 
-## §9. References
+## §10. References
 
 - Gelbart-Jacquet (1978), GL_3 structure, entireness.
 - Goldfeld (2006), GL_n AFE formulation.

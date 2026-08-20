@@ -1,5 +1,5 @@
 {
-  "status": "CERTIFIED",
+  "status": "DISCOVERY",
   "region": {"sigma_min": 0.6, "sigma_max": 1.0, "t_min": -20.0, "t_max": 20.0},
   "N_afe": 3000,
   "grid_scan": {
@@ -14,29 +14,16 @@
     "all_nonzero": true,
     "min_L": 0.274353,
     "min_L_point": {"sigma": 0.65, "t": -7.5},
-    "note": "All 4 sigma x 40 t cell centers computed with N_afe=3000"
+    "note": "All 4 sigma x 40 t cell centers computed with N_afe=3000. "
+            "Center coverage does NOT imply full cell coverage."
   },
   "derivative_bounds": {
-    "note": "Correct A[n-1] indexing verified",
-    "points": [
-      {"sigma": 0.6, "t": -7.0, "L": 0.170485, "Lp": 1.285528, "r": 0.132619},
-      {"sigma": 0.6, "t": -6.0, "L": 1.289670, "Lp": 1.147196, "r": 1.124193},
-      {"sigma": 0.6, "t": -5.0, "L": 1.822582, "Lp": 0.937946, "r": 1.943164},
-      {"sigma": 0.6, "t": -8.0, "L": 1.211464, "Lp": 1.359808, "r": 0.890908},
-      {"sigma": 0.6, "t": -9.0, "L": 1.604898, "Lp": 1.470535, "r": 1.091370},
-      {"sigma": 0.7, "t": -7.0, "L": 0.274353, "Lp": 1.100351, "r": 0.249332},
-      {"sigma": 0.7, "t": -8.0, "L": 1.132761, "Lp": 1.132370, "r": 1.000345},
-      {"sigma": 0.8, "t": -7.0, "L": 0.370752, "Lp": 0.942514, "r": 0.393366},
-      {"sigma": 0.8, "t": -8.0, "L": 1.073556, "Lp": 0.942526, "r": 1.139019},
-      {"sigma": 0.9, "t": -7.0, "L": 0.455316, "Lp": null, "r": 0.455316},
-      {"sigma": 0.9, "t": -8.0, "L": 1.029599, "Lp": 0.784028, "r": 1.313217},
-      {"sigma": 0.9, "t": -16.0, "L": 0.545963, "Lp": 0.379483, "r": 1.438702},
-      {"sigma": 1.0, "t": -7.0, "L": 0.528543, "Lp": null, "r": 0.529},
-      {"sigma": 1.0, "t": -16.0, "L": 0.584224, "Lp": 0.391163, "r": 1.493555},
-      {"sigma": 1.0, "t": 0.0, "L": 0.631793, "Lp": 0.224538, "r": 2.813740}
-    ],
-    "min_r": 0.132619,
-    "min_r_point": {"sigma": 0.6, "t": -7.0}
+    "note": "NOT RIGOROUS: uses finite differences, not derivative supremum bounds. "
+            "Different N (60) from grid scan (3000) gives ~20% discrepancy.",
+    "min_r": 0.098909,
+    "min_r_point": {"sigma": 0.6, "t": -20.0}
   },
-  "conclusion": "L(s, sym^2 Delta) != 0 for all s in [0.6, 1.0] x [-20, 20]"
+  "conclusion": "DISCOVERY-TIER ONLY: L(s) != 0 numerically on grid, but NOT proved. "
+                "Only 128/160 cells fully covered by single-disk argument.",
+  "note": "This file was previously labeled CERTIFIED. Downgraded to DISCOVERY in v3."
 }

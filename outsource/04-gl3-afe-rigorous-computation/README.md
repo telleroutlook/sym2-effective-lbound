@@ -16,16 +16,14 @@ equation. The AFE structure is correct. All rigorous error layers are
 - NOT a premise for downstream obligations
 - NOT self-contained (missing heartbeat.py, tail_bound.py, baseline/)
 
-## Mathematical goal
+## v3 corrections (2026-08-20)
 
-Evaluate L(s, sym^2 Delta) at points in the critical strip using the
-two-term AFE:
-
-```
-L(s) = sum_{n<=N} A(n)/n^s * V(n/X, s) + dual_sum + tails
-```
-
-with weight functions from Mellin inversion.
+- All witness JSONs downgraded from CERTIFIED to DISCOVERY
+- C_V computation bug documented (missing G factor)
+- AFE tail X-direction error documented
+- Dual tail hardcoded value documented
+- proof.md §5: 3 code-level bugs identified
+- limitations.md: expanded from 9 to 10 gap categories
 
 ## Discovery-tier results
 
@@ -37,21 +35,23 @@ with weight functions from Mellin inversion.
 1. Exact coefficient chain (float -> exact rational)
 2. Mellin quadrature error bound
 3. Contour tail bound
-4. AFE tail bound (N vs 2N is NOT rigorous)
+4. AFE tail bound (N vs 2N is NOT rigorous; X-direction error in code)
 5. Zero-free region (finite differences != derivative bounds)
 6. Unified error budget
+7. C_V missing G(s+1+it)/G(s) factor
+8. Dual tail hardcoded (no derivation)
 
 See `limitations.md` for full details.
 
 ## Contents
 
 - `statement.md` — method description
-- `proof.md` — method and gap analysis
-- `src/` — AFE implementation (discovery-tier)
+- `proof.md` — method and gap analysis (v3: 6 error layers + 3 code bugs)
+- `src/` — AFE implementation (discovery-tier, bugs documented)
 - `checker/` — independent verifier
-- `witness/` — numerical certificates (discovery-tier)
+- `witness/` — numerical observations (all DISCOVERY, no CERTIFIED)
 - `dependencies.yaml` — dependency graph
-- `limitations.md` — scope and limitations
+- `limitations.md` — scope and limitations (v3: 10 categories)
 - `novelty.md` — what is new
 
 ## Integrity
