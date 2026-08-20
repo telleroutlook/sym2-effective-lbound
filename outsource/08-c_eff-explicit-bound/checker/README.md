@@ -1,23 +1,27 @@
-# c_eff Checker README
+# Checker — c_eff v2
+
+## Status
+
+Structural checker only. Does NOT verify mathematical correctness.
 
 ## What it checks
 
-1. **Required files**: statement.md, proof.md, dependencies.yaml, limitations.md, novelty.md
-2. **[OBL] status**: No file promotes c_eff to [THM] without [OBL] tag
-3. **Required concepts**: Hoffstein–Lockhart, zero-free region, auxiliary series, explicit
-4. **Forbidden patterns**: "case 2" (exceptional branch), "siegel zero" (wrong framing), "Vinogradov–Korobov" (not needed)
-5. **Scope check**: Must use 1/log(kp+1) or fix k, NOT 1/log p
+1. Required files exist
+2. Status labels: c_eff must remain [OBL]
+3. Required concepts in proof.md: hoffstein, zero-free, auxiliary, explicit, triple zero, double pole
+4. Forbidden patterns: siegel zero, vinogradov-korobov, L(1/2)
+5. Theorem scope: must use log(kp+1), not just log p
+6. Completed function: must include p^s factor
+7. Analytic conductor: must use k², not k³
+8. Reference years: Hoffstein–Lockhart must be 1994
 
 ## What it does NOT check
 
-- Mathematical correctness of the proof
-- Numerical computation of c_*
-- Correctness of the interval certification
-- Replay script validity
+- Mathematical correctness of proofs
+- Numerical validity of constants
+- Correctness of the zero-count argument
+- Whether the residue formula is valid
 
-## Bug fixes (2026-08-20)
+## Run
 
-- Changed from `any()` token matching to phrase-level matching
-- Fixed OBL status check to require exact `[OBL]` tag
-- Added forbidden pattern detection (case 2, Siegel zero, VK)
-- Added scope check for k-dependence
+    python3 check_explicit_bound.py <submission_dir>

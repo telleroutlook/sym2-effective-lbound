@@ -1,31 +1,28 @@
-# c_eff Dependencies — Rewritten
+# c_eff Dependencies — v2 (corrected per reviewer feedback)
 
 # Corrected dependency chain
 dependency_chain:
-  - stage: "1. Normalization/conductor"
+  - stage: "A. Normalization"
     status: "[THM]"
-    description: "f ∈ S_k^new(Γ₀(p)), sym² Euler factors, q_ar = p², completed L-function"
-  - stage: "2. Zero-free region"
-    status: "[THM for Δ, OBL general]"
-    description: "Explicit σ₀ for L(s, sym² f)"
-  - stage: "3. HL residue proposition"
+    description: "f ∈ S_k^new(Γ₀(p)), F=sym²f, q_ar=p², Λ(s,F)=p^s L_∞(s) L(s,F)"
+  - stage: "B. GHL zero-free region"
     status: "[THM, constants OBL]"
-    description: "Auxiliary Φ(s) = ζ·L²·L(Π×Π̃), prime+trivial eliminates exceptional branch"
-  - stage: "4. Explicit constants"
+    description: "φ(s)=ζ(s)L(s,F)³L(s,F,V²), double pole at s=1, triple-zero contradiction"
+  - stage: "C. HL lower bound"
+    status: "[THM, constants OBL]"
+    description: "Apply HL Prop 1.1 to A(s)=ζ(s)L(s,F), residue=L(1,F), get L(1)≥c₁/log(kp+1)"
+  - stage: "D. Numerical constants"
     status: "[OBL]"
-    description: "Trace HL computation, get c₁(k,p), show inf > 0"
-  - stage: "5. Interval certification"
-    status: "[OBL]"
-    description: "Arb/python-flint, outward rounding, machine witness"
+    description: "Trace all O(1), ≪, c(B), C; compute c_eff>0 via Arb"
 
-# What is NOT a dependency (corrected from original)
+# What is NOT a dependency
 not_dependencies:
   - id: M-1-MOLLIFIER
     reason: "HL approach uses auxiliary Dirichlet series, not mollifier moment"
   - id: M-2-MEAN-VALUE
     reason: "HL approach doesn't need GL₃ second moment asymptotic"
   - id: F-2-GLOBAL-RESIDUE
-    reason: "HL uses ζ·L²·L(Π×Π̃), not Rankin–Selberg residue directly"
+    reason: "HL uses ζ·L²·L(F×F), not Rankin–Selberg residue directly"
   - id: GL3-VORONOI
     reason: "No Kloosterman sums needed in HL approach"
   - id: GL3-VK-GENERAL
@@ -35,26 +32,26 @@ not_dependencies:
 
 # Verified dependencies
 dependencies:
-  - id: HL-PROPOSITION-1-1
-    source: "Hoffstein–Lockhart (1997), Proposition 1.1"
+  - id: HL-1994
+    source: "Hoffstein–Lockhart (1994), Annals of Mathematics 140(1), pp. 1–42"
     evidence: "refereed"
     status: "[THM]"
-    note: "Auxiliary Dirichlet series with non-negative coefficients"
+    note: "Theorem 0.1 (main bound) + Proposition 1.1 (zero-free → residue lower bound)"
 
   - id: GHL-1994
-    source: "Goldfeld–Hoffstein–Lieman (1994)"
+    source: "Goldfeld–Hoffstein–Lieman (1994), appendix to 'Effective estimates for L-functions...'"
     evidence: "refereed"
     status: "[THM]"
-    note: "Explicit effective constants, but not numerically computed"
+    note: "Generic zero-free region via auxiliary series with non-negative coefficients; effective constants"
 
   - id: IWANIEC-MICHEL-2001
-    source: "Iwaniec–Michel (2001)"
+    source: "Iwaniec–Michel (2001), J. Amer. Math. Soc. 14, pp. 705–751"
     evidence: "refereed"
     status: "[THM]"
-    note: "Symmetric-square archimedean factors and bad-prime normalization"
+    note: "Symmetric-square L-functions: archimedean factors, bad-prime normalization, conductor=p²"
 
-  - id: SYMMETRIC-SQUARE-ZERO-FREE
-    source: "Various (see survey)"
+  - id: HL-PROPOSITION-1-1
+    source: "Hoffstein–Lockhart (1994), Proposition 1.1"
     evidence: "refereed"
-    status: "[THM] for specific ranges"
-    note: "NOT general GL₃ VK; uses special structure of sym² from GL₂"
+    status: "[THM]"
+    note: "Non-negative coefficients + zero-free region + growth ⟹ residue ≥ c/log M"

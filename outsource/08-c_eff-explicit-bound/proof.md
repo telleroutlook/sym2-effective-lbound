@@ -1,119 +1,183 @@
-# c_eff: Explicit Lower Bound — Proof
+# c_eff: Explicit Lower Bound — Proof (v2, corrected)
 
-## Stage 1: Normalization and conductor
+## Stage A — Normalization
 
 ### Form setup
 Let f ∈ S_k^new(Γ₀(p)) be a normalized Hecke eigenform (a_f(1) = 1).
-The symmetric-square lift Π = sym²π_f is a degree-3 automorphic representation
-of GL₃(A_Q).
+The symmetric-square lift F = sym²π_f is a cuspidal automorphic
+representation of GL₃(A_Q), since f is non-dihedral.
 
 ### Euler factors
 For q ≠ p (good prime):
-    L_q(s, Π) = (1 − α_f(q)² q^{-s})^{-1} (1 − q^{-s})^{-1} (1 − β_f(q)² q^{-s})^{-1}
-where α_f(q), β_f(q) are Satake parameters of π_f at q, with α_f(q) β_f(q) = 1.
+    L_q(s, F) = (1 − α_f(q)² q^{−s})⁻¹ (1 − q^{−s})⁻¹ (1 − β_f(q)² q^{−s})⁻¹
+where α_f(q) β_f(q) = 1 (Ramanujan bound gives |α_f(q)| ≤ 1).
 
 For q = p (bad prime, Steinberg type):
-    L_p(s, Π) = (1 − p^{-s-1})^{-1} (Iwaniec–Michel 2001 normalization)
+    L_p(s, F) = (1 − p^{−s−1})⁻¹
+(Iwaniec–Michel 2001, §3 normalization.)
 
 ### Conductors
-- Arithmetic conductor: q_ar(Π) = p²
-- Analytic conductor: q_an(Π, T) = p² · max(1, T)³ approximately
-  (the exact formula involves the archimedean parameters)
+Arithmetic conductor: q_ar(F) = p².
+(This follows from the conductor formula for sym² of a newform of prime level p.)
 
 ### Completed L-function
-    Λ(s, Π) = L_∞(s) · L(s, Π)
+    Λ(s, F) = p^s · L_∞(s) · L(s, F)
 
-with (Iwaniec–Michel 2001):
+with Iwaniec–Michel (2001) archimedean factor:
 
-    L_∞(s) = π^{-3s/2} Γ((s+1)/2) Γ((s+k-1)/2) Γ((s+k)/2)
+    L_∞(s) = π^{−3s/2} Γ((s+1)/2) Γ((s+k−1)/2) Γ((s+k)/2)
 
-## Stage 2: Zero-free region
+Note the factor p^s = (p²)^{s/2} = q_ar^{s/2}. The functional equation is:
 
-### For Δ (k=12, p=1): already proved
-    L(s, sym²Δ) ≠ 0 for σ ∈ [0.6, 1.0], |t| ≤ 20
+    Λ(s, F) = Λ(1 − s, F)
 
-### For general (k, p): use existing results
-The symmetric-square L-function inherits zero-free regions from:
-- The GL₂ form f itself (via Rankin–Selberg)
-- Direct symmetric-square zero-free results in the literature
+### Analytic conductor
+The archimedean shifts are approximately 1, k−1, k. At t = 0:
 
-The key parameter is σ₀ = 1 − c₃/log(kp+1) for some explicit c₃ > 0.
+    Q_an(F, 0) ≍ p² · (1+1) · (1+k−1) · (1+k) ≍ p² k²
 
-The special structure of sym² (from GL₂) gives stronger zero-free results
-than what is available for general GL₃ automorphic representations.
+More generally:
 
-## Stage 3: Hoffstein–Lockhart residue proposition
+    Q_an(F, t) ≍ p² (1 + |t|)(k + |t|)²
 
-### The auxiliary Dirichlet series
-Following GHL 1994, construct:
+For |t| ≫ k this reduces to p² |t|³.
 
-    Φ(s) = ζ(s) · L(s, Π)² · L(s, Π × Π̃)
+---
 
-This has non-negative Dirichlet coefficients (in the relevant range).
+## Stage B — GHL generic zero-free region
 
-### Key observation: prime level + trivial character
-For p prime and trivial central character:
-- Π = sym²π_f is NOT a monomial / GL(1)-lift (since f is non-CM)
-- The auxiliary series Φ(s) has a pole of order 2 at s = 1 (from ζ(s) and L(s,Π)²)
-- There is NO additional zero from a GL(1)-lift factor
+### The auxiliary series
+Following GHL 1994 Appendix, define:
 
-Therefore: the exceptional/monomial branch DOES NOT ARISE in this scope.
+    φ(s) = ζ(s) · L(s, F)² · L(s, F × F)
 
-### The generic branch only
-By HL Proposition 1.1 (specialized):
-- Φ(s) has a pole of order 2 at s = 1
-- L(s, Π) has at most a simple pole at s = 1 (actually none for cuspidal Π)
-- If L(s, Π) had a real zero β near 1, then L(s, Π)² would contribute a
-  double zero, making Φ(s) have order ≥ 3 zero minus order 2 pole = net zero
-  at s = 1, contradicting the residue computation
+where F × F denotes the Rankin–Selberg convolution of F with its
+contragredient F̃. Since F is self-contragredient (sym² of a
+self-dual GL₂ form), F̃ = F.
 
-This gives: L(s, Π) has no real zero in [1 − c₀/log(kp+1), 1].
+### Factorization
+By the Rankin–Selberg identity for the symmetric-square lift:
 
-### Deducing L(1) > 0
-From the zero-free region + Hadamard factorization + explicit residue:
+    L(s, F × F) = L(s, F) · L(s, F, V²)
 
-    L(1, Π) ≥ c₁ / log(kp + 1)
+where V² is the symmetric part of the exterior square ⊗² minus the
+symmetric square. This gives:
 
-where c₁ depends on:
-- The residue of ζ(s) L(s,Π)² L(s,Π×Π̃) at s = 1
-- The zero-free region parameter σ₀
-- The gamma factor constants
-- The bad Euler factor at p
+    φ(s) = ζ(s) · L(s, F)³ · L(s, F, V²)
 
-## Stage 4: Explicit constant extraction
+### Pole structure at s = 1
+- ζ(s) has a simple pole at s = 1 (residue = 1)
+- L(s, F, V²) has a simple pole at s = 1 when f is non-dihedral
+  (this is the key non-degeneracy condition)
+- L(s, F) is holomorphic at s = 1 (cuspidal Π has no pole)
+
+Therefore φ(s) has a **double pole** at s = 1.
+
+### Zero-count argument (GHL)
+Suppose for contradiction that L(β, F) = 0 for some real β with
+
+    1 − c₀/log(kp+1) < β < 1.
+
+Then L(s, F)³ contributes a **triple zero** at s = β to φ(s).
+But GHL's zero-count lemma says: a function with a double pole at s = 1,
+non-negative Dirichlet coefficients, and polynomial growth, can have at
+most 2 real zeros near 1 (counting multiplicity).
+
+A triple zero at β would exceed this bound. Contradiction.
+
+### Result
+    L(s, F) ≠ 0  for  1 − c₀/log(kp+1) < s < 1
+
+for an explicit constant c₀ > 0 depending on k and the explicit
+parameters in the GHL zero-count lemma.
+
+---
+
+## Stage C — Hoffstein–Lockhart lower bound
+
+### The HL function
+Consider:
+
+    A(s) = ζ(s) · L(s, F)
+
+Properties:
+1. Dirichlet coefficients a_n ≥ 0 (product of ζ and L with non-negative
+   coefficients — follows from Hecke multiplicativity and positivity of
+   symmetric-square coefficients)
+2. Simple pole at s = 1 with residue:
+   Res_{s=1} A(s) = L(1, F)
+3. Polynomial growth in vertical strips (from Gamma factors)
+4. No real zero in (1 − c₀/log(kp+1), 1) — from Stage B
+
+### Application of HL Proposition 1.1
+Hoffstein–Lockhart (1994), Proposition 1.1 states:
+If A(s) has non-negative coefficients, a simple pole at s = 1 with
+residue R, satisfies appropriate growth conditions, and has no real zero
+in (1 − δ, 1), then:
+
+    R⁻¹ ≪ log(1/δ)
+
+Applied with δ = c₀/log(kp+1):
+
+    L(1, F)⁻¹ ≪ log(kp+1)
+
+Therefore:
+
+    L(1, sym² f) = L(1, F) ≥ c₁ / log(kp+1)
+
+where c₁ = 1/C for the implied constant C in the HL bound.
+
+### Role separation
+- **Stage B** (GHL): establishes the zero-free region (no real zero near 1)
+- **Stage C** (HL Prop 1.1): converts zero-free region into L(1) lower bound
+
+These are two distinct steps that must not be conflated.
+
+---
+
+## Stage D — Numerical constant extraction [OBL]
 
 ### What needs to be computed
-1. Residue of ζ(s) L(s,Π)² L(s,Π×Π̃) at s = 1:
-   = Res_{s=1} ζ(s) · L(1,Π)² · L(1,Π×Π̃) (if L(1,Π) ≠ 0)
-   = 1 · L(1,Π)² · L(1,Π×Π̃)
+The constant c₁ in Stage C depends on:
 
-2. Zero-free region: σ₀ = 1 − c₃/log(kp+1) with explicit c₃
+1. **GHL zero-free region constant c₀**: from the zero-count lemma,
+   depends on Gamma function derivatives, Dirichlet series coefficients
+   bound M = 1 + D · max|c_n|, and conductor D.
 
-3. Gamma factor ratio at s = 1 vs s = σ₀
+2. **HL Proposition 1.1 implied constant C**: from the contour integral
+   representation, depends on:
+   - The growth parameter B in |A(s)| ≪ |t|^B
+   - The contour shift distance r (related to c₀)
+   - The Dirichlet series coefficient bound M
 
-4. Bad Euler factor at p: L_p(1, Π) = (1 − p^{-2})^{-1}
+3. **Explicit A(s) = ζ(s)L(s,F) at s = 1**: the residue is L(1,F)
+   itself, so the constant extraction is bootstrapped — we get an
+   inequality, not an equation.
 
-### The final constant
-    c_* = f(c₁, σ₀, gamma ratios, bad factors)
+4. **Bad Euler factor**: L_p(1, F) = (1 − p^{−2})⁻¹ ≤ p²/(p²−1)
 
-with inf_{k≥2, p prime} c_* > 0.
+### The final task
+Show inf_{k≥2, p prime} c₁(k,p) > 0 and compute a certified
+interval [a, b] with a > 0 containing this infimum (or a useful
+lower bound for it).
 
-## Stage 5: Interval certification
+This requires:
+- Explicit bounds on Gamma derivatives at the relevant points
+- Explicit M (Dirichlet coefficient bound) in terms of kp
+- Explicit B (growth exponent) from the functional equation
+- Contour integral estimation with explicit constants
+- Arb/python-flint interval arithmetic with outward rounding
 
-### Arb/python-flint computation
-For each target (k, p):
-1. Compute all input constants to rigorous precision
-2. Use outward rounding to get certified interval [a, b]
-3. Verify a > 0
+### Status: [OBL]
+None of these explicit constants have been computed.
 
-### Machine-readable witness
-Output:
-    c_* ∈ [a, b],  a > 0,  width < ε
-with SHA-256 of inputs and replay script.
+---
 
 ## Status: [OBL]
 
-The main tasks are:
-1. Verify prime + trivial char eliminates GL(1)-lift (Stage 3)
-2. Trace HL computation with all constants explicit (Stage 4)
-3. Compute interval using Arb (Stage 5)
+The main remaining tasks are:
+1. Trace all implied constants in GHL zero-count lemma (Stage B constants)
+2. Trace all implied constants in HL Proposition 1.1 (Stage C constants)
+3. Combine to get explicit c₁(k,p) > 0
+4. Show inf_{k,p} c₁ > 0
+5. Compute interval [a,b] with a > 0 using Arb

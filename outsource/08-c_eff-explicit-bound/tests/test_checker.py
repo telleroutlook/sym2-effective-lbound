@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-test_checker.py — Tests for c_eff structural checker (rewritten).
+test_checker.py — Tests for c_eff structural checker (v2).
 """
 import subprocess
 import tempfile
@@ -24,12 +24,19 @@ def _run_checker(submission_dir):
     return result.returncode, result.stdout
 
 
-def _base_files(tmpdir, statement_content, proof_content):
+def _base_files(tmpdir, statement_content, proof_content, deps_content=None):
     """Write all required files."""
     _write(os.path.join(tmpdir, "statement.md"), statement_content)
     _write(os.path.join(tmpdir, "proof.md"), proof_content)
-    _write(os.path.join(tmpdir, "dependencies.yaml"),
-           "stages:\n  - name: test\n    status: '[OBL]'\n")
+    if deps_content is None:
+        deps_content = (
+            "# Dependencies\n"
+            "dependencies:\n"
+            "  - id: HL-1994\n"
+            "    source: Hoffstein-Lockhart (1994)\n"
+            "    status: '[THM]'\n"
+        )
+    _write(os.path.join(tmpdir, "dependencies.yaml"), deps_content)
     _write(os.path.join(tmpdir, "limitations.md"),
            "# Limits\n[OBL] Some.\n")
     _write(os.path.join(tmpdir, "novelty.md"),
@@ -42,13 +49,23 @@ def test_pass_on_well_structured():
     """Well-structured submission with correct architecture should PASS."""
     with tempfile.TemporaryDirectory() as tmpdir:
         _base_files(tmpdir,
-            "# Statement\n[OBL] L(1, sym² f) ≥ c_*/log(kp+1).\n",
+            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\n",
             """# Proof
-The Hoffstein–Lockhart auxiliary Dirichlet series Φ(s) = ζ(s)L(s,Π)²L(s,Π×Π̃)
-has non-negative coefficients. For prime level + trivial character, the
-GL(1)-lift obstruction does not arise. The zero-free region gives
-L(1,Π) ≥ c₁/log(kp+1). Explicit constant extraction and interval
-certification follow.
+## Stage A — Normalization
+Λ(s, F) = p^s L_∞(s) L(s, F) with q_ar = p².
+
+## Stage B — GHL zero-free region
+Following Hoffstein–Lockhart (1994) and Goldfeld–Hoffstein–Lieman (1994),
+the auxiliary series φ(s) = ζ(s) L(s,F)³ L(s,F,V²) has double pole at s=1.
+If L(β,F)=0, triple zero at β contradicts GHL zero-count lemma.
+L(s,F) ≠ 0 for 1 − c₀/log(kp+1) < s < 1.
+
+## Stage C — HL lower bound
+A(s) = ζ(s) L(s,F) has residue L(1,F) at s=1.
+HL Proposition 1.1 gives L(1,F) ≥ c₁/log(kp+1).
+
+## Stage D — Numerical constants [OBL]
+Explicit constant extraction and interval certification.
 """)
         code, output = _run_checker(tmpdir)
         assert code == 0, f"Expected PASS but got FAIL:\n{output}"
@@ -60,25 +77,54 @@ def test_fail_on_wrong_scope():
         _base_files(tmpdir,
             "# Statement\n[OBL] L(1, sym² f) ≥ c_eff/log p for all p.\n",
             """# Proof
-Auxiliary Dirichlet series. Hoffstein–Lockhart. Zero-free region.
-Explicit constants.
+Auxiliary Dirichlet series. Hoffstein-Lockhart. Zero-free region.
+Explicit constants. Triple zero. Double pole.
 """)
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
 
 
-def test_fail_on_case2():
-    """Case 2 (exceptional branch) should FAIL for prime/trivial."""
+def test_fail_on_l_half():
+    """L(1/2) in statement should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
         _base_files(tmpdir,
-            "# Statement\n[OBL] L(1, sym² f) ≥ c_*/log(kp+1).\n",
+            "# Statement\n[OBL] L(½, sym² f) ≥ c₀/log(kp+1).\n",
             """# Proof
-Case 1: no exceptional zero. Case 2: exceptional zero β > 1 - c₀/log p.
-Hadamard factorization.
+Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
+Triple zero. Double pole.
 """)
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
-        assert "forbidden" in output.lower() or "case 2" in output.lower()
+        assert "l(1/2" in output.lower() or "forbidden" in output.lower()
+
+
+def test_fail_on_wrong_hl_year():
+    """Hoffstein-Lockhart 1997 should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\n",
+            """# Proof
+Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
+Triple zero. Double pole.
+""",
+            "# Dependencies\ndependencies:\n  - id: HL\n    source: Hoffstein-Lockhart (1997)\n    status: '[THM]'\n")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
+        assert "1994" in output or "year" in output.lower()
+
+
+def test_fail_on_cubic_conductor():
+    """Analytic conductor k³ should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\nq_an ≈ p²k³\n",
+            """# Proof
+Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
+Triple zero. Double pole.
+""")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
+        assert "k³" in output or "k^3" in output or "conductor" in output.lower()
 
 
 def test_no_false_positive_trivial():

@@ -1,78 +1,70 @@
-# c_eff: Explicit Lower Bound for L(1, sym² f) — Rewritten
+# c_eff: Explicit Lower Bound for L(1, sym² f) — Rewritten v2
 
-## Corrected Theorem Statement
+## Theorem Statement
 
-**Theorem** (GHL 1994 specialized + explicit constants). Let f ∈ S_k^new(Γ₀(p))
-be a holomorphic Hecke eigenform of weight k ≥ 2 on prime level p, with trivial
-central character. Assume f is non-CM (non-dihedral). Let q_ar = p² denote the
-arithmetic conductor of sym² f.
+**Theorem** (Hoffstein–Lockhart 1994 + Goldfeld–Hoffstein–Lieman 1994).
+Let f ∈ S_k^new(Γ₀(p)) be a holomorphic Hecke eigenform of weight k ≥ 2
+on prime level p, with trivial central character. Assume f is non-dihedral.
+Let F = sym² f be the symmetric-square lift to GL₃.
 
-Then there exists an explicitly computable constant c_* > 0 depending only on k
-such that:
+Then there exists an absolute effective constant c₀ > 0 such that
 
-    L(½, sym² f) ≥ c_* / log(kp + 1)
+    L(1, sym² f) ≥ c₀ / log(kp + 1).
 
-Equivalently, with the completed L-function and explicit normalization:
+The existence and effectivity of c₀ follow from Hoffstein–Lockhart (1994)
+Theorem 0.1 together with the Goldfeld–Hoffstein–Lieman (1994) effective
+zero-free argument. The present project seeks to extract and certify a
+concrete numerical value c_eff ≤ c₀.
 
-    L(1, sym² f) ≥ c_*(k) / log(kp + 1)
+**Scope**: The denominator is log(kp+1), NOT log p. Hoffstein–Lockhart
+explicitly states that for holomorphic forms, the Maass-form parameter λN
+is replaced by kN. For prime level p, this gives kp.
 
-**Scope correction**: The original claimed 1/log p independent of k. This is
-not supported by Hoffstein–Lockhart, which gives scales involving kN (here kp).
-The correct uniform bound involves log(kp+1).
+**Status**: [OBL] — the effective constant c₀ exists by HL/GHL, but no
+concrete numerical value has been computed.
 
-**Alternative** (if k must be fixed): For each fixed k₀, there exists c_eff(k₀) > 0
-such that L(1, sym² f) ≥ c_eff(k₀)/log p for all f ∈ S_{k₀}^new(Γ₀(p)).
+## Proof Architecture (4 stages)
 
-## Proof Architecture (GHL/Hoffstein–Lockhart correct route)
-
-The proof proceeds in FIVE stages, not the original five blockers:
-
-### Stage 1: Normalization and conductor [THM]
+### Stage A — Normalization [THM]
 - Fix f ∈ S_k^new(Γ₀(p)), a_f(1) = 1 (Hecke normalization)
-- Compute sym² Euler factors at each prime
-- Arithmetic conductor: q_ar = p²
-- Analytic conductor depends on k: q_an(k, p) = p² · (k/2π)³ approximately
-- Completed L-function: L_∞(s) · L(s, sym² f) with Iwaniec–Michel gamma factors
+- F = sym² f, arithmetic conductor q_ar = p²
+- Completed L-function: Λ(s, F) = p^s L_∞(s) L(s, F)
+- Gamma factors from Iwaniec–Michel (2001)
 
-### Stage 2: Zero-free region [THM for Δ, OBL general]
-- Explicit zero-free region for L(s, sym² f) on σ ∈ [σ₀, 1]
-- For Δ (k=12, p=1): proved computationally
-- For general (k, p): use symmetric-square zero-free results from existing literature
-- NOT requiring general GL₃ Vinogradov–Korobov
+### Stage B — GHL zero-free region [THM, constants OBL]
+- Auxiliary series φ(s) = ζ(s) L(s,F)² L(s,F×F)
+- Factorization: L(s,F×F) = L(s,F) L(s,F,V²)
+- Non-dihedral ⟹ L(s,F,V²) has simple pole at s=1
+- Therefore φ has double pole at s=1
+- GHL zero-count lemma: if L(β,F) = 0, then φ has triple zero at β
+  but double pole at 1 ⟹ at most 2 zeros near 1 ⟹ contradiction
+- Result: L(s,F) ≠ 0 for 1 − c₀/log(kp+1) < s < 1
 
-### Stage 3: Hoffstein–Lockhart residue proposition [THM, constants OBL]
-- HL Proposition 1.1: auxiliary Dirichlet series with non-negative coefficients
-- Φ(s) = ζ(s) L(s, F)² L(s, F × F) with appropriate F
-- For prime p + trivial character: the GL(1)-lift / monomial obstruction does NOT arise
-- Therefore only the "generic" branch applies: residue gives L(1) ≥ c₁/log(kp+1)
-- Constants c₁ from HL are effective but not yet numerically explicit
+### Stage C — HL lower bound [THM, constants OBL]
+- Apply HL Proposition 1.1 to A(s) = ζ(s) L(s,F)
+  - Coefficients nonnegative
+  - Simple pole at s=1 with residue L(1,F)
+  - Zero-free region from Stage B
+- HL gives: L(1,F)⁻¹ ≪ log(kp+1)
+- Therefore: L(1, sym² f) ≥ c₁ / log(kp+1)
 
-### Stage 4: Explicit constant extraction [OBL]
-- Trace through HL computation with explicit constants at each step:
-  - Rankin–Selberg residue R_Π
-  - Zero-free region parameter σ₀
-  - Gamma factor constants
-  - Bad Euler factor bounds
-- Obtain c₁(k, p) and show inf_{k,p} c₁ > 0
+### Stage D — Numerical constant extraction [OBL]
+- Trace through all O(1), ≪, c(B), C in HL computation
+- Instantiate: gamma derivatives, M = 1+D·max|c_i|, contour parameters,
+  bad-prime bounds
+- Obtain c_eff > 0 as certified interval [a,b]
+- Arb/python-flint with outward rounding
 
-### Stage 5: Interval certification [OBL]
-- Compute c_* ∈ [a, b] with a > 0 using Arb/python-flint
-- Outward rounding for certified lower bound
-- Machine-readable witness with SHA-256
-- Replay script for independent verification
-
-## What is NOT a blocker (corrected from original)
+## What is NOT needed (corrected from previous version)
 
 1. **M-1 (mollifier)**: Not needed for the HL-based approach
 2. **M-2 (mean value)**: Not needed for the HL-based approach
-3. **F-2 (global residue)**: Not needed; HL uses auxiliary series, not Rankin–Selberg directly
-4. **GL₃ Voronoi**: Not needed; the HL approach doesn't require Kloosterman sums
-5. **General GL₃ VK**: Existing symmetric-square zero-free results suffice
-6. **Case 2 (exceptional zero)**: Eliminated for prime level + trivial character
+3. **F-2 (global residue)**: Not needed; HL uses auxiliary series
+4. **GL₃ Voronoi**: Not needed; no Kloosterman sums in HL approach
+5. **Case 2 (exceptional zero)**: Eliminated for prime level + trivial char
 
 ## Status: [OBL]
 
 The main tasks are:
-1. Verify prime + trivial char eliminates GL(1)-lift obstruction
-2. Trace HL computation with explicit constants
-3. Compute interval [a, b] containing c_*
+1. Trace HL computation with all constants explicit (Stage D)
+2. Compute interval [a, b] with a > 0 using Arb (Stage D)
