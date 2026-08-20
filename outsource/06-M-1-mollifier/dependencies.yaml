@@ -1,0 +1,55 @@
+# M-1 Dependencies — Rewritten
+
+# Required assumptions
+assumptions:
+  - id: NON-CM
+    description: "π non-CM / non-dihedral, so Π = sym²π is cuspidal GL₃"
+    source: "Standard; CM/dihedral gives isobaric decomposition"
+    evidence: "textbook"
+    status: "[OBL] must be verified for each target form"
+
+  - id: RAMANUJAN-GL2
+    description: "GL₂ Ramanujan bound for π (Deligne's theorem)"
+    source: "Deligne (1974), Serre (1978)"
+    evidence: "refereed"
+    status: "[THM] for holomorphic forms"
+
+# Core analytic ingredients
+ingredients:
+  - id: AFE-GL3
+    description: "Approximate functional equation for L(½, Π) with length ≈ T^{3/2}"
+    source: "Iwaniec–Kowalski (2004), §5.6"
+    evidence: "textbook"
+    status: "[THM]"
+
+  - id: GL3-SHIFTED-CONVOLUTION
+    description: "GL₃ shifted-convolution sum estimate for fixed Π"
+    source: "Dasgupta–Leung–Young (2024), Pal (2022)"
+    evidence: "refereed"
+    status: "[OBL] — research frontier; upper bounds known, not asymptotics"
+
+  - id: RECIPROCAL-COEFFICIENTS
+    description: "True reciprocal Euler coefficients ρ_Π(n) with p², p³ terms"
+    source: "Standard Euler product theory"
+    evidence: "textbook"
+    status: "[THM]"
+
+  - id: SQUAREFREE-APPROX-LEMMA
+    description: "Squarefree approximation: error from omitting p², p³ terms"
+    source: "None — must be proved"
+    evidence: "none"
+    status: "[OBL]"
+
+# What is NOT a dependency (corrected from original)
+not_dependencies:
+  - id: LRS-1995
+    description: "Luo–Rudnick–Sarnak 1995 is about Selberg eigenvalue conjecture, NOT GL₃ second moment"
+    reason: "Wrong attribution in original package"
+
+  - id: GL3-LARGE-SIEVE
+    description: "GL₃ spectral large sieve applies to families, NOT fixed-Π twisted moment"
+    reason: "Wrong object; large sieve is for Σ_φ |Σ_n a_n λ_φ(n)|², not ∫|L|²"
+
+  - id: HECKE-ORTHOGONALITY
+    description: "Hecke eigenvalue orthogonality is for families, not fixed Π"
+    reason: "We work with one Π, not summing over automorphic forms"

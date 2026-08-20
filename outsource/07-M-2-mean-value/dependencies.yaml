@@ -1,0 +1,56 @@
+# M-2 Dependencies — Rewritten
+
+# Corrected literature attributions
+references:
+  - id: IWANIEC-MICHEL-2001
+    title: "The second moment of the symmetric square L-functions"
+    authors: "Iwaniec, Michel"
+    journal: "Ann. Acad. Sci. Fenn. Math. 26 (2001), 465–482"
+    evidence: "refereed"
+    note: "Studies level-family average, NOT fixed-form t-aspect moment"
+
+  - id: DASGUPTA-LEUNG-YOUNG-2024
+    title: "The second moment of the GL₃ standard L-function on the critical line"
+    authors: "Dasgupta, Leung, Young"
+    source: "arXiv:2407.06962"
+    evidence: "preprint"
+    note: "Upper bound T^{4/3+ε}, NOT asymptotic"
+
+  - id: PAL-2022
+    title: "Second moment of degree three L-functions"
+    authors: "Pal"
+    source: "arXiv:2212.14620"
+    evidence: "preprint"
+    note: "Upper bound for degree-3 L-functions"
+
+# NOT dependencies (corrected from original)
+not_dependencies:
+  - id: LRS-1995
+    description: "Luo–Rudnick–Sarnak 1995 is about Selberg eigenvalue conjecture"
+    reason: "Wrong attribution; does NOT contain GL₃ second-moment asymptotic"
+
+  - id: IWANIEC-SARNAK
+    description: "Iwaniec–Sarnak Perspectives, GAFA 2000 Special Vol, pp. 705–741"
+    reason: "Original cited wrong page numbers (1039–1065)"
+
+# What the proof actually needs
+ingredients:
+  - id: AFE-GL3
+    description: "AFE for L(½, Π) with length T^{3/2}"
+    status: "[THM] (standard)"
+
+  - id: RANKIN-SELBERG-POLE
+    description: "Res_{s=1} D_Π(s) = R_Π > 0 from Rankin–Selberg"
+    status: "[THM] for cuspidal Π"
+
+  - id: IWANIEC-MICHEL-GAMMA
+    description: "Correct archimedean factor: π^{-3s/2} Γ((s+1)/2) Γ((s+k-1)/2) Γ((s+k)/2)"
+    status: "[THM] (Iwaniec–Michel 2001)"
+
+  - id: D-VS-RS
+    description: "D_Π(s) = L(s, Π×Π̃) · H_Π(s) with H_Π analytic at s=1"
+    status: "[THM] (standard Euler product computation)"
+
+  - id: GL3-SHIFTED-CONVOLUTION
+    description: "Off-diagonal: GL₃ shifted-convolution sum for fixed Π"
+    status: "[OBL] — research frontier"

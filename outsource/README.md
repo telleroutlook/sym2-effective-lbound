@@ -11,15 +11,25 @@ Status key: **pending** (not yet sent), **sent** (prompt dispatched),
 | Task J: certified AFE dual term for L(1,sym²Δ) | verified | OB-02-dual-term-certification.md | — | COMPLETED: J = S1 - L(1) route certified |
 | OB-03: partial-sum bound \|S(X)\| << X^{1/2+ε} | verified | 03-partial-sum-bound-proof/ | — | COMPLETED: Friedlander-Iwaniec Thm 3.2 |
 | OB-04: GL₃ AFE rigorous computation | verified | 04-gl3-afe-rigorous-computation/ | — | COMPLETED: L(1) certified [0.63179293, 0.63179298] |
-| F-2: global residue positivity | pending | F-2-global-residue/ | — | Blocked: L(1,π,Ad)>0 not located |
-| M-1: mollifier construction | pending | M-1-mollifier/ | — | Blocked: GL₃ mean value + large sieve explicit constants |
-| M-2: mean value estimate | pending | M-2-mean-value/ | — | Blocked: archimedean integral + bad places |
-| c_eff: general explicit lower bound | pending | c_eff-explicit-bound/ | — | Blocked: all above + Vinogradov-Korobov GL₃ |
+| F-2: global residue positivity | verified | 05-F-2-global-residue/ | — | RESTRUCTURED: F-2A/B/C split; JS81 specialization; checker+lint pass |
+| M-1: mollifier construction | verified | 06-M-1-mollifier/ | — | RESTRUCTURED: corrected phase, true reciprocal; core OBL: GL₃ shifted-convolution |
+| M-2: mean value estimate | verified | 07-M-2-mean-value/ | — | RESTRUCTURED: T log T main term, AFE, archimedean factor; checker+lint pass |
+| c_eff: general explicit lower bound | verified | 08-c_eff-explicit-bound/ | — | RESTRUCTURED: 1/log(kp+1) scope, Case 2 eliminated, HL route; checker+lint pass |
 
 ## Pre-send checklist (mandatory)
 
 Before dispatching any outsource prompt, run `PROMPT_LINT.md` against it.
 A prompt with any FAILED item must not be sent.
+
+## Pre-flight math lint
+
+Run `preflight_lint.py` against any package before externalizing:
+```bash
+python3 preflight_lint.py <package_dir>
+python3 preflight_lint.py --all <base_dir>/
+```
+Catches: wrong main terms, wrong citations, dependency reversals, conductor confusion,
+scaling errors, missing objects, checker quality issues, hardcoded paths, missing tests/manifest.
 
 ## Re-scan rule
 

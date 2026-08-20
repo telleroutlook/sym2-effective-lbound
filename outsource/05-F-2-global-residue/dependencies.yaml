@@ -1,0 +1,54 @@
+# F-2 Dependencies — Restructured (F-2A / F-2B / F-2C)
+
+F-2A:
+  status: "[THM/REFEREED candidate]"
+  sources:
+    - id: JS81-LEMMA-4.4
+      description: "Eisenstein series pole at s=1 with residue proportional to Φ̂(0)·∫|φ|²dg"
+      source: "Jacquet & Shalika, Ann. Math. 114 (1981), 459–512, Lemma 4.4"
+      evidence: "refereed"
+      status: "verified against original text"
+    - id: JS81-LEMMA-4.6I
+      description: "Whittaker unfolding identifies Rankin–Selberg L-function; diagonal condition π'=π"
+      source: "Jacquet & Shalika, Ann. Math. 114 (1981), 459–512, Lemma 4.6(i)"
+      evidence: "refereed"
+      status: "verified against original text"
+    - id: NORM-SQUARE-POSITIVITY
+      description: "∫|φ(g)|²dg > 0 for any nonzero automorphic form φ"
+      source: "Standard; follows from positive-definite Haar measure"
+      evidence: "textbook"
+  blockers: []
+
+F-2B:
+  status: "[OBL]"
+  sources:
+    - id: GJ-LOCAL-FACTORS
+      description: "Godement–Jacquet local zeta integrals for GL₂"
+      source: "Godement–Jacquet, Zeta functions for simple algebras, Ann. Math. Studies 26 (1972)"
+      evidence: "refereed"
+    - id: CASSELMAN-NEWVECTOR
+      description: "Local newvector theory for GL₂"
+      source: "Casselman, Canad. J. Math. 26 (1974), 1030–1037"
+      evidence: "refereed"
+    - id: RS-LF-ADJOINT-FACTORIZATION
+      description: "L(s, π × π̃) = ζ(s) · L(s, π, Ad) for GL₂ with trivial central character"
+      source: "Standard; follows from unramified computation"
+      evidence: "textbook"
+  blockers:
+    - "Archimedean factor Z_∞(1) for weight k (NOT fixed at k=11)"
+    - "Ramified finite factors Z_p(1) for each p | N"
+    - "Consistent normalization of Haar measures and Whittaker functions"
+    - "Root number / ε-factor tracking"
+
+F-2C:
+  status: "[OBL]"
+  sources:
+    - id: GHL-UNIFORMITY
+      description: "Uniformity of local factors for level ≤ N₀"
+      source: "Goldfeld–Hoffstein–Lieman (1994), Appendix"
+      evidence: "refereed"
+  blockers:
+    - "Explicit computation of Z_∞(1) for weight k"
+    - "Explicit computation of Z_p(1) for each local type (spherical/Iwahori)"
+    - "Explicit lower bound c' = min_{N ≤ N₀} ∏_{p|N} |Z_p(1)|"
+    - "Interface with M-1 mollifier and c_eff explicit bound"

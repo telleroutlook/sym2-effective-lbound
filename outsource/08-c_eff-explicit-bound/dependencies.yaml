@@ -1,0 +1,60 @@
+# c_eff Dependencies — Rewritten
+
+# Corrected dependency chain
+dependency_chain:
+  - stage: "1. Normalization/conductor"
+    status: "[THM]"
+    description: "f ∈ S_k^new(Γ₀(p)), sym² Euler factors, q_ar = p², completed L-function"
+  - stage: "2. Zero-free region"
+    status: "[THM for Δ, OBL general]"
+    description: "Explicit σ₀ for L(s, sym² f)"
+  - stage: "3. HL residue proposition"
+    status: "[THM, constants OBL]"
+    description: "Auxiliary Φ(s) = ζ·L²·L(Π×Π̃), prime+trivial eliminates exceptional branch"
+  - stage: "4. Explicit constants"
+    status: "[OBL]"
+    description: "Trace HL computation, get c₁(k,p), show inf > 0"
+  - stage: "5. Interval certification"
+    status: "[OBL]"
+    description: "Arb/python-flint, outward rounding, machine witness"
+
+# What is NOT a dependency (corrected from original)
+not_dependencies:
+  - id: M-1-MOLLIFIER
+    reason: "HL approach uses auxiliary Dirichlet series, not mollifier moment"
+  - id: M-2-MEAN-VALUE
+    reason: "HL approach doesn't need GL₃ second moment asymptotic"
+  - id: F-2-GLOBAL-RESIDUE
+    reason: "HL uses ζ·L²·L(Π×Π̃), not Rankin–Selberg residue directly"
+  - id: GL3-VORONOI
+    reason: "No Kloosterman sums needed in HL approach"
+  - id: GL3-VK-GENERAL
+    reason: "Existing symmetric-square zero-free results suffice"
+  - id: CASE-2-EXCEPTIONAL
+    reason: "Prime level + trivial char eliminates GL(1)-lift obstruction"
+
+# Verified dependencies
+dependencies:
+  - id: HL-PROPOSITION-1-1
+    source: "Hoffstein–Lockhart (1997), Proposition 1.1"
+    evidence: "refereed"
+    status: "[THM]"
+    note: "Auxiliary Dirichlet series with non-negative coefficients"
+
+  - id: GHL-1994
+    source: "Goldfeld–Hoffstein–Lieman (1994)"
+    evidence: "refereed"
+    status: "[THM]"
+    note: "Explicit effective constants, but not numerically computed"
+
+  - id: IWANIEC-MICHEL-2001
+    source: "Iwaniec–Michel (2001)"
+    evidence: "refereed"
+    status: "[THM]"
+    note: "Symmetric-square archimedean factors and bad-prime normalization"
+
+  - id: SYMMETRIC-SQUARE-ZERO-FREE
+    source: "Various (see survey)"
+    evidence: "refereed"
+    status: "[THM] for specific ranges"
+    note: "NOT general GL₃ VK; uses special structure of sym² from GL₂"

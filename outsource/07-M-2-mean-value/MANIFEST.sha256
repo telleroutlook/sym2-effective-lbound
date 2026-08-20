@@ -1,0 +1,15 @@
+00834f4fe4d9b8731c1162c4ac9c071907633803900d105f366b720d40a23f1d  ./checker/README.md
+6bbc988949ef2e4d6df7b60b24ea0fcc329ac4a622f75200da383cb8088be933  ./checker/check_mean_value.py
+557b2d7c630f4e962758540125845cffe162f81773b54b159e79b3276ddb1fc1  ./dependencies.yaml
+d63203fb03e412c9f32b2e7c40b4ecfc7f83e1c6903d8a7f53fea6e5ce056a70  ./limitations.md
+3e57999a937e577e9fce947092c8b1994893f97c2fa70f7563bc1019ae745be7  ./novelty.md
+826ca52283a73da8acf0401c25aaffbfa60fbf0aa5c6e2adf5f065af41a22378  ./proof.md
+3c73d57d2b01ed7d1855d5259990b98cf6487578552c03b91e8c3af228fa0975  ./statement.md
+3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd  ./tests/.pytest_cache/.gitignore
+37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4  ./tests/.pytest_cache/CACHEDIR.TAG
+73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad  ./tests/.pytest_cache/README.md
+44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a  ./tests/.pytest_cache/v/cache/lastfailed
+fd1f109dd4231cf99e4ac0d53b9b87072b6fa1aa9a15a6021881dfe5399a4efd  ./tests/.pytest_cache/v/cache/nodeids
+32ed931936887dfd35e054eed23832461dd2ff46b8a816a787564fec4ff01619  ./tests/__pycache__/test_checker.cpython-314-pytest-9.1.1.pyc
+517e16452f4387564f04a6099bd9ce2f383235845916363ca4eef04835312ed9  ./tests/test_checker.py
+949879e357fac445b73919432bd0ec8ce69ce43978c7275f8a53b859c840c18a  ./witness/README.md
