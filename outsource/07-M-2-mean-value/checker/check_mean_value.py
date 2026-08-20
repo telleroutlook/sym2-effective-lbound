@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-check_mean_value.py — Structural checker for M-2 submissions (v2).
+check_mean_value.py — Structural checker for M-2 submissions (v3).
 
 Detects:
 - Wrong main term c_Π T (should be T log T)
 - Wrong AFE dual factor (constant root number instead of t-dependent)
 - Wrong H_{Π,p} formula (must give 1+O(x²))
+- Wrong leading constant ((3/2)R_Π instead of 3R_Π)
 - Missing archimedean gamma factors
 """
 import sys
@@ -28,10 +29,15 @@ REQUIRED_CONCEPTS = [
     "diagonal",      # Diagonal/off-diagonal decomposition
 ]
 
-# Concepts that indicate old errors (only catch USAGE, not discussion of errors)
+# Concepts that indicate old errors (v3: expanded from v2)
 FORBIDDEN_PATTERNS = [
     "c_pi t",           # Wrong main term (should be T log T) — standalone claim
     "infinite double sum",  # Wrong starting point
+    "chi(pi)",          # Constant root number as AFE dual factor (should be X_Pi(t))
+    "chi(Π)",           # Same, Unicode variant
+    "(3/2) r_pi",       # Wrong leading constant (should be 3R_Pi)
+    "(3/2) rπ",         # Same, Unicode variant
+    "r/t^3",            # Wrong AFE weight scale (should be T^{3/2})
 ]
 
 

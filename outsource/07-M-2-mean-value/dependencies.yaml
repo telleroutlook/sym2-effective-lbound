@@ -1,4 +1,4 @@
-# M-2 Dependencies — Rewritten v2
+# M-2 Dependencies — Rewritten v3
 
 # Corrected literature attributions
 references:
@@ -37,8 +37,8 @@ not_dependencies:
 # What the proof actually needs
 ingredients:
   - id: AFE-GL3
-    description: "AFE for L(½+it, Π) with length T^{3/2} and t-dependent X_Π(t)"
-    status: "[THM] (standard)"
+    description: "Smooth AFE for L(½+it, Π) with weight W_t(y) ≪ (1+y/|t|^{3/2})^{-A}"
+    status: "[THM] (standard, Iwaniec–Kowalski §5.6); truncation error [OBL]"
 
   - id: FE-FACTOR
     description: "Dual factor X_Π(s) = L_∞(Π,1-s)/L_∞(Π,s), NOT constant root number"
@@ -49,16 +49,20 @@ ingredients:
     status: "[THM] for cuspidal Π"
 
   - id: EULER-CORRECTION
-    description: "H_{Π,p}(x) = 1 - A_p²x² + 2(A_p²-1)x³ - A_p²x⁴ + x⁶"
-    status: "[THM] (explicit level-one computation)"
+    description: "H_{Π,p}(x) = 1 - A_p²x² + 2(A_p²-1)x³ - A_p²x⁴ + x⁶; H_{Π,p}(1/p) > 0"
+    status: "[THM] (explicit level-one computation + positivity)"
 
   - id: IWANIEC-MICHEL-GAMMA
     description: "Correct archimedean factor: π^{-3s/2} Γ((s+1)/2) Γ((s+k-1)/2) Γ((s+k)/2)"
     status: "[THM] (Iwaniec–Michel 2001, formula 2.22)"
 
   - id: LEADING-CONSTANT
-    description: "A_Π = 3R_Π (both AFE halves contribute, factor 2 × 3/2 = 3)"
-    status: "[THM] (from Steps 2-3)"
+    description: "A_Π = 3R_Π (CONDITIONAL on cross terms I_{+-}, I_{-+} being o(T log T))"
+    status: "[CONDITIONAL] — diagonal gives 3R_Π, cross terms [OBL]"
+
+  - id: FOUR-TERM-DECOMPOSITION
+    description: "|S₁+XS_2|² = |S₁|²+|S₂|²+S₁·X̄·S̄₂+S̄₁·X·S₂; cross terms with gamma phase"
+    status: "[OBL] — must be shown o(T log T) for leading constant"
 
   - id: GL3-SHIFTED-CONVOLUTION
     description: "Off-diagonal: GL₃ shifted-convolution sum for fixed Π"
