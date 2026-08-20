@@ -6,49 +6,53 @@ dependency_chain:
     status: "[THM]"
     description: "Two-term AFE for L(½+it, Π) with degree-3 length N ≍ T^{3/2}"
     source: "04-gl3-afe, 06-M-1"
-  - stage: "Sub-problem 09-A: individual shifted convolution"
+  - stage: "Averaged shifted convolution (Wang 2026)"
+    status: "[THM]"
+    description: "Non-trivial bound for H ≫ N^{1/4} for holomorphic sym²f"
+    source: "Wang 2026, PRESEMA, doi:10.1017/prm.2026.10153"
+  - stage: "09-B': Smooth-weight transfer"
+    status: "[OBL]"
+    description: "Promote Wang 2026 box cutoff to smooth two-variable weight W(n/N, h/H)"
+  - stage: "09-A: Individual shifted convolution"
     status: "[OBL]"
     description: "S_W(h,N;Π) ≪ N^{1-δ} for individual fixed h ≍ N^{1/3}"
-  - stage: "Sub-problem 09-B: averaged transfer to holomorphic Π"
-    status: "[OBL]"
-    description: "Transfer DLY averaged mechanism from spherical/Maaß to cohomological/holomorphic"
   - stage: "Output: second moment control"
     status: "[OBL]"
     description: "Power-saving off-diagonal bound for M-1 and M-2 (sufficient, not necessary)"
 
-# What this provides
-provides:
-  - id: AVERAGED-OFF-DIAGONAL
-    description: "Averaged power-saving off-diagonal bound for AFE expansion"
-    status: "[OBL]"
-    note: "Sufficient condition for M-1/M-2, not necessary"
-  - id: INDIVIDUAL-OFF-DIAGONAL
-    description: "Individual shifted convolution power-saving (stronger, independent)"
-    status: "[OBL]"
-
 # References (corrected)
 references:
+  - id: WANG-2026
+    title: "Shifted convolution sum for the coefficients of symmetric square L-function"
+    authors: "You Jun Wang"
+    journal: "Proc. Roy. Soc. Edinburgh Sect. A, FirstView, 2026"
+    doi: "10.1017/prm.2026.10153"
+    evidence: "refereed"
+    note: >
+      Averaged shifted convolution for λ_{sym²f}(n), holomorphic cusp form
+      of even integral weight on SL₂(ℤ). Non-trivial for H ≫ N^{1/4}.
+      Our scale H = N^{1/3} > N^{1/4} is covered.
+
   - id: DASGUPTA-LEUNG-YOUNG-2024
     title: "The second moment of the GL₃ standard L-function on the critical line"
     authors: "Dasgupta, Leung, Young"
     source: "arXiv:2407.06962"
     evidence: "preprint"
     note: >
-      Theorem 1.1: ∫|L|² ≪ T^{4/3+ε} (spherical/Maaß GL₃ cusp forms).
-      Theorem 1.2: averaged shifted convolution, non-trivial when H > N^{1/4}.
-      Uses classical Kloosterman sums S(k̄,n;c) + Weil bounds after GL₃ Voronoi.
-      Scope: Hecke–Maaß cusp forms on SL₃(ℤ), NOT holomorphic symmetric-square.
+      Theorem 1.2 (exact): Σ λ(n)λ_f(n+k) W(n/N,k/H) ≪ N^{4/3+ε}/H^{1/3} + √H·N^{1+ε}.
+      Proof: GL₃ Voronoi → Poisson → delta symbol → norm bound → duality →
+      twisted Kloosterman sums → Weil bounds → Gallagher hybrid character large sieve.
+      Scope: Hecke cusp forms on SL₃(ℤ), NOT holomorphic symmetric-square.
 
   - id: PAL-2025
     title: "Second moment of degree three L-functions"
     authors: "Pal"
-    journal: "Int. Math. Res. Not. (IMRN), 2025"
+    journal: "Int. Math. Res. Not. (15), 2025, 234–271"
     source: "arXiv:2212.14620v3"
     evidence: "refereed"
     note: >
-      ∫|L|² ≪ T^{3/2-3/32+ε} for Hecke–Maaß GL₃ cusp forms.
-      Weaker than DLY in the GL₃ scope (T^{0.406} vs T^{0.333}).
-      Applies to broader class of forms but not the current best for GL₃.
+      ∫|L|² ≪ T^{3/2-3/88+ε} ≈ T^{1.466+ε} for Hecke–Maaß GL₃ cusp forms.
+      Weaker than DLY (T^{1.333}) in the GL₃ scope.
 
   - id: BLOMER-MAN-2023
     title: "Bounds for Kloosterman sums on GL(n)"
@@ -56,19 +60,20 @@ references:
     journal: "Math. Ann., 2023"
     note: "Power-saving bounds for GL(n) long-Weyl Kloosterman sums"
 
-  - id: BLOMER-2013
-    title: "Applications of the Kuznetsov formula on GL(3)"
-    authors: "Blomer"
-    journal: "Invent. Math., 2013"
-    note: "GL₃ Kuznetsov formula; references Buttcane–Goldfeld–Kontorovich for GL₃ spectral theory"
+  - id: GALLAGHER-LARGE-SIEVE
+    title: "A large sieve estimate near e^{α}"
+    authors: "Gallagher"
+    journal: "Ann. of Math., 1970"
+    note: "Hybrid character large sieve: Σ_χ ∫|Σ a_n χ(n) n^{iy}|² dy ≪ (dY+N)Σ|a_n|²"
+
+  - id: MILLER-SCHMID-2006
+    title: "Voronoi summation for GL(3)"
+    authors: "Miller, Schmid"
+    journal: "Ann. of Math., 2006"
+    note: "GL₃ Voronoi summation formula"
 
   - id: IWANIEC-KOWALSKI
     title: "Analytic Number Theory"
     authors: "Iwaniec, Kowalski"
     publisher: "AMS, 2004"
-    note: "General reference; GL₃ Kuznetsov not covered in this text"
-
-  - id: GOLDFELD-KONTOROVICH-2013
-    title: "The GL₃ Kuznetsov formula and applications"
-    authors: "Goldfeld, Kontorovich"
-    note: "GL₃ Kuznetsov formula for the spherical case"
+    note: "General reference; Gallagher large sieve, classical Kloosterman bounds"

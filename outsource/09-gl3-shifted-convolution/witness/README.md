@@ -1,23 +1,22 @@
 # Witness: GL₃ Shifted Convolution
 
-This package is a **research gap documentation**, not a theorem.
-No numerical witness or replay script is applicable.
+This package is a **research gap documentation** (09-A) and **technical
+verification task** (09-B'), not a theorem. No numerical witness is
+applicable.
 
 ## Why no witness?
 
-A witness would require:
-1. A proof of the GL₃ shifted convolution estimate (which doesn't exist)
-2. Numerical computation of the shifted sum (which confirms the difficulty)
-3. A certified bound on the error term (which is [OBL])
-
-Since none of these exist, no witness can be produced.
+- 09-A (individual shifted convolution): No proof exists, so no witness.
+- 09-B' (smooth-weight transfer): This is a technical verification that
+  Wang 2026's box-cutoff estimate can be promoted to smooth weight. It
+  requires a mathematical argument, not a numerical computation.
 
 ## What could be done (discovery-tier only)
 
 A numerical exploration could:
-1. Compute S(h, N, Π) for small h, N and specific Π
-2. Compare with the expected main term C_Π(h)·N
-3. Estimate the error term |S(h,N) - C_Π(h)·N|
+1. Compute Σ_{h≤H} Σ_{N<n≤2N} λ_{sym²f}(n) λ_{sym²f}(n+h) for small N, H
+2. Compare with expected main term from Rankin–Selberg (h=0 case)
+3. Verify that the averaged bound is non-trivial at H = N^{1/3}
 
-This would NOT be a proof but could provide evidence for/against the estimate.
-Such computation is OUTSIDE the scope of this package (discovery-tier only).
+This would NOT be a proof but could provide evidence. Such computation
+is OUTSIDE the scope of this package.

@@ -1,137 +1,143 @@
 # GL₃ Shifted Convolution — Proof
 
-**Status:** RESEARCH GAP (no proof exists for either sub-problem).
+**Status:** RESEARCH GAP (no proof for 09-A; 09-B' is technical transfer).
 
 ## §1. What the AFE actually produces
 
 After squaring the two-term AFE for L(½+it, Π) and integrating over
-t ∈ [T, 2T], the off-diagonal contributions are NOT a single individual
-shifted sum. They are **averaged** over h:
+t ∈ [T, 2T], the off-diagonal contributions are an **averaged** object:
 
     (T/N) · Σ_{h ≍ N/T} Σ_{n ≍ N} a_Π(n) ā_Π(n+h) W(n/N, h/H)
 
 with H = N/T ≍ N^{1/3} = T^{1/2}.
 
-This averaging is intrinsic to the AFE squaring process — it is not
-an optional smoothing. The individual shifted sum S_W(h, N; Π) for
-fixed h is a related but strictly stronger object.
+The individual shifted sum S_W(h, N; Π) for fixed h is a strictly
+stronger object and is 09-A.
 
-## §2. What DLY 2024 established
+## §2. What DLY 2024 established (corrected)
 
 ### Theorem 1.1 (second moment upper bound)
 
-For f a Hecke–Maaß cusp form on SL₃(ℤ):
+For f a Hecke cusp form on SL₃(ℤ):
 
     ∫_{-T}^{T} |L(f, ½+it)|² dt ≪_{f,ε} T^{4/3+ε}
 
-This beats the trivial T^{3/2+ε} by a genuine power saving T^{1/6-ε}.
+### Theorem 1.2 (averaged shifted convolution — exact statement)
 
-### Theorem 1.2 (averaged shifted convolution)
+For 1 ≤ H ≤ N^{1/2-ε} and W an X^ε-inert smooth function on (ℝ⁺)²:
 
-For the same class of f:
+    Σ_{n,k} λ_f(n)λ_f(n+k) W(n/N, k/H)
+    ≪_{f,ε} N^{4/3+ε}/H^{1/3} + √H · N^{1+ε}
 
-    Σ_{n,k} λ_f(n) λ_f(n+k) W(n/N, k/H)
-    ≪_{f,ε} N^{4/3+ε}/H^{1/3} + √H · N^{ε} + N^{1+ε}
+**Non-trivial when H > N^{1/4}.**
 
-**Non-trivial regime:** H > N^{1/4}.
+**Scope:** Hecke cusp forms on SL₃(ℤ) — this includes **spherical/Maaß**
+representations at infinity. Our project uses **holomorphic** symmetric-square
+lifts, which have a different (cohomological) archimedean type. The DLY proof
+mechanism does NOT rely on spectral theory at infinity, so the archimedean
+distinction does not block the method. Wang 2026 handles the holomorphic case
+directly.
 
-At our scale H = N^{1/3} > N^{1/4}, this gives a genuine averaged
-power-saving bound on the shifted convolution.
+At our scale H = N^{1/3}:
+- First term: N^{4/3-1/9+ε} = N^{11/9+ε}
+- Second term: N^{1/6+1+ε} = N^{7/6+ε}
+- Dominant: N^{11/9+ε}
+- Saving vs NH = N^{4/3}: factor N^{1/9}
+- With AFE coefficient T/N = N^{-1/3}: contribution ≈ N^{8/9} = T^{4/3} ✓
 
-### How DLY handles Kloosterman sums
+### DLY proof mechanism (corrected from previous version)
 
-After applying GL₃ Voronoi to the shifted sum, the dual involves
-**classical** Kloosterman sums S(k̄, n; c), NOT GL₃ Kloosterman sums.
-DLY then uses:
+The DLY proof does NOT use GL₃ spectral expansion or GL₃ large sieve.
+The actual chain is:
 
-1. Twisting by Hecke eigenvalues λ_f(c)
-2. Weil-type bounds for classical Kloosterman sums
-3. Large sieve for GL₃
+1. **GL₃ Voronoi summation** (Lemma 2.4, Miller–Schmid): Transforms the
+   sum over λ_f(n) using GL₃ Fourier coefficients.
 
-The key insight is that the GL₃ Voronoi transforms the GL₃ shifted
-convolution into a sum involving classical (GL₂-level) arithmetic,
-where standard tools apply.
+2. **Poisson summation** in the k-variable: Dualizes the shift.
 
-### What DLY does NOT cover
+3. **DFI delta symbol** (Lemma 2.6): Introduces arithmetic conductor c ≤ Q
+   with Q² = o(N), trading arithmetic for archimedean conductor.
 
-DLY's f is a Hecke–Maaß cusp form on SL₃(ℤ) (spherical/infinite-
-dimensional representation at infinity).
+4. **Reduction to norm bound** (Proposition 4.8): The problem reduces to
+   bounding a bilinear form involving twisted Kloosterman sums:
 
-Our Π = sym²π where π is a **holomorphic** Hecke eigenform on
-SL₂(ℤ). The symmetric-square lift to GL₃ gives a cuspidal automorphic
-representation with **cohomological** archimedean component (finite-
-dimensional at infinity).
+     𝒩(N',Q,k,Y) = max_{‖α‖=1} ∫_{yasymp Y} Σ_{casymp Q}
+       |Σ_{nasymp N'} α_n S(k̄,n;c) n^{iy}|² dy
 
-The GL₃ Voronoi formula has a different archimedean factor for
-cohomological vs. spherical representations. The gamma factors,
-the spectral expansion, and the resulting bounds may differ.
+5. **Duality + Poisson** (§5): Open the square, apply Poisson in n,
+   get twisted Kloosterman sums S_χ(1,1;nk).
 
-## §3. The Kloosterman situation (corrected)
+6. **Multiplicative Fourier decomposition** (eq. 1.17–1.18): The
+   exponential e_{nk}(c₂c̄₁ + c₁c̄₂) decomposes as
 
-### Classical Kloosterman sums (GL₂-level)
+     Σ_{χ mod nk} Ĝ(χ) χ(c₁) χ̄(c₂)
 
-| Bound | Source | Status |
-|-------|--------|--------|
-| \|S(m,n;c)\| ≤ d₃(c) · c^{1/2} | Weil (1948) | Classical [THM] |
-| ∑_{c≤C} \|S(m,n;c)\|² / c ≪ C^{1+ε} | Kuznetsov/standard | Classical [THM] |
+   where Ĝ(χ) = S_χ(1,1;nk)/φ(nk).
 
-These are well-understood and used by DLY.
+7. **Weil bounds for twisted Kloosterman sums** (Lemma 2.9):
+   |S_χ(m,n;p)| ≤ 2p^{1/2} for prime p. For prime powers p^j,
+   |S_χ(m,n;p^j)| ≤ 2p^{j/2} (with conductor condition) or
+   |S_χ(m,n;p^j)| ≤ 2p^{j-1/2} (without). Higher prime powers are
+   sparse enough that the saving suffices.
 
-### GL₃ Kloosterman sums
+8. **Hybrid large sieve** (Lemma 2.8, Gallagher): For Dirichlet
+   characters χ mod d:
 
-| Bound | Source | Status |
-|-------|--------|--------|
-| \|S₃(m,n;c)\| ≪ c^{3/2+ε} | Trivial (size of sum) | Known [BASE] |
-| \|S₃(m,n;c)\| ≪ c^{(n-1)/2+ε} (GL(n)) | Blomer–Man (2023) | [THM] |
-| \|S₃(m,n;c)\| power-saving for Weyl elements | Larsen, Stevens, etc. | Various [THM] |
+     Σ_{χ mod d} ∫_{-Y}^{Y} |Σ_{n≤N} a_n χ(n) n^{iy}|² dy ≪ (dY + N) Σ|a_n|²
 
-The GL₃ Kloosterman sums DO have non-trivial bounds beyond the
-trivial c^{3/2+ε} for specific element types. The package's previous
-claim of "only trivial bound" was incorrect.
+This is a **Gallagher-type hybrid character large sieve**, NOT a "GL₃
+spectral large sieve." The spectral theory of GL₃ is not used in the
+proof.
 
-However, the relevant Kloosterman sums for the DLY-type approach are
-**classical** (GL₂-level) sums S(k̄, n; c), not GL₃ sums. The GL₃
-Voronoi formula reduces the problem to classical arithmetic.
+## §3. Wang 2026 (new reference)
 
-## §4. Why the holomorphic transfer is non-trivial
+**You Jun Wang**, "Shifted convolution sum for the coefficients of
+symmetric square L-function", *Proc. Roy. Soc. Edinburgh Sect. A*,
+online 6 May 2026. doi:10.1017/prm.2026.10153.
 
-The DLY proof uses:
+**Main result:** For f a normalized primitive holomorphic cusp form of
+even integral weight on SL₂(ℤ), and λ_{sym²f}(n) the n-th coefficient
+of L(s, sym²f):
 
-1. **GL₃ Voronoi formula**: the cohomological archimedean factor
-   changes the gamma functions in the dual expression.
+    Σ_{h≤H} Σ_{N<n≤2N} λ_{sym²f}(n) λ_{sym²f}(n+h) ≪_{f,ε} N^{?+ε}
 
-2. **Spectral expansion**: DLY expands over Maaß forms; the holomorphic
-   case requires expanding over holomorphic forms (cohomological
-   spectral theory, which is less developed).
+for H ≫ N^{1/4}. The bound is non-trivial at our scale H = N^{1/3}.
 
-3. **Weil bounds for classical Kloosterman sums**: these are
-   arch-independent and should transfer directly.
+**Scope:** Holomorphic cusp forms of even integral weight on the full
+modular group — exactly the class of forms in our project.
 
-4. **Large sieve for GL₃**: the GL₃ large sieve of Goldfeld–Kontorovich
-   may need modification for the cohomological case.
+**Proof method:** Uses Perron formula, symmetric square L-function
+analytic properties, and shifted convolution techniques. The paper
+references the same family of results (Munshi 2013, Sun 2018, Xi 2018,
+Pal 2025) that DLY builds on.
 
-The critical question is whether steps 1–2 can be adapted without
-losing the power-saving bound from step 3.
+## §4. What 09-B' requires
 
-## §5. Status of each sub-problem
+Wang 2026 proves the estimate for a **box cutoff** Σ_{h≤H} Σ_{N<n≤2N}.
+Our AFE produces a **smooth two-variable weight** W(n/N, h/H).
 
-### 09-A: Individual S_W(h, N; Π) ≪ N^{1-δ}
+The transfer from box to smooth weight requires:
 
-**Status:** [OBL]
+1. **Dyadic decomposition**: Break the sum into dyadic blocks
+   n ≍ N₀, h ≍ H₀.
+2. **Partial summation**: Convert the box cutoff to smooth weight using
+   summation by parts.
+3. **Uniformity check**: Verify that Wang 2026's implied constant is
+   uniform enough for the dyadic decomposition to not lose the saving.
 
-No power-saving bound for individual fixed h ≍ N^{1/3} is known,
-for any class of GL₃ forms. This is strictly stronger than what
-DLY proves (which is averaged over h).
+This is a standard but non-trivial technical step. If it works, the
+averaged off-diagonal for M-1/M-2 is controlled.
 
-### 09-B: Averaged shifted convolution transfer to holomorphic Π
+## §5. 09-A: Why individual fixed-h is harder
 
-**Status:** [OBL]
+For individual fixed h, the AFE expansion does NOT average over h.
+The sum S_W(h, N; Π) for fixed h ≍ N^{1/3} has:
 
-The spherical/Maaß mechanism (DLY) is established. The transfer to
-cohomological/holomorphic Π is open but well-defined:
-- The classical Kloosterman bounds transfer (arch-independent)
-- The GL₃ Voronoi archimedean factor needs adaptation
-- The spectral expansion needs cohomological theory
+- No averaging benefit over h
+- The DLY/Wang mechanism relies on averaging over h to apply the
+  large sieve / character decomposition
+- Individual shifted convolutions at the critical scale remain open
+  for all classes of GL₃ forms
 
 ## §6. Dependencies
 
@@ -145,5 +151,5 @@ This package is relevant to (but NOT a logical prerequisite for):
 
 ## Status: [OBL]
 
-Both sub-problems are open research questions. 09-B is the more
-approachable and directly relevant to the project.
+09-A (individual) is an open research problem.
+09-B' (Wang 2026 transfer) is a technical verification pending.
