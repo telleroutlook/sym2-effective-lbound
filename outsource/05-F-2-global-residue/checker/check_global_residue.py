@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-check_global_residue.py — Structural checker for F-2 (v2).
+check_global_residue.py — Structural checker for F-2 (v4).
 
 Detects:
 - Missing F-2A/F-2B/F-2C concepts
@@ -8,6 +8,10 @@ Detects:
 - Wrong archimedean degree (3 instead of 4)
 - Wrong uniformity argument (continuity alone)
 - Wrong JS81 citation
+- Old Z_∞(1) formula used as CURRENT claim (not in correction context)
+- Old HL94 page numbers used as CURRENT reference
+- Old citation chain ("Lemma 4.4") used as CURRENT citation
+- Old "min over N" used as CURRENT formulation
 """
 import sys
 import os
@@ -40,13 +44,31 @@ BLOCKERS_F2C = [
     "explicit",
 ]
 
-# Forbidden patterns (v2 additions)
-# Only patterns that are UNAMBIGUOUSLY wrong.
-# Note: single-factor Adjoint detection is NOT possible structurally because
-# the correct 3-factor formula also contains "α_p β_p". Requires human review.
+# Forbidden patterns: only patterns that are UNAMBIGUOUSLY wrong as current claims.
+# Patterns that appear in "what was wrong" / correction context are allowed.
 FORBIDDEN_PATTERNS = [
-    "ann. math. 114",               # Wrong JS81 citation
-    "ann math 114",                 # Wrong JS81 citation
+    "ann. math. 114",               # Wrong JS81 citation (never correct)
+    "ann math 114",                 # Wrong JS81 citation (never correct)
+]
+
+# Correction-context patterns: these appear legitimately in "what was wrong" sections.
+# We check that they ONLY appear in correction/explanation context, not as current claims.
+CORRECTION_CONTEXT_PATTERNS = [
+    {
+        "pattern": "2π^{-k-1}",
+        "name": "Old Z_∞(1) formula",
+        "context_regex": r"(was|corrected|previous|error|wrong|v2|off by|differ)",
+    },
+    {
+        "pattern": "lemma 4.4",
+        "name": "Old citation chain",
+        "context_regex": r"(not|corrected|was|previous|wrong|should be|§4\.3)",
+    },
+    {
+        "pattern": "min over n",
+        "name": "Old min formulation",
+        "context_regex": r"(was|insufficient|not|corrected|previous|wrong|should be)",
+    },
 ]
 
 
@@ -98,11 +120,46 @@ def check_no_forbidden(path):
     content = _normalize(open(path).read())
     clean = True
     for pattern in FORBIDDEN_PATTERNS:
-        if re.search(pattern, content):
+        if pattern in content:
             print(f"  [FAIL] Forbidden pattern found: {pattern}")
             clean = False
     if clean:
         print(f"  [PASS] No forbidden patterns in {os.path.basename(path)}")
+    return clean
+
+
+def check_correction_context(path):
+    """Check that old formulas only appear in correction/explanation context."""
+    if not os.path.exists(path):
+        return True
+    raw_content = open(path).read()
+    content = _normalize(raw_content)
+    clean = True
+    for item in CORRECTION_CONTEXT_PATTERNS:
+        pattern = item["pattern"]
+        if pattern not in content:
+            continue
+        # Check if there's a context word nearby
+        # Find all occurrences and check surrounding text
+        context_re = re.compile(item["context_regex"], re.IGNORECASE)
+        # Simple heuristic: check if context word appears in the same paragraph
+        paragraphs = re.split(r'\n\n+', raw_content)
+        found_in_context = False
+        found_at_all = False
+        for para in paragraphs:
+            para_lower = _normalize(para)
+            if pattern in para_lower:
+                found_at_all = True
+                if context_re.search(para_lower):
+                    found_in_context = True
+                    break
+        if found_at_all and not found_in_context:
+            print(f"  [FAIL] {item['name']} used as current claim in {os.path.basename(path)}")
+            clean = False
+        elif found_at_all and found_in_context:
+            print(f"  [PASS] {item['name']} appears in correction context: {os.path.basename(path)}")
+    if clean:
+        print(f"  [PASS] No current claims of old formulas in {os.path.basename(path)}")
     return clean
 
 
@@ -143,11 +200,20 @@ def main():
     if not check_blockers(proof_c, BLOCKERS_F2C, "F-2C"):
         ok = False
 
-    print("\n--- Forbidden patterns ---")
+    print("\n--- Forbidden patterns (unconditional) ---")
     for f in ["statement-F-2A.md", "statement-F-2B.md", "statement-F-2C.md",
-              "proof-F-2A.md", "proof-F-2B.md", "proof-F-2C.md"]:
+              "proof-F-2A.md", "proof-F-2B.md", "proof-F-2C.md",
+              "statement.md", "proof.md", "dependencies.yaml"]:
         path = os.path.join(submission_dir, f)
         if not check_no_forbidden(path):
+            ok = False
+
+    print("\n--- Correction-context patterns ---")
+    for f in ["statement-F-2A.md", "statement-F-2B.md", "statement-F-2C.md",
+              "proof-F-2A.md", "proof-F-2B.md", "proof-F-2C.md",
+              "statement.md", "proof.md"]:
+        path = os.path.join(submission_dir, f)
+        if not check_correction_context(path):
             ok = False
 
     overall = "PASS" if ok else "FAIL"

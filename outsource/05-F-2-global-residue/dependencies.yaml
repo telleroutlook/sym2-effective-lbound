@@ -1,7 +1,7 @@
-# F-2 Dependencies — v3
+# F-2 Dependencies — v4
 
 F-2A:
-  status: "[THM/REFEREED candidate]"
+  status: "[OBL — CONDITIONAL, ready for PASS after v4]"
   sources:
     - id: JS81-§4.3-eq.2
       description: "Automorphic integral I(s) pole at s=1, residue ∝ Φ̂(0)·∫|φ|²dg"
@@ -18,6 +18,11 @@ F-2A:
       source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), §4.6(i), ~p.551"
       evidence: "refereed"
       status: "verified against original text"
+    - id: JS81-WHITTAKER-SPACE
+      description: "W⁰(π; ψ) = span of Whittaker functions of cuspidal automorphic vectors"
+      source: "Jacquet & Shalika, Am. J. Math. 103(3) (1981), §4.5, pp.549-550"
+      evidence: "refereed"
+      status: "verified against original text"
     - id: NORM-SQUARE-POSITIVITY
       description: "∫|φ(g)|²dg > 0 for any nonzero automorphic form φ"
       source: "Standard; positive-definite Haar measure"
@@ -25,7 +30,7 @@ F-2A:
   blockers: []
 
 F-2B:
-  status: "[OBL]"
+  status: "[OBL — BLOCKED on ramified factors]"
   sources:
     - id: JS81-§4.7-FACTORIZATION
       description: "Product factorization for decomposable vectors via pure tensor + Fubini"
@@ -43,25 +48,29 @@ F-2B:
       description: "Adjoint representation: parameters {1, αβ⁻¹, βα⁻¹}, degree 3"
       source: "Standard representation theory"
       evidence: "textbook"
+    - id: WEIL-GROUP-INDUCTION
+      description: "Real Weil-group parameter ρ_{k-1} = Ind_{W_C}^{W_R}((z/|z|)^{k-1})"
+      source: "Bump, automorphic representations; Iwaniec–Kowalski §13.1"
+      evidence: "textbook"
     - id: ARCHIMEDESAN-LANGLANDS
-      description: "Archimedean Langlands parameter for discrete series D_k"
+      description: "Rankin–Selberg Γ-factor from ρ_{k-1} ⊗ ρ_{k-1}^∨"
       source: "Iwaniec–Kowalski §13.1; Goldfeld–Hundley Vol. 1 §4.7"
       evidence: "textbook"
   blockers:
-    - "Archimedean factor derivation from local integral (not just degree counting)"
-    - "Ramified finite factors Z_p(1) for each local type"
+    - "Ramified finite factors Z_p(1) for Steinberg/ramified principal/supercuspidal [BLOCKER]"
     - "Consistent normalization of Haar measures and Whittaker functions"
-    - "Pure-tensor hypothesis for ∏_v factorization"
+    - "Full archimedean derivation from local integral (not just Weil-group consistency)"
+    - "Normalization constant c_∞(1) for Ψ_∞ = c_∞ · L_∞(s)"
 
 F-2C:
-  status: "[OBL]"
+  status: "[OBL — BLOCKED on explicit Z_p(1) formulas]"
   sources:
     - id: GHL-HL94
-      description: "Effective lower bound for L(1, sym²f) via mollifier (Hoffstein–Lockhart 1994, with Goldfeld–Hoffstein–Lieman appendix)"
-      source: "Hoffstein–Lockhart, Ann. Math. 140(1) (1994), 1–42; appendix by Goldfeld–Hoffstein–Lieman"
+      description: "Effective lower bound for L(1, sym²f) via mollifier"
+      source: "Hoffstein–Lockhart, Ann. Math. 140(1) (1994), 161–181; appendix by Goldfeld–Hoffstein–Lieman"
       evidence: "refereed"
   blockers:
-    - "Explicit computation of Z_∞(1) = 2^{1-k}π^{-(k+1)}Γ(k)"
-    - "Explicit computation of Z_p(1) for each local type"
-    - "Direct nonvanishing proof from explicit formulas"
-    - "Product bound C(F_{N_0}) > 0 for target family (not just min over N)"
+    - "Explicit computation of Z_p(1) for each local type [BLOCKER]"
+    - "Quantitative lower bound |Z_p(1)| ≥ c_v > 0 for each type"
+    - "Product bound C(F_{N_0}) > 0 for target family"
+    - "If c_v < 1, product ∏ |Z_p(1)| may degenerate as N → ∞"

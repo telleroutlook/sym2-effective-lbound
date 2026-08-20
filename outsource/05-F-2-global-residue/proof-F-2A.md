@@ -1,4 +1,4 @@
-# F-2A: Diagonal Global Residue Positivity — Proof
+# F-2A: Diagonal Global Residue Positivity — Proof (v4)
 
 ## Mathematical content
 
@@ -22,18 +22,26 @@ The unfolding identity I(s) → Ψ(s) is JS81 §4.5 equation (5).
 
 ### Correct residue formula
 
-By JS81 §4.3 eq. (2) + §4.5 eq. (5) + §4.6(i), for W' = W:
+By JS81 §4.3 eq. (2) + §4.5 eq. (5) + §4.6(i), for W' = W = W_φ ∈ W⁰(π; ψ):
 
-    Res_{s=1} Ψ(s, W, W, Φ) = c_Q · Φ̂(0) · ∫|φ(g)|² dg
+    Res_{s=1} Ψ(s, W_φ, W_φ, Φ) = c_Q · Φ̂(0) · ∫|φ(g)|² dg
 
 where c_Q > 0 is explicit. The integral ∫|φ(g)|² dg > 0 for any nonzero φ.
 
-**Citation chain (corrected per 2026-08-20 review):**
-- §4.3 eq. (2): automorphic integral I(s) has pole at s=1 with residue proportional to Φ̂(0)·∫|φ|²dg
-- §4.5 eq. (5): unfolding identity I(s) = Ψ(s) (Whittaker–Fourier expansion)
-- §4.6(i): pole of Ψ(s) at s=1 follows from §4.3 + §4.5
+**Quantifier (v4 correction per 2026-08-20 review):** W must be
+W_φ ∈ W⁰(π; ψ), the Whittaker function of a nonzero cuspidal automorphic
+vector φ. The ambient space W(π; ψ) is larger; not every W ∈ W(π; ψ) is
+the Whittaker function of a cuspidal automorphic form. JS81 §4.5 (pp. 549–550)
+defines W⁰(π; ψ) as the span of such Whittaker functions, and the residue
+formula applies within W⁰(π; ψ).
 
-**NOT** "Lemma 4.4 + Lemma 4.6(i)" as previously stated. Lemma 4.4 gives a pole criterion; the actual residue formula comes from the chain above.
+**Citation chain (corrected, v4 — NOT "Lemma 4.4"):**
+- §4.3 eq. (2) (~p.548): automorphic integral I(s) has pole at s=1, residue ∝ Φ̂(0)·∫|φ|²dg
+- §4.5 eq. (5) (~p.550): unfolding identity I(s) = Ψ(s) via Whittaker–Fourier expansion
+- §4.6(i) (~p.551): pole of Ψ(s) at s=1 follows from §4.3 + §4.5
+
+**NOT** "Lemma 4.4 + Lemma 4.6(i)". Lemma 4.4 gives a pole criterion;
+the actual residue formula comes from the chain above.
 
 ### Why the original was wrong
 
@@ -54,7 +62,7 @@ where c_Q > 0 is explicit. The integral ∫|φ(g)|² dg > 0 for any nonzero φ.
 
 F-2A is a direct specialization of JS81 with:
 - π' = π (diagonal condition)
-- W' = W (same vector, producing norm-square)
+- W' = W_φ ∈ W⁰(π; ψ) (same Whittaker vector, producing norm-square)
 - Φ̂(0) > 0 (by choice)
 
 The residue is strictly positive by construction.

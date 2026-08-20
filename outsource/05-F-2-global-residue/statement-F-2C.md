@@ -1,4 +1,6 @@
-# F-2C: Target-Family Local Positivity/Uniformity
+# F-2C: Target-Family Local Positivity/Uniformity (v4)
+
+**Status**: [OBL] — BLOCKED on explicit Z_p(1) formulas
 
 ## Desired Statement
 
@@ -14,16 +16,19 @@ For the specific modular form family needed downstream (L(1, sym² f) ≥ c/log 
 
 Then:
 
-1. **Archimedean correction**: Z_∞(1) = 2^{1-k}π^{-(k+1)}Γ(k) (corrected per 2026-08-20 review)
+1. **Archimedean correction**: Z_∞(1) = 2^{1-k}π^{-(k+1)}Γ(k)
 
 2. **Ramified corrections**: For each p | N_π, Z_p(1) is computed explicitly
    for the specific local type
 
 3. **Local nonvanishing**: For each local type that occurs, Z_v(1) ≠ 0.
-   This must be proved by DIRECT COMPUTATION of the local formula,
-   NOT by continuity+compactness.
+   Proved by DIRECT COMPUTATION of the local formula.
 
-4. **Uniform lower bound**: For the family F_{N_0} of forms with level ≤ N_0:
+4. **Quantitative lower bound**: For each local type, |Z_v(1)| ≥ c_v > 0
+   where c_v depends on the local type (but not on the specific form within
+   the type)
+
+5. **Uniform product bound**: For the family F_{N_0} of forms with level ≤ N_0:
 
     C(F_{N_0}) = min_{f ∈ F_{N_0}} ( |Z_∞(1;f)| · ∏_{p | N_π(f)} |Z_p(1;f)| ) > 0
 
@@ -39,32 +44,30 @@ This is INVALID because:
 - To get min > 0, must first prove Z_p(1) ≠ 0 for every local type
 - The nonvanishing must come from EXPLICIT LOCAL FORMULAS, not abstract arguments
 
-Correct order:
-    explicit local formula → Z_p(1) ≠ 0 → quantitative lower bound
+Correct order (v4):
+    explicit local formula → Z_p(1) ≠ 0 → quantitative lower bound |Z_p(1)| ≥ c_v > 0
+    → product bound C(F_{N_0}) > 0
 
-## Conductor notation (corrected per 2026-08-20 review)
+## Why existence is not enough
 
-The previous version used N for both "conductor of π" and "conductor of the
-symmetric square" — these are different quantities. Corrected notation:
+The reviewer (2026-08-20) correctly noted that proving Z_p(1) ≠ 0 for each
+individual form is not sufficient for explicit c_eff. The downstream needs:
+
+1. **Quantitative bounds**: |Z_p(1)| ≥ c_v > 0 (not just ≠ 0)
+2. **Uniformity**: c_v depends on local TYPE, not on specific form within type
+3. **Product control**: ∏_p |Z_p(1)| ≥ C(F_{N_0}) > 0 for the whole family
+
+If the individual bounds |Z_p(1)| ≥ c_v have c_v < 1, then
+∏ |Z_p(1)| ≥ (min c_v)^{ω(N)} which degenerates as N grows.
+Correct approach: compute C(F_{N_0}) directly as a finite minimum.
+
+## Conductor notation
 
 - N_π = conductor of π (determines local representation types at p | N_π)
 - N_{sym²} = conductor of sym²π (appears in the global L-function)
 - N_{Ad} = conductor of Ad(π) (adjoint representation)
 
-The local type classification at p uses N_π, NOT N_{sym²}.
-
-## Product bound: c_loc vs C_global
-
-The downstream needs the PRODUCT bound ∏ |Z_v(1)| ≥ C > 0, not just individual
-bounds min |Z_p(1)| ≥ c' > 0.
-
-If c' < 1, then ∏ |Z_p(1)| ≥ (c')^{ω(N)} which degenerates.
-
-Correct approach: define
-
-    C(F_{N_0}) = min_{f ∈ F_{N_0}} ( |Z_∞(1;f)| · ∏_{p | N_π(f)} |Z_p(1;f)| )
-
-directly (finite minimum over finitely many forms with level ≤ N_0).
+Local type classification at p uses N_π, NOT N_{sym²}.
 
 ## Why min over N is insufficient
 
@@ -88,5 +91,8 @@ the conductor of π (N_π), NOT the symmetric-square conductor N_{sym²}.
 
 ## Status: [OBL]
 
-This is the most concrete obligation and directly interfaces with the
-computational pipeline.
+The main tasks are:
+1. **[BLOCKER]** Explicit computation of Z_p(1) for each local type
+2. Quantitative lower bound |Z_p(1)| ≥ c_v > 0 for each type
+3. Product bound C(F_{N_0}) > 0 for target family
+4. Full archimedean derivation (c_∞ normalization)
