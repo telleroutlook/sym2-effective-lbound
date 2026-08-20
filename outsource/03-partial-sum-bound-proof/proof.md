@@ -68,6 +68,13 @@ primitive holomorphic cusp form is entire (Iwaniec-Michel state this
 explicitly, with the s <-> 1-s functional equation). Therefore
 R(X) = 0 in the Friedlander-Iwaniec formula. [THM, IM]
 
+**Self-duality (B(s) = A(s)):** The Friedlander-Iwaniec framework
+requires a dual Dirichlet series B(s) = sum b(n) n^{-s} with
+|b(n)| << n^epsilon. For sym^2 Delta, the L-function is self-dual
+(root number +1), so B(s) = A(s) and b(n) = A(n). The coefficient
+bound |A(n)| << n^epsilon therefore verifies the FI hypothesis for
+both series simultaneously.
+
 ## §3. Conclusion
 
 Applying Friedlander-Iwaniec Proposition 3.2 with m=3, D=1,
@@ -76,6 +83,9 @@ kappa=(1,11,12), |A(n)| <<_epsilon n^epsilon, and R(X)=0:
 ```
 S(X) := sum_{n<=X} A(n) = O_epsilon(X^{1/2 + epsilon})
 ```
+
+The cited proposition gives the estimate for X > D^{1/2} = 1; the
+case X = 1 follows from S(1) = 1 after enlarging the implied constant.
 
 **This is unconditional.** No GRH, no zero-free region, no explicit formula
 over zeros is needed. [THM]

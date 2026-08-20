@@ -52,13 +52,15 @@ For every epsilon > 0, there exists C(epsilon) > 0 such that for all X >= 1:
 |S(X)| <= C(epsilon) * X^{1/2 + epsilon}
 ```
 
-Moreover, for the specific case epsilon = 0 (if attainable):
+The case X = 1 is absorbed by enlarging the constant, since S(1) = A(1) = 1.
+
+### Open strengthening (not proved here)
 
 ```
 |S(X)| <= C * X^{1/2}
 ```
 
-for some absolute constant C. Whether this holds remains open.
+for some absolute constant C, remains open.
 
 ## Empirical evidence
 
@@ -85,10 +87,6 @@ If |S(X)| <= C * X^{0.5}, then:
 |L(1) - sum_{n<=N} A(n)/n| <= 3C / sqrt(N)
 ```
 
-With C = 0.259 and N = 10^8: error <= 7.8e-5, giving:
-
-```
-L(1, sym^2 Delta) in approximately [0.6317, 0.6326]
-```
-
-(This is discovery-tier since C is not proved.)
+The explicit constant C(epsilon) is not available from the theorem, so no
+certified L(1) interval is produced in this batch. A numerical L(1) bound
+requires either an explicit C or a separate certified partial-sum computation.

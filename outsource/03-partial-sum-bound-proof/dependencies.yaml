@@ -46,9 +46,13 @@ dependencies:
     role: Relates zeros in critical strip to values at 1-s.
   - id: FRIEDLANDER-IWANIEC-SUMMATION
     statement: >
-      Friedlander-Iwaniec (2005), Proposition 3.2: For a degree-m L-function
-      with conductor D, coefficients O_epsilon(n^epsilon), and R(X)=0 when
-      entire: sum_{n<=X} a(n) = O_epsilon(D^{1/4} X^{1/2+epsilon}).
+      Friedlander-Iwaniec (2005), Proposition 3.2: For a degree-3 Dirichlet
+      series satisfying the Friedlander-Iwaniec hypotheses (functional equation,
+      coefficients O_epsilon(n^epsilon), conductor D, and R(X)=0 when entire):
+      sum_{n<=X} a(n) = O_epsilon(D^{1/4} X^{1/2+epsilon}).
+      Note: the general degree-m Proposition 1.1 gives the weaker exponent
+      D^{1/(m+1)} X^{(m-1)/(m+1)+epsilon}; the degree-3 specialization
+      (Prop. 3.2) is what this package uses.
     source: >
       J.B. Friedlander and H. Iwaniec, "Summation Formulae for Coefficients
       of L-functions", Canadian J. Math. 57 (2005), 494-505, Prop. 3.2.
