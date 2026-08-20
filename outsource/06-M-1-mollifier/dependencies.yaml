@@ -1,4 +1,4 @@
-# M-1 Dependencies — Rewritten
+# M-1 Dependencies — Rewritten v2
 
 # Required assumptions
 assumptions:
@@ -17,39 +17,49 @@ assumptions:
 # Core analytic ingredients
 ingredients:
   - id: AFE-GL3
-    description: "Approximate functional equation for L(½, Π) with length ≈ T^{3/2}"
+    description: "AFE for L(½+it, Π) with length ≈ T^{3/2} and t-dependent weights V_t"
     source: "Iwaniec–Kowalski (2004), §5.6"
     evidence: "textbook"
     status: "[THM]"
 
-  - id: GL3-SHIFTED-CONVOLUTION
-    description: "GL₃ shifted-convolution sum estimate for fixed Π"
-    source: "Dasgupta–Leung–Young (2024), Pal (2022)"
-    evidence: "refereed"
-    status: "[OBL] — research frontier; upper bounds known, not asymptotics"
+  - id: FE-FACTOR
+    description: "Dual AFE factor X_Π(s) = N^{1-2s} L_∞(1-s)/L_∞(s), NOT constant root number"
+    source: "Standard functional equation"
+    evidence: "textbook"
+    status: "[THM]"
 
   - id: RECIPROCAL-COEFFICIENTS
-    description: "True reciprocal Euler coefficients ρ_Π(n) with p², p³ terms"
+    description: "True reciprocal Euler coefficients ρ_Π(n) with (p,p²,p³) three-term structure"
     source: "Standard Euler product theory"
     evidence: "textbook"
     status: "[THM]"
 
-  - id: SQUAREFREE-APPROX-LEMMA
-    description: "Squarefree approximation: error from omitting p², p³ terms"
-    source: "None — must be proved"
+  - id: GL3-TWISTED-MOMENT
+    description: "Mollified twisted GL₃ moment: I(T) = C_{Π,θ}T + O(T^{1-δ}), C > 0"
+    source: "Dasgupta–Leung–Young (2024), Pal (IMRN 2025)"
+    evidence: "preprint / refereed"
+    status: "[OBL] — research frontier; upper bounds known, not asymptotics"
+
+  - id: CONVOLUTION-COEFFICIENTS
+    description: "Bound on convolution c_X(q) = Σ_{mr=q, m≤X} b_m a_Π(r)"
+    source: "Must be proved for the specific mollifier"
     evidence: "none"
     status: "[OBL]"
 
 # What is NOT a dependency (corrected from original)
 not_dependencies:
+  - id: SQUAREFREE-APPROX
+    description: "Squarefree approximation lemma (μ(m)=0 when p²|m → trivially zero)"
+    reason: "Algebraically vacuous; the sum Σ_{p²|m} μ(m)... ≡ 0"
+
   - id: LRS-1995
-    description: "Luo–Rudnick–Sarnak 1995 is about Selberg eigenvalue conjecture, NOT GL₃ second moment"
+    description: "Luo–Rudnick–Sarnak 1995 is about Selberg eigenvalue conjecture"
     reason: "Wrong attribution in original package"
 
   - id: GL3-LARGE-SIEVE
-    description: "GL₃ spectral large sieve applies to families, NOT fixed-Π twisted moment"
+    description: "GL₃ spectral large sieve applies to families, NOT fixed Π"
     reason: "Wrong object; large sieve is for Σ_φ |Σ_n a_n λ_φ(n)|², not ∫|L|²"
 
-  - id: HECKE-ORTHOGONALITY
-    description: "Hecke eigenvalue orthogonality is for families, not fixed Π"
-    reason: "We work with one Π, not summing over automorphic forms"
+  - id: BRIDGE-LEMMA
+    description: "Bridge I(T) ≥ c₀T ⟹ L(½,Π) > 0"
+    reason: "FALSE: integral at |t| ≥ T₀ cannot detect central value"

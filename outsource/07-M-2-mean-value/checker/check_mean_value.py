@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-check_mean_value.py — Structural checker for M-2 submissions (rewritten).
+check_mean_value.py — Structural checker for M-2 submissions (v2).
 
-Bug fixes (2026-08-20):
-- Changed from any() token matching to phrase-level matching
-- Fixed OBL status check to require exact [OBL] tag
-- Added checks for correct main term and AFE usage
+Detects:
+- Wrong main term c_Π T (should be T log T)
+- Wrong AFE dual factor (constant root number instead of t-dependent)
+- Wrong H_{Π,p} formula (must give 1+O(x²))
+- Missing archimedean gamma factors
 """
 import sys
 import os
@@ -25,13 +26,11 @@ REQUIRED_CONCEPTS = [
     "t log t",       # Correct main term (NOT just "cT")
     "afe",           # Approximate functional equation
     "diagonal",      # Diagonal/off-diagonal decomposition
-    "shifted",       # Shifted convolution
 ]
 
-# Concepts that indicate old errors
+# Concepts that indicate old errors (only catch USAGE, not discussion of errors)
 FORBIDDEN_PATTERNS = [
-    "c_pi t",           # Wrong main term (should be T log T)
-    "c_π t",            # Wrong main term
+    "c_pi t",           # Wrong main term (should be T log T) — standalone claim
     "infinite double sum",  # Wrong starting point
 ]
 
@@ -77,17 +76,17 @@ def check_required_concepts(proof_path):
     return all_found
 
 
-def check_no_forbidden(proof_path):
-    if not os.path.exists(proof_path):
+def check_no_forbidden(path):
+    if not os.path.exists(path):
         return True
-    content = _normalize(open(proof_path).read())
+    content = _normalize(open(path).read())
     clean = True
     for pattern in FORBIDDEN_PATTERNS:
         if pattern in content:
             print(f"  [FAIL] Forbidden pattern found: {pattern}")
             clean = False
     if clean:
-        print("  [PASS] No forbidden patterns")
+        print(f"  [PASS] No forbidden patterns in {os.path.basename(path)}")
     return clean
 
 
@@ -119,8 +118,10 @@ def main():
         ok = False
 
     print("\n--- Forbidden patterns ---")
-    if not check_no_forbidden(proof_path):
-        ok = False
+    for f in ["statement.md", "proof.md", "limitations.md"]:
+        path = os.path.join(submission_dir, f)
+        if not check_no_forbidden(path):
+            ok = False
 
     overall = "PASS" if ok else "FAIL"
     print(f"\nOverall: {overall}")

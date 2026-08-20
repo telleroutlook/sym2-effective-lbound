@@ -1,41 +1,53 @@
-# M-1: Mollifier Construction — Rewritten
+# M-1: Mollifier Construction — Rewritten v2
 
 ## Desired Statement
 
 Let π be a holomorphic Hecke eigenform of weight k on SL₂(Z), non-CM/non-dihedral,
 and let Π = sym²π be its symmetric-square lift to GL₃. Fix T > 0 and let
-Q(Π, T) denote the analytic conductor of L(s, Π) at height T.
+C_Π(t) ≍ t³ denote the analytic conductor of L(s, Π) at height t.
 
 Define the mollified second moment:
 
-    I(T) = ∫_T^{2T} |M(½ + it) L(½ + it, Π)|² dt
+    I(T) = ∫_T^{2T} |M(½ + it, Π)|² dt
 
-where M(s) is a mollifier of length X ≤ Q(Π, T)^η.
+where M(s, Π) = M_X(s) · L(s, Π) and M_X(s) = Σ_{m≤X} b_m m^{-s} is a
+reciprocal mollifier of length X = T^θ for some θ ∈ (0,1).
 
-**Goal**: Prove there exist explicit θ ∈ (0, 1), c₀ > 0, T₀ > 0, δ > 0 such that:
+**Goal [OBL]**: Prove there exist explicit θ ∈ (0,1), C_{Π,θ} > 0, T₀ > 0, δ > 0
+such that:
 
-    I(T) ≥ c₀ T    for all T ≥ T₀
+    I(T) = C_{Π,θ} · T + O(T^{1-δ})    for all T ≥ T₀
 
-with X = Q(Π, T)^θ, and deduce L(½, Π) > 0 (hence L(1, sym² f) > 0).
+with C_{Π,θ} > 0.
 
-## Critical corrections from review
+## Why the original was wrong
 
-1. **Mollifier definition**: The squarefree mollifier μ(n)a_Π(n) is NOT a true
-   reciprocal mollifier. It misses p² and p³ terms in the local Euler inverse.
-   Either use true reciprocal coefficients ρ_Π(n), or prove a squarefree
-   approximation lemma.
+1. **Wrong bridge lemma**: The original claimed I(T) ≥ c₀T ⟹ L(½, Π) > 0.
+   This is FALSE. The integral ∫_T^{2T} lives at |t| ≥ T₀ > 0 and has no
+   logical connection to the central value L(½, Π) = L(½+0·i, Π). A Lebesgue
+   integral over t ∈ [T,2T] cannot detect an isolated zero at t = 0.
 
-2. **Square expansion**: |M(½+it)L(½+it,Π)|² produces a twisted moment
-   J_{m,n}(T) = ∫_T^{2T} (n/m)^{it} |L(½+it,Π)|² dt, NOT a factorized
-   ∫|L|² × Σ coefficients.
+2. **Wrong main term for mollified moment**: The unmollified second moment
+   has T·log T scale (from the Rankin–Selberg pole). But M(s)·L(s) ≈ 1 for
+   a good reciprocal mollifier, so I(T) ≍ T, NOT T·log T. The T·log T
+   appears in the UNMOLLIFIED moment.
 
-3. **No family orthogonality**: We work with a FIXED Π, not a family. The
-   near-orthogonality comes from t-integration, not Hecke eigenvalue averaging.
+3. **Wrong normalization bridge**: L(½, Π) > 0 does NOT imply L(1, sym²f) > 0
+   without specifying the normalization shift. In automorphic normalization,
+   L(s, Π) has functional equation center at ½; the classical L(1, sym²f)
+   is a different point.
 
-4. **CM/dihedral exclusion**: Must assume π non-CM/non-dihedral for Π to be
-   cuspidal GL₃.
+## Revised goal
+
+The correct t-aspect goal is: establish I(T) = C_{Π,θ} T + o(T) with C_{Π,θ} > 0.
+This is a statement about the average behavior of |M(½+it) L(½+it)|² on
+[t ∈ [T,2T]]. It does NOT directly imply anything about L(½, Π) itself.
+
+If the project's ultimate target is L(1, sym²f) > 0, that requires a
+completely different route (e.g., Rankin–Selberg/Petersson residue), NOT
+this mollifier moment.
 
 ## Status: [OBL]
 
 The core analytic lemma (mollified twisted GL₃ moment) is at the research frontier.
-See Dasgupta–Leung–Young (2024), Pal (2022) for current state of GL₃ second moments.
+See Dasgupta–Leung–Young (2024), Pal (IMRN 2025) for current state.

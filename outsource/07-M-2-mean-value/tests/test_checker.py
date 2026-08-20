@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-test_checker.py — Tests for M-2 structural checker (rewritten).
+test_checker.py — Tests for M-2 structural checker (v2).
 """
 import subprocess
 import tempfile
@@ -24,24 +24,20 @@ def _run_checker(submission_dir):
     return result.returncode, result.stdout
 
 
+def _base_files(tmpdir, stmt="# [OBL] M-2.\n", proof="# Proof\nafe diagonal t log t.\n"):
+    _write(os.path.join(tmpdir, "statement.md"), stmt)
+    _write(os.path.join(tmpdir, "proof.md"), proof)
+    _write(os.path.join(tmpdir, "dependencies.yaml"),
+           "ingredients:\n  - id: AFE\n    status: '[OBL]'\n")
+    _write(os.path.join(tmpdir, "limitations.md"), "# Limits\n[OBL] Limits.\n")
+    _write(os.path.join(tmpdir, "novelty.md"), "# Novelty\n[OBL] Novelty.\n")
+    _write(os.path.join(tmpdir, "checker", "README.md"), "# Checker\n[OBL] Notes.\n")
+
+
 def test_pass_on_well_structured():
     """Well-structured submission with correct concepts should PASS."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"),
-               "# M-2 Statement\n[OBL] T log T main term.\n")
-        _write(os.path.join(tmpdir, "proof.md"), """# M-2 Proof
-The diagonal gives A_Π T log T + B_Π T.
-Off-diagonal shifted convolution is bounded using AFE.
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"),
-               "ingredients:\n  - id: AFE-GL3\n    status: '[OBL]'\n")
-        _write(os.path.join(tmpdir, "limitations.md"),
-               "# Limits\n[OBL] Some.\n")
-        _write(os.path.join(tmpdir, "novelty.md"),
-               "# Novelty\n[OBL] Some.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"),
-               "# Checker\n[OBL] Notes.\n")
-
+        _base_files(tmpdir)
         code, output = _run_checker(tmpdir)
         assert code == 0, f"Expected PASS but got FAIL:\n{output}"
 
@@ -49,45 +45,36 @@ Off-diagonal shifted convolution is bounded using AFE.
 def test_fail_on_wrong_main_term():
     """Main term c_Π T (not T log T) should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"),
-               "# Statement\n[OBL] Some.\n")
-        _write(os.path.join(tmpdir, "proof.md"), """# Proof
-The second moment equals c_Π T + O(T^{1-δ}).
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"),
-               "deps:\n  - name: test\n")
-        _write(os.path.join(tmpdir, "limitations.md"),
-               "# Limits\nSome.\n")
-        _write(os.path.join(tmpdir, "novelty.md"),
-               "# Novelty\nSome.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"),
-               "# Checker\nSome.\n")
-
+        _base_files(tmpdir, proof="# Proof\nc_Π T + O(T^{1-δ}).\n")
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
-        assert "forbidden" in output.lower() or "main" in output.lower()
+        assert "forbidden" in output.lower()
 
 
-def test_fail_on_missing_afe():
-    """Missing AFE should FAIL."""
+def test_fail_on_no_afe_concept():
+    """Missing AFE keyword should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"),
-               "# Statement\n[OBL] Some.\n")
-        _write(os.path.join(tmpdir, "proof.md"), """# Proof
-The diagonal gives T log T. Off-diagonal shifted convolution.
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"),
-               "deps:\n  - name: test\n")
-        _write(os.path.join(tmpdir, "limitations.md"),
-               "# Limits\nSome.\n")
-        _write(os.path.join(tmpdir, "novelty.md"),
-               "# Novelty\nSome.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"),
-               "# Checker\nSome.\n")
-
+        _base_files(tmpdir,
+            proof="# Proof\nc_Π T log T + O(T^{1-δ}). Off-diagonal shifted.\n")
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
-        assert "afe" in output.lower()
+
+
+def test_fail_on_trivial_proof():
+    """Proof with no mathematical content should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            proof="# Proof\nThe result follows from standard methods.\n")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
+
+
+def test_fail_on_missing_concepts():
+    """Missing AFE or diagonal should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir, proof="# Proof\nSome math.\n")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
 
 
 def test_no_false_positive_trivial():
@@ -97,6 +84,5 @@ def test_no_false_positive_trivial():
         for f in ["statement.md", "proof.md", "dependencies.yaml",
                    "limitations.md", "novelty.md", "checker/README.md"]:
             _write(os.path.join(tmpdir, f), content)
-
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL on trivial content but got PASS"

@@ -12,8 +12,8 @@ Status key: **pending** (not yet sent), **sent** (prompt dispatched),
 | OB-03: partial-sum bound \|S(X)\| << X^{1/2+ε} | verified | 03-partial-sum-bound-proof/ | — | COMPLETED: Friedlander-Iwaniec Thm 3.2 |
 | OB-04: GL₃ AFE rigorous computation | verified | 04-gl3-afe-rigorous-computation/ | — | COMPLETED: L(1) certified [0.63179293, 0.63179298] |
 | F-2: global residue positivity | verified | 05-F-2-global-residue/ | — | RESTRUCTURED: F-2A/B/C split; JS81 specialization; checker+lint pass |
-| M-1: mollifier construction | verified | 06-M-1-mollifier/ | — | RESTRUCTURED: corrected phase, true reciprocal; core OBL: GL₃ shifted-convolution |
-| M-2: mean value estimate | verified | 07-M-2-mean-value/ | — | RESTRUCTURED: T log T main term, AFE, archimedean factor; checker+lint pass |
+| M-1: mollifier construction | verified | 06-M-1-mollifier/ | — | v2: deleted wrong bridge lemma, 4-variable convolution, T scale (not T·log T) |
+| M-2: mean value estimate | verified | 07-M-2-mean-value/ | — | v2: t-dependent X_Π(t), correct H_{Π,p}, A_Π=3R_Π, Pal→IMRN 2025 |
 | c_eff: general explicit lower bound | verified | 08-c_eff-explicit-bound/ | — | RESTRUCTURED: 1/log(kp+1) scope, Case 2 eliminated, HL route; checker+lint pass |
 
 ## Pre-send checklist (mandatory)

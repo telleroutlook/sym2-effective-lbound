@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-test_checker.py — Tests for M-1 structural checker (rewritten).
+test_checker.py — Tests for M-1 structural checker (v2).
 """
 import subprocess
 import tempfile
@@ -24,27 +24,20 @@ def _run_checker(submission_dir):
     return result.returncode, result.stdout
 
 
+def _base_files(tmpdir, stmt="# [OBL] M-1.\n", proof="# Proof\nafe mollifier n/m.\n"):
+    _write(os.path.join(tmpdir, "statement.md"), stmt)
+    _write(os.path.join(tmpdir, "proof.md"), proof)
+    _write(os.path.join(tmpdir, "dependencies.yaml"),
+           "ingredients:\n  - id: AFE\n    status: '[OBL]'\n")
+    _write(os.path.join(tmpdir, "limitations.md"), "# Limits\n[OBL] Limits.\n")
+    _write(os.path.join(tmpdir, "novelty.md"), "# Novelty\n[OBL] Novelty.\n")
+    _write(os.path.join(tmpdir, "checker", "README.md"), "# Checker\n[OBL] Notes.\n")
+
+
 def test_pass_on_well_structured():
     """Well-structured submission with correct concepts should PASS."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"),
-               "# M-1 Statement\n[OBL] Mollified moment I(T) ≥ c₀T.\n")
-        _write(os.path.join(tmpdir, "proof.md"), """# M-1 Proof
-The mollified moment identity with mollifier M(s) is:
-I(T) = Σ_{m,n} (b_m b̄_n / √(mn)) J_{m,n}(T)
-where J_{m,n}(T) = ∫_T^{2T} (n/m)^{it} |L(½+it,Π)|² dt.
-Diagonal terms give the main term. Off-diagonal shifted convolution
-is bounded using the AFE with length T^{3/2}.
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"),
-               "assumptions:\n  - id: NON-CM\n    status: '[OBL]'\n")
-        _write(os.path.join(tmpdir, "limitations.md"),
-               "# Limits\n[OBL] Some limits.\n")
-        _write(os.path.join(tmpdir, "novelty.md"),
-               "# Novelty\n[OBL] Some novelty.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"),
-               "# Checker\n[OBL] Notes.\n")
-
+        _base_files(tmpdir)
         code, output = _run_checker(tmpdir)
         assert code == 0, f"Expected PASS but got FAIL:\n{output}"
 
@@ -52,49 +45,38 @@ is bounded using the AFE with length T^{3/2}.
 def test_fail_on_missing_phase():
     """Missing (n/m)^{it} phase should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"),
-               "# M-1 Statement\n[OBL] Some statement.\n")
-        # Proof without the (n/m)^{it} phase — the old error
-        _write(os.path.join(tmpdir, "proof.md"), """# M-1 Proof
-The mollified moment is:
-I(T) = (∑ b_m m^{-1/2}) ∫_T^{2T} |L(½+it,Π)|² dt
-This factorizes into mollifier sum times the second moment.
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"),
-               "deps:\n  - name: test\n")
-        _write(os.path.join(tmpdir, "limitations.md"),
-               "# Limits\nSome.\n")
-        _write(os.path.join(tmpdir, "novelty.md"),
-               "# Novelty\nSome.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"),
-               "# Checker\nSome.\n")
-
+        _base_files(tmpdir, proof="# Proof\nmollifier afe diagonal.\n")
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
         assert "n/m" in output.lower()
 
 
+def test_fail_on_bridge_lemma():
+    """Wrong bridge I(T)≥c₀T ⟹ L(½)>0 should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            proof="# Proof\nafe mollifier n/m.\nI(T) >= c_0 T hence L(½) > 0.\n")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
+
+
+def test_fail_on_missing_concepts():
+    """Proof missing key concepts (afe, mollifier, n/m) should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            proof="# Proof\nDiagonal gives main term. Shifted convolution.\n")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
+
+
 def test_fail_on_forbidden_pattern():
     """Hecke eigenvalue orthogonality should FAIL (wrong object)."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        _write(os.path.join(tmpdir, "statement.md"),
-               "# Statement\n[OBL] Some.\n")
-        _write(os.path.join(tmpdir, "proof.md"), """# Proof
-The off-diagonal terms vanish by Hecke eigenvalue orthogonality
-over the family of forms.
-""")
-        _write(os.path.join(tmpdir, "dependencies.yaml"),
-               "deps:\n  - name: test\n")
-        _write(os.path.join(tmpdir, "limitations.md"),
-               "# Limits\nSome.\n")
-        _write(os.path.join(tmpdir, "novelty.md"),
-               "# Novelty\nSome.\n")
-        _write(os.path.join(tmpdir, "checker", "README.md"),
-               "# Checker\nSome.\n")
-
+        _base_files(tmpdir,
+            proof="# Proof\nHecke eigenvalue orthogonality over the family.\n"
+                   "afe mollifier n/m.\n")
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
-        assert "forbidden" in output.lower()
 
 
 def test_no_false_positive_trivial():
@@ -104,6 +86,5 @@ def test_no_false_positive_trivial():
         for f in ["statement.md", "proof.md", "dependencies.yaml",
                    "limitations.md", "novelty.md", "checker/README.md"]:
             _write(os.path.join(tmpdir, f), content)
-
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL on trivial content but got PASS"

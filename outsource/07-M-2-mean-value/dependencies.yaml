@@ -1,4 +1,4 @@
-# M-2 Dependencies — Rewritten
+# M-2 Dependencies — Rewritten v2
 
 # Corrected literature attributions
 references:
@@ -7,7 +7,7 @@ references:
     authors: "Iwaniec, Michel"
     journal: "Ann. Acad. Sci. Fenn. Math. 26 (2001), 465–482"
     evidence: "refereed"
-    note: "Studies level-family average, NOT fixed-form t-aspect moment"
+    note: "Studies level-family average, NOT fixed-form t-aspect moment. Formula 2.22 gives correct gamma factors."
 
   - id: DASGUPTA-LEUNG-YOUNG-2024
     title: "The second moment of the GL₃ standard L-function on the critical line"
@@ -16,12 +16,13 @@ references:
     evidence: "preprint"
     note: "Upper bound T^{4/3+ε}, NOT asymptotic"
 
-  - id: PAL-2022
+  - id: PAL-2025
     title: "Second moment of degree three L-functions"
     authors: "Pal"
-    source: "arXiv:2212.14620"
-    evidence: "preprint"
-    note: "Upper bound for degree-3 L-functions"
+    journal: "Int. Math. Res. Not. (IMRN), 2025"
+    source: "arXiv:2212.14620v3"
+    evidence: "refereed"
+    note: "Upper bound T^{3/2-3/32+ε} for degree-3 L-functions"
 
 # NOT dependencies (corrected from original)
 not_dependencies:
@@ -30,26 +31,34 @@ not_dependencies:
     reason: "Wrong attribution; does NOT contain GL₃ second-moment asymptotic"
 
   - id: IWANIEC-SARNAK
-    description: "Iwaniec–Sarnak Perspectives, GAFA 2000 Special Vol, pp. 705–741"
+    description: "Iwaniec–Sarnak Perspectives, GAFA 2000 Special Vol"
     reason: "Original cited wrong page numbers (1039–1065)"
 
 # What the proof actually needs
 ingredients:
   - id: AFE-GL3
-    description: "AFE for L(½, Π) with length T^{3/2}"
+    description: "AFE for L(½+it, Π) with length T^{3/2} and t-dependent X_Π(t)"
+    status: "[THM] (standard)"
+
+  - id: FE-FACTOR
+    description: "Dual factor X_Π(s) = L_∞(Π,1-s)/L_∞(Π,s), NOT constant root number"
     status: "[THM] (standard)"
 
   - id: RANKIN-SELBERG-POLE
     description: "Res_{s=1} D_Π(s) = R_Π > 0 from Rankin–Selberg"
     status: "[THM] for cuspidal Π"
 
+  - id: EULER-CORRECTION
+    description: "H_{Π,p}(x) = 1 - A_p²x² + 2(A_p²-1)x³ - A_p²x⁴ + x⁶"
+    status: "[THM] (explicit level-one computation)"
+
   - id: IWANIEC-MICHEL-GAMMA
     description: "Correct archimedean factor: π^{-3s/2} Γ((s+1)/2) Γ((s+k-1)/2) Γ((s+k)/2)"
-    status: "[THM] (Iwaniec–Michel 2001)"
+    status: "[THM] (Iwaniec–Michel 2001, formula 2.22)"
 
-  - id: D-VS-RS
-    description: "D_Π(s) = L(s, Π×Π̃) · H_Π(s) with H_Π analytic at s=1"
-    status: "[THM] (standard Euler product computation)"
+  - id: LEADING-CONSTANT
+    description: "A_Π = 3R_Π (both AFE halves contribute, factor 2 × 3/2 = 3)"
+    status: "[THM] (from Steps 2-3)"
 
   - id: GL3-SHIFTED-CONVOLUTION
     description: "Off-diagonal: GL₃ shifted-convolution sum for fixed Π"

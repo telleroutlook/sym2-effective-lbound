@@ -1,28 +1,27 @@
-# Novelty — M-1 Rewritten
+# Novelty — M-1 Rewritten v2
 
-## What is new
+## What is new in v2 (correcting v1)
 
-This rewriting:
+1. **Deleted wrong bridge lemma**: I(T) ≥ c₀T ⟹ L(½,Π) > 0 is FALSE.
+   The v1 statement was a logical error, not just a missing proof.
 
-1. **Corrects the mollified moment identity**: Includes the (n/m)^{it} phase
-   that was missing in the original.
+2. **Deleted wrong normalization**: L(½,Π) > 0 does not imply L(1,sym²f) > 0
+   without specifying the shift.
 
-2. **Distinguishes true reciprocal vs squarefree mollifier**: The original
-   μ(n)a_Π(n) misses p² and p³ terms. Either use true ρ_Π(n) or prove
-   a squarefree approximation lemma.
+3. **Corrected main term scale**: For reciprocal mollifier M·L ≈ 1, the
+   mollified moment I(T) ≍ T (NOT T·log T). The T·log T is for the
+   UNMOLLIFIED moment.
 
-3. **Corrects literature attributions**: LRS 1995 is about Selberg eigenvalue,
-   not GL₃ second moment. GL₃ spectral large sieve applies to families,
-   not fixed Π. Hecke orthogonality is for families.
+4. **Deleted algebraically vacuous squarefree lemma**: Σ_{p²|m} μ(m)... ≡ 0.
 
-4. **Adds CM/dihedral exclusion**: Required for Π to be cuspidal GL₃.
+5. **Corrected AFE structure**: Dual factor is t-dependent X_Π(t), not
+   constant χ(Π). Near-diagonal is ns ≈ mr (4 variables), not r ≈ s.
 
-5. **Identifies the real obstruction**: The GL₃ shifted-convolution sum for
-   fixed Π is at the research frontier (Dasgupta–Leung–Young 2024).
+6. **Corrected convolution structure**: Defined c_X(q) = Σ_{mr=q} b_m a_Π(r)
+   and expressed I(T) in terms of these convolution coefficients.
 
 ## What is NOT new
 
-- The mollifier strategy itself is classical (analogous to Soundararajan's
-  work for GL₂)
+- The mollifier strategy itself is classical
 - The AFE-based reduction is standard
-- The diagonal/off-diagonal decomposition is standard
+- The identification of GL₃ shifted-convolution as the obstruction is known

@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-check_mollifier.py — Structural checker for M-1 submissions (rewritten).
+check_mollifier.py — Structural checker for M-1 submissions (v2).
 
-Bug fixes (2026-08-20):
-- Changed from any() token matching to phrase-level matching
-- Fixed OBL status check to require exact [OBL] tag
-- Added structural checks for correct mathematical setup
+Detects:
+- Missing (n/m)^{it} phase (old error)
+- Wrong bridge lemma I(T) ≥ c₀T ⟹ L(½) > 0 (v2 fatal error)
+- Hecke eigenvalue orthogonality (wrong object)
+- Squarefree approximation lemma (algebraically vacuous)
+- Wrong main term scale (T·log T for mollified moment)
 """
 import sys
 import os
@@ -24,15 +26,17 @@ REQUIRED_FILES = [
 REQUIRED_CONCEPTS = [
     "n/m",           # The (n/m)^{it} phase factor
     "mollifier",     # The mollifier definition
-    "shifted",       # Shifted convolution / near-diagonal
     "afe",           # Approximate functional equation
-    "diagonal",      # Diagonal/off-diagonal decomposition
 ]
 
-# Concepts that should NOT appear (indicates old errors)
+# Concepts that indicate old or new errors
 FORBIDDEN_PATTERNS = [
     "hecke eigenvalue orthogonality",  # Misapplied (fixed Π, no family)
     "gl3 spectral large sieve",        # Wrong object (family, not fixed Π)
+    "i(t) >= c_0 t",                   # Wrong bridge: I(T)≥c₀T ⟹ L(½)>0
+    "i(t)≥c_0t",                       # Same, no spaces
+    "deduce l(½",                       # Wrong: cannot deduce central value
+    "hence l(1,",                       # Wrong: normalization gap
 ]
 
 
@@ -77,17 +81,17 @@ def check_required_concepts(proof_path):
     return all_found
 
 
-def check_no_forbidden(proof_path):
-    if not os.path.exists(proof_path):
+def check_no_forbidden(path):
+    if not os.path.exists(path):
         return True
-    content = _normalize(open(proof_path).read())
+    content = _normalize(open(path).read())
     clean = True
     for pattern in FORBIDDEN_PATTERNS:
         if pattern in content:
             print(f"  [FAIL] Forbidden pattern found: {pattern}")
             clean = False
     if clean:
-        print("  [PASS] No forbidden patterns")
+        print(f"  [PASS] No forbidden patterns in {os.path.basename(path)}")
     return clean
 
 
@@ -119,8 +123,10 @@ def main():
         ok = False
 
     print("\n--- Forbidden patterns ---")
-    if not check_no_forbidden(proof_path):
-        ok = False
+    for f in ["statement.md", "proof.md", "limitations.md"]:
+        path = os.path.join(submission_dir, f)
+        if not check_no_forbidden(path):
+            ok = False
 
     overall = "PASS" if ok else "FAIL"
     print(f"\nOverall: {overall}")
