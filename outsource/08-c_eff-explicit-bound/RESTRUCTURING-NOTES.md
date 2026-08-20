@@ -1,72 +1,82 @@
-# Restructuring Notes — v2 (2026-08-20)
+# Restructuring Notes — v3 (2026-08-20)
 
-## Major corrections from v1 (per independent review)
+## Major corrections from v2 (per independent review)
 
-### 1. L(1/2) vs L(1) confusion (CRITICAL)
-v1 stated L(½, sym² f) ≥ c_*/log(kp+1) and claimed equivalence with L(1).
-This is wrong. GHL/HL gives a lower bound at s=1, not s=1/2.
-These are completely different values.
+### 1. Stage C parameter chain wrong (CRITICAL)
+v2 wrote δ = c₀/log(kp+1) then R⁻¹ ≪ log(1/δ), then somehow got
+O(log(kp+1)). This is wrong: log(1/δ) = log(log(kp+1)) + O(1),
+which is a much stronger conclusion and internally inconsistent with
+the final O(log(kp)) result.
 
-**Fix**: Deleted L(1/2) entirely. Only L(1) bound is retained.
+**Fix**: Rewritten with M = K^C matching. Set M = (kp+1)^C with
+C ≥ max(A_0, c_ZF⁻¹). Then 1/log M ≤ c_ZF/log K, so the GHL
+zero-free region covers HL Proposition 1.1's requirement. HL gives
+R⁻¹ ≤ c(B)·log M = c(B)·C·log K. c_eff = 1/(c(B)·C).
 
-### 2. Missing p^s in completed function (CRITICAL)
-v1 wrote Λ(s,Π) = L_∞(s) L(s,Π).
-Correct: Λ(s,Π) = p^s L_∞(s) L(s,Π) because q_ar = p².
+### 2. Positivity reason wrong (ERROR)
+v2 claimed non-negative coefficients "follows from Hecke multiplicativity
+and positivity of symmetric-square coefficients." L(sym²f) coefficients
+are NOT generally non-negative.
 
-**Fix**: Added p^s to all completed function statements.
+**Fix**: For A(s) = ζ(s)L(s,F), each local factor
+(1−q^{−s})⁻¹(1−q^{−s−1})⁻¹ has all positive coefficients in q^{−s}.
+By multiplicativity, the full Dirichlet series has non-negative coefficients.
+GHL establishes this in general; for prime level + trivial character the
+argument is especially clean.
 
-### 3. Analytic conductor k³ vs k² (ERROR)
-v1 stated Q_an ≈ p²k³.
-Correct: archimedean shifts are ≈1, k−1, k, giving Q_an ≈ p²k².
+### 3. V² description wrong (ERROR)
+v2 wrote "symmetric part of the exterior square ⊗² minus the symmetric
+square" — misleading and not how GHL describes it.
 
-**Fix**: Corrected to k² everywhere.
+**Fix**: V² is the symmetric-square L-series of F. GHL calls it
+"symmetric-square (L)-series of (F)."
 
-### 4. Stage 3 factorization wrong (CRITICAL)
-v1 claimed poles from ζ(s) and L(s,Π)².
-Correct: poles from ζ(s) and L(s,F,V²); L(s,F) is holomorphic at s=1.
+### 4. c₀ not "depending on k" (ERROR)
+v2 wrote c₀ "depending on k and the explicit parameters."
+GHL states the zero-free region constant is absolute effective.
 
-**Fix**: Complete rewrite of Stage B with correct factorization
-φ(s) = ζ(s) L(s,F)³ L(s,F,V²).
+**Fix**: c_ZF is absolute effective (independent of k and p).
 
-### 5. Zero multiplicity wrong (ERROR)
-v1 argued "double zero minus double pole = net zero".
-Correct: triple zero at β, double pole at 1 — different points,
-cannot subtract orders. GHL zero-count lemma gives contradiction.
+### 5. witness/README.md wrong (ERROR)
+v2 claimed "c₀ ≤ 0.63179293 is a valid upper bound for the universal
+constant." The correct relation is c_eff ≤ L(1,sym²Δ)·log(13) ≈ 1.62052.
+Also Δ is level 1, outside prime-level scope.
 
-**Fix**: Rewritten as triple-zero / double-pole contradiction.
+**Fix**: Deleted the wrong claim. Added correct upper bound derivation.
 
-### 6. HL Proposition 1.1 misapplied (CRITICAL)
-v1 applied HL to Φ(s) = ζ·L²·L(Π×Π̃).
-Correct: HL Prop 1.1 applies to A(s) = ζ(s)L(s,F), whose residue is L(1,F).
-Stage B and Stage C are separate steps.
+### 6. Bibliography wrong (ERROR)
+v2 cited HL as "Annals 140(1), pp. 1–42" (actually 161–181) and
+Iwaniec–Michel as "JAMS 14, pp. 705–751" (actually Ann. Acad. Sci. Fenn.
+26, pp. 465–482).
 
-**Fix**: Separated into Stage B (GHL zero-free) and Stage C (HL residue).
+**Fix**: All citations corrected.
 
-### 7. Stage 4 residue formula wrong (CRITICAL)
-v1 wrote Res ζ·L²·L(Π×Π̃) = L(1,Π)² L(1,Π×Π̃).
-This is wrong: L(Π×Π̃) has a simple pole at s=1, so L(1,Π×Π̃) is not finite.
+### 7. Stage D unnecessarily complex
+v2 argued inf_{k,p} c₁(k,p) > 0 as a separate step. Since all constants
+are absolute, c_eff = 1/(c(B)·C) is already a universal lower bound.
 
-**Fix**: Deleted entirely. Stage D is now about explicit constant extraction,
-not a residue formula.
+**Fix**: Simplified. No infimum argument needed.
 
-### 8. HL year wrong
-v1 referenced "Hoffstein–Lockhart (1997)".
-Correct: Hoffstein–Lockhart (1994), Annals of Mathematics 140(1), pp. 1–42.
+### 8. MANIFEST included cache files
+v2 MANIFEST included .pytest_cache/__pycache__ files not in the ZIP.
 
-**Fix**: All references corrected to 1994.
+**Fix**: Regenerated with only stable source files.
 
-### 9. Deleted Δ numerical dependency
-v1 included L(s,sym²Δ) ≠ 0 as a dependency. This is unrelated to the
-general proof and should not be in this package.
+### 9. Checker false positives
+v2 checker checked for "q_ar" string presence as a proxy for correct
+completed function. Also only checked statement.md for analytic conductor
+(which is in proof.md).
 
-**Fix**: Removed. Δ-specific computation is in F-3 (separate package).
+**Fix**: Rewritten with M=K^C check, false positive fixes, proof.md checks.
 
-### 10. Checker improvements (per reviewer feedback)
-- check_scope(): fixed operator precedence bug, now requires log(kp)
-- Removed Case 2 string ban (it's correct to say "Case 2 is absent")
-- Added checks for p^s, k², L(1/2), HL year
+## Previous corrections from v1
 
-### 11. MANIFEST.sha256
-v1 MANIFEST included .pytest_cache and __pycache__ files not in the ZIP.
-
-**Fix**: Regenerated with only stable source/certificate files.
+1. L(1/2) vs L(1) confusion — deleted L(1/2) entirely
+2. Missing p^s in completed function — added
+3. Analytic conductor k³ vs k² — corrected
+4. Stage 3 factorization wrong — rewritten
+5. Zero multiplicity wrong — rewritten as triple-zero/double-pole
+6. HL Proposition 1.1 misapplied — separated into Stage B and Stage C
+7. Stage 4 residue formula wrong — deleted
+8. HL year wrong — corrected to 1994
+9. Deleted Δ numerical dependency

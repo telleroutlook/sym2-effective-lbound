@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-test_checker.py — Tests for c_eff structural checker (v2).
+test_checker.py — Tests for c_eff structural checker (v3).
 """
 import subprocess
 import tempfile
@@ -57,12 +57,14 @@ def test_pass_on_well_structured():
 ## Stage B — GHL zero-free region
 Following Hoffstein–Lockhart (1994) and Goldfeld–Hoffstein–Lieman (1994),
 the auxiliary series φ(s) = ζ(s) L(s,F)³ L(s,F,V²) has double pole at s=1.
+The non-negative coefficients follow from local factors.
 If L(β,F)=0, triple zero at β contradicts GHL zero-count lemma.
-L(s,F) ≠ 0 for 1 − c₀/log(kp+1) < s < 1.
+L(s,F) ≠ 0 for 1 − c_ZF/log(kp+1) < s < 1.
 
 ## Stage C — HL lower bound
 A(s) = ζ(s) L(s,F) has residue L(1,F) at s=1.
-HL Proposition 1.1 gives L(1,F) ≥ c₁/log(kp+1).
+Set M = K^C with C ≥ max(A_0, c_ZF⁻¹).
+HL Proposition 1.1 gives L(1,F) ≥ c_eff/log(kp+1).
 
 ## Stage D — Numerical constants [OBL]
 Explicit constant extraction and interval certification.
@@ -78,7 +80,8 @@ def test_fail_on_wrong_scope():
             "# Statement\n[OBL] L(1, sym² f) ≥ c_eff/log p for all p.\n",
             """# Proof
 Auxiliary Dirichlet series. Hoffstein-Lockhart. Zero-free region.
-Explicit constants. Triple zero. Double pole.
+Explicit constants. Triple zero. Double pole. Non-negative coefficients.
+M = K^C parameter matching.
 """)
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
@@ -91,7 +94,7 @@ def test_fail_on_l_half():
             "# Statement\n[OBL] L(½, sym² f) ≥ c₀/log(kp+1).\n",
             """# Proof
 Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
-Triple zero. Double pole.
+Triple zero. Double pole. Non-negative coefficients. M = K^C.
 """)
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
@@ -105,7 +108,7 @@ def test_fail_on_wrong_hl_year():
             "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\n",
             """# Proof
 Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
-Triple zero. Double pole.
+Triple zero. Double pole. Non-negative coefficients. M = K^C.
 """,
             "# Dependencies\ndependencies:\n  - id: HL\n    source: Hoffstein-Lockhart (1997)\n    status: '[THM]'\n")
         code, output = _run_checker(tmpdir)
@@ -114,17 +117,47 @@ Triple zero. Double pole.
 
 
 def test_fail_on_cubic_conductor():
-    """Analytic conductor k³ should FAIL."""
+    """Analytic conductor k³ in proof.md should FAIL."""
     with tempfile.TemporaryDirectory() as tmpdir:
         _base_files(tmpdir,
-            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\nq_an ≈ p²k³\n",
+            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\n",
             """# Proof
 Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
-Triple zero. Double pole.
+Triple zero. Double pole. Non-negative coefficients. M = K^C.
+q_an ≈ p²k³
 """)
         code, output = _run_checker(tmpdir)
         assert code == 1, f"Expected FAIL but got PASS:\n{output}"
         assert "k³" in output or "k^3" in output or "conductor" in output.lower()
+
+
+def test_fail_on_log_one_delta():
+    """log(1/δ) in proof should FAIL (wrong HL parameter)."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\n",
+            """# Proof
+Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
+Triple zero. Double pole. Non-negative coefficients.
+R⁻¹ ≪ log(1/δ) with δ = c₀/log(kp+1).
+""")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
+        assert "log(1" in output.lower() or "forbidden" in output.lower()
+
+
+def test_fail_on_exterior_square():
+    """'exterior square' V² description should FAIL."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        _base_files(tmpdir,
+            "# Statement\n[OBL] L(1, sym² f) ≥ c₀/log(kp+1).\n",
+            """# Proof
+Hoffstein-Lockhart. Zero-free region. Auxiliary. Explicit.
+Triple zero. Double pole. Non-negative coefficients. M = K^C.
+V² is the symmetric part of the exterior square.
+""")
+        code, output = _run_checker(tmpdir)
+        assert code == 1, f"Expected FAIL but got PASS:\n{output}"
 
 
 def test_no_false_positive_trivial():

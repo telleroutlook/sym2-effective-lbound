@@ -1,4 +1,4 @@
-# Limitations — c_eff v2
+# Limitations — c_eff v3
 
 ## Scope
 
@@ -13,16 +13,39 @@
 - No interval [a, b] with a > 0 is certified
 - No machine-readable witness exists
 - The explicit constant extraction (Stage D) is [OBL]
+- All constants c_ZF, A_0, B, c(B), C, c_eff are formulas, not numbers
 
-## Corrected from v1
+## Corrected from v2
 
-1. Deleted L(1/2) statement — GHL/HL gives L(1) lower bound, not L(1/2)
-2. Added p^s to completed function: Λ(s,F) = p^s L_∞(s) L(s,F)
-3. Fixed analytic conductor: p² k² (not p² k³)
-4. Rewrote Stage B: correct factorization ζ·L³·L(V²), triple-zero/double-pole
-5. Separated Stage B (GHL zero-free) from Stage C (HL residue)
-6. Deleted wrong residue formula involving L(Π×Π̃) which has a pole at s=1
-7. Fixed HL year: 1994 Annals, not 1997
+1. **Stage C parameter chain rewritten**: v2 wrote δ = c₀/log K
+   then R⁻¹ ≪ log(1/δ), which is wrong (HL Prop 1.1 uses M, not δ).
+   Correct: set M = K^C with C ≥ max(A_0, c_ZF⁻¹), giving
+   R⁻¹ ≤ c(B)·C·log K.
+
+2. **Positivity reason corrected**: v2 claimed non-negative coefficients
+   follow from "positivity of symmetric-square coefficients" — wrong
+   (L(sym²f) coefficients are not generally non-negative).
+   Correct: A(s) = ζ(s)L(s,F) has non-negative coefficients because
+   each local factor (1−q^{−s})⁻¹(1−q^{−s−1})⁻¹ has positive
+   coefficients.
+
+3. **V² description corrected**: v2 wrote "symmetric part of the exterior
+   square ⊗² minus the symmetric square" — misleading.
+   Correct: V² is the symmetric-square L-series of F.
+
+4. **c₀ is absolute effective**: v2 said "depending on k".
+   Correct: GHL gives absolute constants (uniform in weight).
+
+5. **Stage D simplified**: v2 unnecessarily complicated the infimum
+   argument. Since all constants are absolute, c_eff = 1/(c(B)·C)
+   is already a universal lower bound. No inf_{k,p} needed.
+
+6. **witness/README.md corrected**: v2 claimed c₀ ≤ 0.63179293 from Δ.
+   Wrong: the correct relation is c_eff ≤ L(1,sym²Δ)·log(13) ≈ 1.62052.
+   Also Δ is level 1, outside prime-level scope.
+
+7. **Bibliography corrected**: HL pp. 161–181 (not 1–42);
+   Iwaniec–Michel Ann. Acad. Sci. Fenn. 26 (not JAMS 14).
 
 ## Downstream impact
 

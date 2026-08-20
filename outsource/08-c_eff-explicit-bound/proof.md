@@ -1,6 +1,6 @@
-# c_eff: Explicit Lower Bound — Proof (v2, corrected)
+# c_eff: Explicit Lower Bound — Proof (v3, corrected per reviewer)
 
-## Stage A — Normalization
+## Stage A — Normalization [THM]
 
 ### Form setup
 Let f ∈ S_k^new(Γ₀(p)) be a normalized Hecke eigenform (a_f(1) = 1).
@@ -44,7 +44,7 @@ For |t| ≫ k this reduces to p² |t|³.
 
 ---
 
-## Stage B — GHL generic zero-free region
+## Stage B — GHL zero-free region [THM, constants OBL]
 
 ### The auxiliary series
 Following GHL 1994 Appendix, define:
@@ -60,8 +60,9 @@ By the Rankin–Selberg identity for the symmetric-square lift:
 
     L(s, F × F) = L(s, F) · L(s, F, V²)
 
-where V² is the symmetric part of the exterior square ⊗² minus the
-symmetric square. This gives:
+where V² denotes the symmetric-square L-series of F (the symmetric
+part of the tensor square of the standard representation of GL₃).
+This gives:
 
     φ(s) = ζ(s) · L(s, F)³ · L(s, F, V²)
 
@@ -73,11 +74,22 @@ symmetric square. This gives:
 
 Therefore φ(s) has a **double pole** at s = 1.
 
+### Non-negative Dirichlet coefficients of φ
+GHL explicitly establishes that φ has non-negative Dirichlet
+coefficients. This is a crucial property for the zero-count argument.
+For prime level + trivial central character, this can be verified
+directly: at each prime q, the local factor of A(s) = ζ(s)L(s,F)
+is (1−q^{−s})⁻¹(1−q^{−s−1})⁻¹, which has all positive coefficients
+in q^{−s}. The product over primes then has non-negative coefficients.
+GHL notes that the positivity in general (including non-prime level)
+is "somewhat more subtle."
+
 ### Zero-count argument (GHL)
 Suppose for contradiction that L(β, F) = 0 for some real β with
 
-    1 − c₀/log(kp+1) < β < 1.
+    1 − c_ZF/log K < β < 1
 
+where K = kp + 1 and c_ZF > 0 is the GHL zero-free region constant.
 Then L(s, F)³ contributes a **triple zero** at s = β to φ(s).
 But GHL's zero-count lemma says: a function with a double pole at s = 1,
 non-negative Dirichlet coefficients, and polynomial growth, can have at
@@ -86,14 +98,14 @@ most 2 real zeros near 1 (counting multiplicity).
 A triple zero at β would exceed this bound. Contradiction.
 
 ### Result
-    L(s, F) ≠ 0  for  1 − c₀/log(kp+1) < s < 1
+    L(s, F) ≠ 0  for  1 − c_ZF/log K < s < 1
 
-for an explicit constant c₀ > 0 depending on k and the explicit
-parameters in the GHL zero-count lemma.
+where c_ZF > 0 is an **absolute effective constant** (independent of k
+and p), determined by the GHL zero-count lemma parameters.
 
 ---
 
-## Stage C — Hoffstein–Lockhart lower bound
+## Stage C — Hoffstein–Lockhart lower bound [THM, constants OBL]
 
 ### The HL function
 Consider:
@@ -101,83 +113,108 @@ Consider:
     A(s) = ζ(s) · L(s, F)
 
 Properties:
-1. Dirichlet coefficients a_n ≥ 0 (product of ζ and L with non-negative
-   coefficients — follows from Hecke multiplicativity and positivity of
-   symmetric-square coefficients)
+1. Dirichlet coefficients a_n ≥ 0: for each prime q, the local factor
+   (1−q^{−s})⁻¹(1−q^{−s−1})⁻¹ has all positive coefficients in q^{−s}.
+   By multiplicativity, the full Dirichlet series has non-negative
+   coefficients. (GHL establishes this in general; for prime level +
+   trivial character the argument is especially clean.)
 2. Simple pole at s = 1 with residue:
    Res_{s=1} A(s) = L(1, F)
 3. Polynomial growth in vertical strips (from Gamma factors)
-4. No real zero in (1 − c₀/log(kp+1), 1) — from Stage B
+4. No real zero in (1 − c_ZF/log K, 1) — from Stage B
+
+### Growth bound
+From the functional equation and Stirling, there exist absolute
+effective constants A_0, B > 0 such that:
+
+    |A(1/2 + it)| ≤ K^{A_0} (1 + |t|)^B
+
+for all t ∈ R. Here K = kp + 1.
 
 ### Application of HL Proposition 1.1
 Hoffstein–Lockhart (1994), Proposition 1.1 states:
+
 If A(s) has non-negative coefficients, a simple pole at s = 1 with
-residue R, satisfies appropriate growth conditions, and has no real zero
-in (1 − δ, 1), then:
+residue R, satisfies |A(1/2+it)| ≤ M^A · (1+|t|)^B for some A, and
+has no real zero in (1 − 1/log M, 1), then:
 
-    R⁻¹ ≪ log(1/δ)
+    R⁻¹ ≤ c(B) · log M
 
-Applied with δ = c₀/log(kp+1):
+for an absolute effective constant c(B) > 0 depending only on the
+growth exponent B.
 
-    L(1, F)⁻¹ ≪ log(kp+1)
+**Parameter matching**: We must choose M so that:
+- (a) Growth: |A(1/2+it)| ≤ M^A (1+|t|)^B is satisfied
+- (b) Zero-free: 1 − 1/log M falls within the GHL zero-free region
+
+Set M = K^C where C ≥ max(A_0, c_ZF⁻¹) is an absolute constant.
+Then:
+- Growth: K^{A_0} ≤ K^{C} = M^A with A = 1, so (a) is satisfied.
+- Zero-free: 1/log M = 1/(C log K) ≤ c_ZF/log K, so the interval
+  (1 − 1/log M, 1) is contained in (1 − c_ZF/log K, 1).
+  Thus (b) is satisfied.
+
+### Result
+Applying HL Proposition 1.1 with M = K^C:
+
+    L(1, F)⁻¹ = R⁻¹ ≤ c(B) · log M = c(B) · C · log K
 
 Therefore:
 
-    L(1, sym² f) = L(1, F) ≥ c₁ / log(kp+1)
+    L(1, sym² f) = L(1, F) ≥ 1/(c(B) · C) · 1/log(kp + 1)
 
-where c₁ = 1/C for the implied constant C in the HL bound.
+Setting c_eff = 1/(c(B) · C) > 0:
+
+    L(1, sym² f) ≥ c_eff / log(kp + 1)
 
 ### Role separation
-- **Stage B** (GHL): establishes the zero-free region (no real zero near 1)
-- **Stage C** (HL Prop 1.1): converts zero-free region into L(1) lower bound
+- **Stage B** (GHL): establishes c_ZF (absolute) zero-free region
+- **Stage C** (HL Prop 1.1): converts growth + zero-free into L(1) lower bound
+- **M = K^C**: absolute constant C matches the two; NOT a Dirichlet coefficient bound
 
-These are two distinct steps that must not be conflated.
+These are three distinct steps that must not be conflated.
 
 ---
 
 ## Stage D — Numerical constant extraction [OBL]
 
 ### What needs to be computed
-The constant c₁ in Stage C depends on:
+The constant c_eff = 1/(c(B) · C) depends on:
 
-1. **GHL zero-free region constant c₀**: from the zero-count lemma,
-   depends on Gamma function derivatives, Dirichlet series coefficients
-   bound M = 1 + D · max|c_n|, and conductor D.
+1. **GHL zero-free region constant c_ZF**: from the zero-count lemma,
+   depends on Gamma function derivatives and the GHL parameters.
+   This is an absolute effective constant.
 
-2. **HL Proposition 1.1 implied constant C**: from the contour integral
-   representation, depends on:
-   - The growth parameter B in |A(s)| ≪ |t|^B
-   - The contour shift distance r (related to c₀)
-   - The Dirichlet series coefficient bound M
+2. **Growth constants A_0, B**: from the functional equation and
+   Stirling's formula for |A(1/2+it)|. Absolute effective.
 
-3. **Explicit A(s) = ζ(s)L(s,F) at s = 1**: the residue is L(1,F)
-   itself, so the constant extraction is bootstrapped — we get an
-   inequality, not an equation.
+3. **Matching constant C**: any C ≥ max(A_0, c_ZF⁻¹) works.
+   The optimal choice is C = max(A_0, c_ZF⁻¹).
 
-4. **Bad Euler factor**: L_p(1, F) = (1 − p^{−2})⁻¹ ≤ p²/(p²−1)
+4. **HL implied constant c(B)**: from the contour integral
+   representation in HL Proposition 1.1. Depends on B.
+   Absolute effective.
 
-### The final task
-Show inf_{k≥2, p prime} c₁(k,p) > 0 and compute a certified
-interval [a, b] with a > 0 containing this infimum (or a useful
-lower bound for it).
-
-This requires:
-- Explicit bounds on Gamma derivatives at the relevant points
-- Explicit M (Dirichlet coefficient bound) in terms of kp
-- Explicit B (growth exponent) from the functional equation
-- Contour integral estimation with explicit constants
-- Arb/python-flint interval arithmetic with outward rounding
+### Named constants (not reusing old names)
+- c_ZF: GHL zero-free region constant (absolute)
+- A_0, B: growth exponents (absolute)
+- C = max(A_0, c_ZF⁻¹): matching constant (absolute)
+- c(B): HL implied constant (absolute)
+- c_eff = 1/(c(B) · C): final effective constant
 
 ### Status: [OBL]
-None of these explicit constants have been computed.
+None of these absolute constants have been numerically computed.
+The infimum inf_{k,p} c_eff is automatically bounded below by
+1/(c(B) · C) since all quantities are absolute — no separate
+infimum argument is needed.
 
 ---
 
 ## Status: [OBL]
 
 The main remaining tasks are:
-1. Trace all implied constants in GHL zero-count lemma (Stage B constants)
-2. Trace all implied constants in HL Proposition 1.1 (Stage C constants)
-3. Combine to get explicit c₁(k,p) > 0
-4. Show inf_{k,p} c₁ > 0
-5. Compute interval [a,b] with a > 0 using Arb
+1. Compute c_ZF from GHL zero-count lemma (Stage B)
+2. Compute A_0, B from functional equation (Stage C)
+3. Compute c(B) from HL contour integral (Stage C)
+4. Set C = max(A_0, c_ZF⁻¹) and c_eff = 1/(c(B)·C)
+5. Certified interval [a,b] with a > 0 using Arb/python-flint
