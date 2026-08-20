@@ -1,58 +1,92 @@
-# GL₃ Shifted Convolution for Fixed Π — Statement
+# GL₃ Shifted Convolution — Statement
 
-## Mathematical Problem
+**Status:** [OBL] (two sub-problems, see below)
 
-Let Π = sym²π be a fixed cuspidal automorphic representation of GL₃(A_ℚ)
-with trivial central character, arising as the symmetric-square lift of a
-holomorphic Hecke eigenform of weight k on SL₂(ℤ).
+## Context
 
-**Core Estimate [OBL]**: For the GL₃ shifted convolution sum
+After expanding |L(½+it, Π)|² via the two-term AFE and integrating over
+t ∈ [T, 2T], the off-diagonal contributions involve GL₃ shifted convolution
+sums of the form
 
-    S(h, N, Π) = Σ_{n ≤ N} a_Π(n) ā_Π(n+h)
+    S_W(h, N; Π) = Σ_n a_Π(n) ā_Π(n+h) W(n/N)
 
-with shift h ≍ T^{1/2} and summation length N ≍ T^{3/2}, prove:
+with smooth weight W, shift h, and summation length N.
 
-    S(h, N, Π) = C_Π(h) · N + O_Π(N^{1-δ})    for some δ > 0
+From the degree-3 AFE structure: N ≍ T^{3/2}, and the natural shift scale
+from the AFE length is h ≍ T^{1/2} = N^{1/3}.
 
-where C_Π(h) is the expected main term from the Rankin–Selberg decomposition,
-and the implied constant is effective in Π.
+The AFE expansion does NOT produce a single individual shifted sum; it
+produces an **averaged** object:
 
-## Why this is needed
+    (T/N) · Σ_{h ≍ N/T} Σ_{n ≍ N} a_Π(n) ā_Π(n+h) W(n/N, h/(N/T))
 
-This estimate is the fundamental analytic obstruction blocking:
+This is the natural input for M-1 and M-2.
 
-1. **M-1 (mollifier second moment)**: The mollified moment
-   ∫₀ᵀ |L(½+it,Π)|²·|M(t)|² dt requires bounding shifted convolutions
-   with shift h ≍ T^{1/2} after AFE expansion. Without power-saving in h,
-   the error cannot be bounded below the main term.
+---
 
-2. **M-2 (unmollified second moment)**: The unmollified moment
-   ∫_T^{2T} |L(½+it,Π)|² dt requires the same type of estimate for
-   the diagonal + off-diagonal decomposition.
+## Sub-problem 09-A: Individual shifted convolution [OBL]
 
-## Current literature status
+**Question:** For fixed h ≍ N^{1/3}, does the individual smooth shifted sum
 
-- **Dasgupta–Leung–Young (2024)**: arXiv:2407.06962
-  Upper bound: ∫_{-T}^T |L(f,½+it)|² dt ≪ T^{4/3+ε}
-  This is NOT an asymptotic; no main term is identified.
+    S_W(h, N; Π) ≪_{Π,W,ε} N^{1-δ}
 
-- **Pal (2025)**: arXiv:2212.14620v3, IMRN 2025
-  Upper bound: T^{3/2 - 3/32 + ε} for Hecke–Maaß GL₃ forms (NOT holomorphic).
-  The 3/32 exponent is the current best for degree-3 L-functions.
+for some δ > 0?
 
-- **For fixed Π (symmetric-square of holomorphic form)**:
-  No power-saving second moment is known. The off-diagonal contribution
-  from the AFE expansion remains open.
+**Note:** We do NOT presuppose a main term C_Π(h)·N. The Rankin–Selberg
+L(s, Π × Π̃) controls the diagonal h = 0, not the shifted h ≠ 0 case.
+Whether a main term exists for h ≠ 0 is itself an open question (it would
+require analysis via the delta method or spectral expansion, not just
+Rankin–Selberg).
 
-## Scope
+**Status:** [OBL] — no power-saving bound for individual fixed h is known
+at the critical scale h ≍ N^{1/3}.
 
-- Fixed non-CM/non-dihedral Π, t-aspect (T → ∞)
-- Level one (SL₂(ℤ)): all primes unramified
-- Shift scale h ≍ T^{1/2} from degree-3 AFE length N ≍ T^{3/2}
-- The estimate must be uniform in Π (or at least effective for each fixed Π)
+---
 
-## Status: [OBL]
+## Sub-problem 09-B: Averaged shifted convolution — transfer to holomorphic Π [OBL]
 
-This is a research-level obligation at the current frontier of analytic
-number theory. No proof exists in the literature for the specific form
-of the estimate needed here.
+**Question:** For Π = sym²π where π is a holomorphic Hecke eigenform of
+weight k on SL₂(ℤ), can the DLY averaged shifted-convolution mechanism
+be rigorously transferred?
+
+### What DLY 2024 proved (Theorem 1.2)
+
+For SL₃(ℤ) Hecke cusp forms (spherical/Maaß type):
+
+    Σ_{n,k} λ_f(n) λ_f(n+k) W(n/N, k/H)
+    ≪_{f,ε} N^{4/3+ε}/H^{1/3} + √H · N^{ε} + N^{1+ε}
+
+This is **non-trivial** when H > N^{1/4}.
+
+Our AFE gives H ≍ N^{1/3} > N^{1/4}, so the averaged problem already
+admits non-trivial cancellation in the spherical/Maaß case.
+
+### The transfer question
+
+DLY's proof uses the GL₃ Voronoi formula + twisted classical Kloosterman
+sums + Weil-type bounds. The archimedean place is handled via the
+spherical/Maaß spectral theory.
+
+For Π = sym²(holomorphic π), the infinity type is **cohomological**,
+not spherical. The archimedean component of the Voronoi formula
+involves different gamma factors and a different spectral decomposition.
+
+**The precise research task:** Can the DLY averaged shifted-convolution
+mechanism be adapted to the holomorphic symmetric-square case, accounting
+for the different infinity type?
+
+**Status:** [OBL] — the spherical/Maaß mechanism is established; the
+holomorphic transfer is open.
+
+---
+
+## Relationship to M-1 and M-2
+
+- M-1 (mollifier second moment) requires an averaged power-saving bound
+  on the off-diagonal, which is exactly 09-B.
+- M-2 (unmollified second moment) requires the same type of averaged bound.
+- **09-B is NOT a necessary precondition in the logical sense** — it is a
+  sufficient condition. The actual second-moment estimate may be achievable
+  by other routes (e.g., direct moment methods without individual shifts).
+- However, 09-B is the most natural and well-understood approach given
+  current technology.

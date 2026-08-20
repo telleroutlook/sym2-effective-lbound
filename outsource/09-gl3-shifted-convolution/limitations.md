@@ -2,89 +2,67 @@
 
 ## What this package does
 
-This package describes a **research-level obligation**: the GL₃ shifted
-convolution estimate for fixed Π at the critical shift scale.
+This package documents two open research problems [OBL] related to
+GL₃ shifted convolution sums, with precise statements and corrected
+literature references.
 
 ## What this package does NOT do
 
 - Does NOT contain a proof
-- Does NOT contain numerical computation
-- Does NOT contain any [THM]-labelled result
-- Does NOT advance beyond the current state of the art
+- Does NOT claim any [THM]-labelled result
+- Does NOT claim that 09-A or 09-B are necessary conditions for M-1/M-2
+  (they are sufficient conditions, not necessary)
 
-## Current state of the art
+## Corrected literature status
 
-### Upper bounds (not asymptotics)
+### DLY 2024 (Dasgupta–Leung–Young, arXiv:2407.06962)
 
-| Source | Bound | Method | Scope |
-|--------|-------|--------|-------|
-| DLY 2024 | ∫\|L\|² ≪ T^{4/3+ε} | Hybrid | Holomorphic GL₃ |
-| Pal 2025 | ∫\|L\|² ≪ T^{3/2-3/32+ε} | Spectral | Hecke–Maaß GL₃ |
-| Trivial | S(h,N) ≪ N^{1+ε} | Cauchy–Schwarz | Any GL₃ |
+- **Theorem 1.1**: ∫|L(f,½+it)|² dt ≪ T^{4/3+ε} for Hecke–Maaß GL₃ cusp forms
+- **Theorem 1.2**: Averaged GL₃ shifted convolution, non-trivial when H > N^{1/4}
+- **Scope**: spherical/Maaß GL₃, NOT holomorphic symmetric-square
+- **Kloosterman handling**: uses classical S(k̄,n;c) + Weil bounds (NOT GL₃ sums)
 
-None of these give an asymptotic with main term + error.
+### Pal 2025 (arXiv:2212.14620v3, IMRN 2025)
 
-### The gap
+- ∫|L(F,½+it)|² dt ≪ T^{3/2-3/32+ε} for Hecke–Maaß GL₃ cusp forms
+- **Weaker than DLY** in the GL₃ cusp form scope: T^{3/2-3/32} ≈ T^{0.406} vs T^{4/3} ≈ T^{0.333}
+- Pal's result applies to a broader class of forms (not just GL₃) but is not the current best for GL₃
 
-The estimate needed for M-1/M-2 requires:
+### Kloosterman sums (corrected)
 
-1. **Main term identification**: C_Π(h) = Σ_{d|h} (multiplicative function of d)
-   This is formal/algebraic and CAN be computed.
+| Object | Best known bound | Status |
+|--------|-----------------|--------|
+| Classical S(m,n;c) | Weil: d₃(c)·c^{1/2} | Classical [THM] |
+| GL₃ S₃(m,n;c) | ≪ c^{3/2+ε} (trivial) | Known [BASE] |
+| GL(n) Weyl elements | Power-saving (Blomer–Man 2023, etc.) | [THM] |
 
-2. **Power-saving error**: S(h,N) = C_Π(h)·N + O(N^{1-δ}) for some δ > 0.
-   This is the hard part. No δ > 0 is known for fixed Π.
+The package's previous claim of "only trivial bound for GL₃ Kloosterman sums" was
+incorrect: non-trivial bounds exist for specific element types.
 
-3. **Uniformity in Π**: The implied constant must be effective enough
-   for the downstream application in M-1/M-2.
+However, the DLY approach uses **classical** Kloosterman sums after GL₃ Voronoi,
+so the GL₃ Kloosterman bounds are not directly relevant to the DLY mechanism.
 
-## Why this is hard
+## What is NOT achieved
 
-### GL₃ Kloosterman sums
+### 09-A: Individual shifted convolution [OBL]
 
-The GL₃ Kuznetsov/Voronoi formula involves GL₃ Kloosterman sums
-S₃(m,n;c). The best known bound is:
+No power-saving bound S_W(h,N;Π) ≪ N^{1-δ} for individual fixed h ≍ N^{1/3}
+is known for any class of GL₃ forms. The trivial bound is N^{1+ε}.
 
-    |S₃(m,n;c)| ≪ c^{3/2+ε}
+### 09-B: Averaged transfer to holomorphic Π [OBL]
 
-This is the trivial bound (size of the sum). No non-trivial cancellation
-is known in general. For comparison, GL₂ Kloosterman sums satisfy the
-Weil bound |S₂(m,n;c)| ≤ d₃(c) · c^{1/2+ε}, which is essential for
-GL₂ analytic number theory.
+DLY's averaged mechanism works for spherical/Maaß GL₃. The transfer to
+cohomological/holomorphic Π = sym²(holomorphic π) requires:
 
-### Spectral theory
+1. Adapting the GL₃ Voronoi formula for cohomological archimedean type
+2. Using cohomological spectral theory instead of Maaß spectral theory
+3. Verifying that the power-saving is preserved
 
-The GL₃ spectral theory is far less developed than GL₂:
+This is a well-defined but open research task.
 
-- The Petersson formula involves GL₃ Kloosterman sums (which are not understood)
-- The spectral sums are not absolutely convergent
-- The Rankin–Selberg method gives upper bounds but not asymptotics
-- The "fundamental lemma" for GL₃ is not as strong as for GL₂
+## Key clarification: 09 is NOT a necessary condition for M-1/M-2
 
-### Critical scale
-
-The shift h ≍ T^{1/2} is the "critical scale" where:
-- For h ≫ T^{1/2}: the off-diagonal is smaller (known)
-- For h ≪ T^{1/2}: the main term dominates (known)
-- For h ≍ T^{1/2}: main term ≈ error, no separation (UNKNOWN)
-
-## What would solve this
-
-A breakthrough in one of:
-
-1. **GL₃ Kloosterman sum bounds**: Non-trivial bounds for S₃(m,n;c)
-   beyond the trivial c^{3/2+ε}. Even a saving of c^{ε} would help.
-
-2. **GL₃ spectral theory**: Absolute convergence of GL₃ spectral sums,
-   or a "fundamental lemma" as strong as the GL₂ case.
-
-3. **Moment methods**: Direct bound on ∫|L(½+it,Π)|²dt without
-   individual shifted convolution estimates (e.g., using the
-   approximate functional equation more cleverly).
-
-4. **Hybrid methods**: Combining GL₃ Voronoi with GL₂ spectral theory
-   in a way that gives the missing cancellation.
-
-## Status: [OBL]
-
-This is the fundamental analytic obstruction blocking the explicit
-lower bound project. No proof is known or expected in the near future.
+The second-moment estimate ∫|L(½+it,Π)|² dt may be achievable by other
+routes (direct moment methods, hybrid bounds, etc.) without proving either
+09-A or 09-B. The shifted-convolution approach is the most natural given
+current technology, but it is not the only possible route.

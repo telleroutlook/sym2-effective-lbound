@@ -1,126 +1,149 @@
-# GL₃ Shifted Convolution for Fixed Π — Proof
+# GL₃ Shifted Convolution — Proof
 
-**Status:** RESEARCH GAP (not a theorem; no proof exists).
+**Status:** RESEARCH GAP (no proof exists for either sub-problem).
 
-## §1. Problem decomposition
+## §1. What the AFE actually produces
 
-The GL₃ shifted convolution for fixed Π arises from the AFE expansion
-of |L(½+it, Π)|². After squaring the two-term AFE and integrating over
-t ∈ [T, 2T], the off-diagonal contributions involve:
+After squaring the two-term AFE for L(½+it, Π) and integrating over
+t ∈ [T, 2T], the off-diagonal contributions are NOT a single individual
+shifted sum. They are **averaged** over h:
 
-### Same-half off-diagonal (I_{++}^{off}, I_{--}^{off})
+    (T/N) · Σ_{h ≍ N/T} Σ_{n ≍ N} a_Π(n) ā_Π(n+h) W(n/N, h/H)
 
-    Σ_{r≠r'} a_Π(r) ā_Π(r') · kernel(r, r', t)
+with H = N/T ≍ N^{1/3} = T^{1/2}.
 
-After dyadic decomposition and stationary phase, the critical contribution
-comes from pairs (r, r') with |r - r'| ≍ h (the shift), giving a shifted
-convolution sum:
+This averaging is intrinsic to the AFE squaring process — it is not
+an optional smoothing. The individual shifted sum S_W(h, N; Π) for
+fixed h is a related but strictly stronger object.
 
-    Σ_n a_Π(n) ā_Π(n+h) · (smooth weight)
+## §2. What DLY 2024 established
 
-### Cross terms (I_{+-}, I_{-+})
+### Theorem 1.1 (second moment upper bound)
 
-    Σ_{r,s} a_Π(r) ā_Π(s) · X_Π(t) · kernel(r, s, t)
+For f a Hecke–Maaß cusp form on SL₃(ℤ):
 
-These involve the t-dependent gamma phase X_Π(t) and require separate
-analysis (stationary phase in t).
+    ∫_{-T}^{T} |L(f, ½+it)|² dt ≪_{f,ε} T^{4/3+ε}
 
-## §2. What is known
+This beats the trivial T^{3/2+ε} by a genuine power saving T^{1/6-ε}.
 
-### GL₃ Kuznetsov formula (Iwaniec, Goldfeld)
+### Theorem 1.2 (averaged shifted convolution)
 
-The GL₃ Voronoi summation formula provides a transformation for sums
-Σ_n a_Π(n) e(nα) that can be applied to shifted convolutions. The
-resulting dual sum involves GL₃ Kloosterman sums.
+For the same class of f:
 
-### Current bounds (no power-saving)
+    Σ_{n,k} λ_f(n) λ_f(n+k) W(n/N, k/H)
+    ≪_{f,ε} N^{4/3+ε}/H^{1/3} + √H · N^{ε} + N^{1+ε}
 
-- **Trivial bound**: S(h, N) ≪ N^{1+ε} (from |a_Π(n)| ≤ d₃(n) ≪ n^ε)
-- **Large sieve**: S(h, N) ≪ (N/h^{1/2} + h^{1/2}) N^ε
-- **DLY upper bound**: ∫|L|² ≪ T^{4/3+ε} (not an asymptotic)
+**Non-trivial regime:** H > N^{1/4}.
 
-### The obstruction
+At our scale H = N^{1/3} > N^{1/4}, this gives a genuine averaged
+power-saving bound on the shifted convolution.
 
-For the power-saving estimate S(h, N) = C_Π(h)·N + O(N^{1-δ}), one needs:
+### How DLY handles Kloosterman sums
 
-1. **Main term identification**: C_Π(h) from the Rankin–Selberg decomposition
-   of L(s, Π × Π̃). This is formal/algebraic and CAN be done.
+After applying GL₃ Voronoi to the shifted sum, the dual involves
+**classical** Kloosterman sums S(k̄, n; c), NOT GL₃ Kloosterman sums.
+DLY then uses:
 
-2. **Off-diagonal cancellation**: The error term requires cancelling the
-   oscillatory kernel against a_Π(n)ā_Π(n+h). This is the hard part.
+1. Twisting by Hecke eigenvalues λ_f(c)
+2. Weil-type bounds for classical Kloosterman sums
+3. Large sieve for GL₃
 
-3. **Uniformity in h**: The shift h ≍ T^{1/2} is at the "critical scale"
-   where the main term and error are comparable. For h ≫ T^{1/2}, the
-   sum is smaller; for h ≪ T^{1/2}, the main term dominates.
+The key insight is that the GL₃ Voronoi transforms the GL₃ shifted
+convolution into a sum involving classical (GL₂-level) arithmetic,
+where standard tools apply.
 
-## §3. Possible approaches
+### What DLY does NOT cover
 
-### Approach A: GL₃ Kuznetsov + stationary phase
+DLY's f is a Hecke–Maaß cusp form on SL₃(ℤ) (spherical/infinite-
+dimensional representation at infinity).
 
-Apply GL₃ Voronoi to the shifted sum, then use stationary phase on the
-dual integral. The GL₃ Kloosterman sums contribute a main term from
-the identity orbit, and the error from the non-identity orbits.
+Our Π = sym²π where π is a **holomorphic** Hecke eigenform on
+SL₂(ℤ). The symmetric-square lift to GL₃ gives a cuspidal automorphic
+representation with **cohomological** archimedean component (finite-
+dimensional at infinity).
 
-**Obstacle**: The GL₃ Kloosterman sums are not well-understood enough
-to give power-saving cancellation. The best known bound is
-|S₃(m,n;c)| ≪ c^{3/2+ε} (trivial), which is insufficient.
+The GL₃ Voronoi formula has a different archimedean factor for
+cohomological vs. spherical representations. The gamma factors,
+the spectral expansion, and the resulting bounds may differ.
 
-### Approach B: Spectral decomposition over GL₃
+## §3. The Kloosterman situation (corrected)
 
-Expand the shifted convolution spectrally over GL₃ automorphic forms.
-The main term comes from the identity representation; the error from
-the cuspidal spectrum.
+### Classical Kloosterman sums (GL₂-level)
 
-**Obstacle**: The spectral theory of GL₃ is far less developed than GL₂.
-The GL₃ Petersson formula involves Kloosterman sums, and the spectral
-sums are not absolutely convergent.
+| Bound | Source | Status |
+|-------|--------|--------|
+| \|S(m,n;c)\| ≤ d₃(c) · c^{1/2} | Weil (1948) | Classical [THM] |
+| ∑_{c≤C} \|S(m,n;c)\|² / c ≪ C^{1+ε} | Kuznetsov/standard | Classical [THM] |
 
-### Approach C: Hybrid bounds (DLY approach)
+These are well-understood and used by DLY.
 
-Use the "hybrid" bound: bound the shifted sum in a range where both
-the shift h and the length N appear. This gives sub-optimal but
-non-trivial bounds.
+### GL₃ Kloosterman sums
 
-**Status**: DLY achieve T^{4/3+ε} using this approach. This is the
-current state of the art but does NOT give the power-saving needed
-for M-1/M-2.
+| Bound | Source | Status |
+|-------|--------|--------|
+| \|S₃(m,n;c)\| ≪ c^{3/2+ε} | Trivial (size of sum) | Known [BASE] |
+| \|S₃(m,n;c)\| ≪ c^{(n-1)/2+ε} (GL(n)) | Blomer–Man (2023) | [THM] |
+| \|S₃(m,n;c)\| power-saving for Weyl elements | Larsen, Stevens, etc. | Various [THM] |
 
-### Approach D: Moment method + mollifier (M-1 route)
+The GL₃ Kloosterman sums DO have non-trivial bounds beyond the
+trivial c^{3/2+ε} for specific element types. The package's previous
+claim of "only trivial bound" was incorrect.
 
-Instead of bounding individual shifted convolutions, use the mollifier
-to average over shifts. This converts the problem to bounding the
-mollified second moment, which has different (potentially easier)
-analytic structure.
+However, the relevant Kloosterman sums for the DLY-type approach are
+**classical** (GL₂-level) sums S(k̄, n; c), not GL₃ sums. The GL₃
+Voronoi formula reduces the problem to classical arithmetic.
 
-**Status**: This is the approach of M-1, but the mollified moment
-itself requires shifted-convolution bounds for the error terms.
+## §4. Why the holomorphic transfer is non-trivial
 
-## §4. What would constitute a proof
+The DLY proof uses:
 
-A proof would need to:
+1. **GL₃ Voronoi formula**: the cohomological archimedean factor
+   changes the gamma functions in the dual expression.
 
-1. Establish the GL₃ shifted convolution estimate with power-saving
-   error for fixed Π at the critical shift scale h ≍ T^{1/2}.
+2. **Spectral expansion**: DLY expands over Maaß forms; the holomorphic
+   case requires expanding over holomorphic forms (cohomological
+   spectral theory, which is less developed).
 
-2. Show that the implied constant is effective (or at least uniform
-   enough for the downstream applications).
+3. **Weil bounds for classical Kloosterman sums**: these are
+   arch-independent and should transfer directly.
 
-3. Handle the archimedean place correctly (the gamma phase X_Π(t)
-   in the cross terms).
+4. **Large sieve for GL₃**: the GL₃ large sieve of Goldfeld–Kontorovich
+   may need modification for the cohomological case.
 
-## §5. Dependencies
+The critical question is whether steps 1–2 can be adapted without
+losing the power-saving bound from step 3.
+
+## §5. Status of each sub-problem
+
+### 09-A: Individual S_W(h, N; Π) ≪ N^{1-δ}
+
+**Status:** [OBL]
+
+No power-saving bound for individual fixed h ≍ N^{1/3} is known,
+for any class of GL₃ forms. This is strictly stronger than what
+DLY proves (which is averaged over h).
+
+### 09-B: Averaged shifted convolution transfer to holomorphic Π
+
+**Status:** [OBL]
+
+The spherical/Maaß mechanism (DLY) is established. The transfer to
+cohomological/holomorphic Π is open but well-defined:
+- The classical Kloosterman bounds transfer (arch-independent)
+- The GL₃ Voronoi archimedean factor needs adaptation
+- The spectral expansion needs cohomological theory
+
+## §6. Dependencies
 
 This package depends on:
-- **03-partial-sum-bound**: The Friedlander–Iwaniec bound on GL₂
-  partial sums (used in the AFE expansion)
-- **05-F-2-global-residue**: The global residue formula (for the
-  main term C_Π(h))
+- **03-partial-sum-bound**: Friedlander–Iwaniec GL₂ bound (AFE input)
+- **04-gl3-afe**: GL₃ AFE structure (provides N ≍ T^{3/2}, h ≍ T^{1/2})
 
-This package blocks:
-- **06-M-1-mollifier**: The mollified second moment estimate
-- **07-M-2-mean-value**: The unmollified second moment estimate
+This package is relevant to (but NOT a logical prerequisite for):
+- **06-M-1-mollifier**: averaged power-saving would suffice
+- **07-M-2-mean-value**: averaged power-saving would suffice
 
 ## Status: [OBL]
 
-No proof exists. This is the fundamental research gap blocking
-the explicit lower bound project at the analytic level.
+Both sub-problems are open research questions. 09-B is the more
+approachable and directly relevant to the project.

@@ -2,41 +2,43 @@
 
 ## What is new in this package
 
-This package is **not a theorem** but a **research gap documentation**.
-Its novelty is in:
+1. **Precise sub-problem decomposition**: Splitting the research gap into
+   09-A (individual, strongest) and 09-B (averaged transfer, most relevant).
 
-1. **Precise formulation**: Identifying the exact analytic estimate needed
-   for the GL₃ shifted convolution at the critical shift scale for fixed
-   symmetric-square Π.
+2. **Corrected dependency logic**: 09 is a sufficient condition for M-1/M-2,
+   not a necessary condition. The second moment may be achievable by other
+   routes.
 
-2. **Dependency mapping**: Showing that this single estimate blocks both
-   M-1 (mollifier) and M-2 (mean value), making it the fundamental
-   analytic obstruction.
+3. **Corrected literature synthesis**: DLY's averaged mechanism already gives
+   non-trivial cancellation at our scale H = N^{1/3} > N^{1/4} for spherical
+   GL₃. The real question is the holomorphic transfer, not "no power saving
+   exists."
 
-3. **Literature synthesis**: Combining DLY 2024, Pal 2025, and the
-   GL₃ spectral theory to explain why the estimate is not yet known.
+4. **Corrected Kloosterman description**: The DLY approach uses classical
+   Kloosterman sums (GL₂-level) after GL₃ Voronoi, not GL₃ Kloosterman
+   sums. Classical sums have Weil bounds. GL₃ sums also have non-trivial
+   bounds for Weyl elements (Blomer–Man 2023).
 
-4. **Approach analysis**: Identifying the four possible approaches
-   (GL₃ Kuznetsov, spectral, hybrid, moment) and their obstacles.
+5. **Corrected C_Π(h) claim**: Deleted the unsubstantiated claim that
+   Rankin–Selberg decomposition gives a main term C_Π(h)·N for h ≠ 0.
+   The diagonal (h=0) is controlled by Rankin–Selberg; the shifted case
+   requires separate analysis.
 
 ## What is NOT new
 
-- The GL₃ Kuznetsov/Voronoi formula is classical (Iwaniec, Goldfeld)
-- The AFE for L(½+it, Π) is known (Goldfeld, Hoffstein–Luo–Sarnak)
-- The upper bounds of DLY and Pal are in the literature
-- The difficulty of GL₃ Kloosterman sums is well-known
+- The GL₃ Kuznetsov/Voronoi formula is classical
+- DLY's averaged shifted convolution result is in the literature
+- The difficulty of the holomorphic transfer is implicit in the literature
+- The Kloosterman bounds are classical results
 
-## Relationship to existing packages
+## Previous errors corrected
 
-| Package | Relationship |
-|---------|-------------|
-| 03-partial-sum-bound | Provides AFE input; uses GL₂ shifted convolution |
-| 04-gl3-afe | Provides the GL₃ AFE structure; same obstruction |
-| 05-F-2-global-residue | Provides main term C_Π(h); algebraic |
-| 06-M-1-mollifier | Blocked by this estimate |
-| 07-M-2-mean-value | Blocked by this estimate |
-| 08-c_eff | Blocked by M-1/M-2, hence by this estimate |
-
-## Status: [OBL]
-
-No new theorem is claimed. This is a research gap documentation.
+| Error | Correction |
+|-------|-----------|
+| "C_Π(h)N from Rankin–Selberg" | Deleted; no main term established for h ≠ 0 |
+| "Large sieve gives S ≪ N^{5/6}" | Deleted; the stated bound is not valid for individual shifted sums |
+| "No power saving at critical scale" | Corrected: averaged problem has non-trivial DLY bound |
+| "GL₃ Kloosterman only trivial" | Corrected: Weil-type bounds exist for Weyl elements |
+| "Pal is current best" | Corrected: DLY is stronger in GL₃ scope |
+| "Iwaniec–Kowalski = GL₃ Kuznetsov" | Corrected: use Blomer, Goldfeld–Kontorovich |
+| "09 is necessary for M-1/M-2" | Corrected: sufficient, not necessary |
