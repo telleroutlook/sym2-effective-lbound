@@ -1,6 +1,6 @@
-# M-1: Mollifier Construction — Proof v2
+# M-1: Mollifier Construction — Proof v3
 
-## Step A: True reciprocal mollifier (only option)
+## Step A: Canonical exact-reciprocal mollifier
 
 Define the reciprocal coefficients by:
 
@@ -20,19 +20,29 @@ Set:
 
 where P is a smooth cutoff with P(1) = 1, P(u) = 0 for u < 0, and X = T^θ.
 
-**Why NOT the squarefree proxy**: The original used μ(n)a_Π(n) as mollifier
-coefficients. This is wrong because:
+**Why the exact reciprocal (canonical choice)**: The original used μ(n)a_Π(n)
+as mollifier coefficients. This is wrong because:
 
     Σ_{p² | m} μ(m) a_Π(m) m^{-s} L(s,Π) ≡ 0
 
 since μ(m) = 0 whenever p² | m. So the "squarefree approximation error"
-is IDENTICALLY ZERO — it measures nothing. The true error from truncating
-the reciprocal series is:
+is IDENTICALLY ZERO — it measures nothing.
+
+The true difference between exact reciprocal and squarefree proxy is:
 
     D_X(s) = Σ_{n≤X} (ρ_Π(n) - μ(n)a_Π(n)) P(...) n^{-s}
 
-which is nonzero precisely for n with p² | n or p³ | n. A genuine
-approximation lemma must bound this D_X(s), not the trivially-zero sum.
+This measures the coefficient-level difference between the two — it is
+NONZERO precisely for n with p² | n (but NOT every such n: the reciprocal
+local polynomial terminates at p³, so p⁴ terms may vanish on both sides,
+and certain A_Π(p) values may cause additional cancellation). A genuine
+approximation lemma must bound this D_X(s).
+
+**Note:** The exact reciprocal mollifier is a canonical natural choice, but
+NOT the only possible mollifier. Squarefree mollifiers, optimized Dirichlet
+polynomials, and Selberg/Levinson type mollifiers are also legitimate
+research objects. The original v2 error was the algebraically vacuous
+"squarefree approximation" sum, not the choice of mollifier type itself.
 
 **Status**: The true reciprocal coefficients ρ_Π(n) are computable
 [THM]. The truncated mollifier M_X(s) is well-defined [THM].
@@ -68,42 +78,40 @@ size separation. The true main term must emerge from the FULL double sum
 after exploiting the arithmetic of the mollifier coefficients b_m and their
 interaction with a_Π(n) via the AFE.
 
-## Step D: AFE-based reduction — 4-variable structure
+## Step D: AFE-based reduction — 4 blocks, NOT a single quadratic form
 
 Insert the approximate functional equation for L(½+it, Π):
 
-    L(½+it, Π) = Σ_{r ≤ T^{3/2}} a_Π(r) r^{-½-it} V_t(r/T^3)
-                + X_Π(½+it) Σ_{s ≤ T^{3/2}} ā_Π(s) s^{-½+it} V_t^*(s/T^3)
+    L(½+it, Π) = A(½+it) + X_Π(½+it) · B(½+it)
 
-where V_t, V_t^* are t-dependent smooth cut-offs (NOT fixed constants),
-and X_Π(½+it) is the t-dependent functional-equation factor from the
-gamma ratio:
+where:
 
-    X_Π(s) = N^{1-2s} · L_∞(Π, 1-s) / L_∞(Π, s)
+    A(s) = Σ_{r ≤ T^{3/2}} a_Π(r) r^{-s} V_t(r/T^{3/2})
+    B(s) = Σ_{s ≤ T^{3/2}} ā_Π(s) s^{s-1} V_t^*(s/T^{3/2})
 
-NOT a constant root number χ(Π). The factor has |X_Π| ≈ 1 but oscillates
-rapidly in t.
+with V_t, V_t^* t-dependent smooth cut-offs (NOT fixed constants),
+and X_Π(s) = N^{1-2s} · L_∞(Π, 1-s) / L_∞(Π, s) is the t-dependent
+functional-equation factor (NOT a constant root number).
 
-Then |M · L|² expands into FOUR indices (m, n from mollifier; r, s from AFE):
+Then |M · L|² = |M · (A + X·B)|² expands into FOUR blocks:
 
-    I(T) = Σ_{m,n,r,s} b_m b̄_n a_Π(r) ā_Π(s) / √(mn·rs)
-           · ∫_T^{2T} (n·s / (m·r))^{it} dt
+    |M·L|² = |M·A|² + |M·X·B|² + M·A·X̄·B̄ + M̄·Ā·X·B
 
-The true near-diagonal condition is:
+= I_{++} + I_{--} + I_{+-} + I_{-+}
 
-    n · s ≈ m · r
+Each block has:
+- Different weight functions (V_t from A, V_t^* from B, none from M)
+- The t-dependent gamma phase X_Π(t) appears in I_{+-}, I_{-+} and I_{--}
+- The convolution structure is ns ≈ mr (4 variables), not r ≈ s (2 variables)
 
-NOT simply r ≈ s (unmollified) or m = n (diagonal). The convolution
-structure is:
+The single-sum "c_X(q) c̄_X(q')" formula in v2 described at most ONE of
+these blocks (approximately I_{++}), NOT the complete I(T). The cross
+terms I_{+-}, I_{-+} and the dual block I_{--} each have different
+convolution structures and weight functions.
 
-    c_X(q) = Σ_{mr = q, m ≤ X} b_m · a_Π(r)
-
-and the moment becomes:
-
-    I(T) = Σ_{q, q'} c_X(q) c̄_X(q') / √(qq') · ∫_T^{2T} (q'/q)^{it} dt
-
-This is the CORRECT reduction. It has four indices coupled through the
-convolution, not the two-index shifted convolution of the unmollified case.
+**This is the core reason D is [OBL]:** the 4-block decomposition with
+weights, gamma phases, and distinct convolution structures must ALL be
+analyzed simultaneously. The v2 single-formula reduction was incomplete.
 
 ## Step E: What must be proved [OBL]
 
@@ -113,16 +121,36 @@ The required analytic estimate is:
 
 where C_{Π,θ} > 0 is determined by the arithmetic of {b_m} and {a_Π(n)}.
 
-For the error term, one needs bounds on the twisted moment:
+### Coefficient bound (corrected scale)
 
-    Σ_{q ≈ Q} |c_X(q)|² ≪ Q^{ε}    (convolution coefficient bound)
+For the diagonal block I_{++}, the relevant quantity is the WEIGHTED
+convolution coefficient sum:
 
-and the off-diagonal contribution from q ≠ q'. The relevant shift scale
-is h ≪ T^{1/2} (from degree-3 AFE length T^{3/2} and time scale T).
+    Σ_{q ≈ Q} |c_X(q)|² / q ≪ Q^ε    (weighted)
+
+NOT the unweighted sum Σ|c_X(q)|² ≪ Q^ε, which would be a factor of Q
+too small (since c_X(q) ≈ a_Π(q) for prime q > X, the unweighted sum
+grows like Q^{1+ε}).
+
+### Shift geometry (corrected scale)
+
+The shift scale depends on the convolution length Q:
+
+    Q ≈ X · T^{3/2} = T^{3/2+θ}
+
+The near-diagonal condition q' ≈ q with |q'-q| ≲ Q/T gives:
+
+    H ≲ T^{1/2+θ}
+
+This is LARGER than the unmollified shift h ≲ T^{1/2} by the factor T^θ.
+Mollification expands the shifted-convolution geometry, not just adds
+short coefficients to an unmollified moment.
 
 **This is at the GL₃ second-moment research frontier.** Current best
-results (DLY 2024: T^{4/3+ε} upper bound for unmollified; Pal 2025:
+results (DLY 2024: T^{4/3+ε} upper bound for unmollified; Pal IMRN 2025:
 T^{3/2-3/32+ε}) do not achieve the power-saving asymptotic needed here.
+The CKLT2026 result (PGL₃ Dirichlet-twist family) does not specialize
+to fixed Π, t-aspect.
 
 ## Step F: Explicit constants (last step, after analytic proof)
 
