@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-check_mollifier.py — Structural checker for M-1 submissions (v2).
+check_mollifier.py — Structural checker for M-1 submissions (v4).
 
 Detects:
 - Missing (n/m)^{it} phase (old error)
-- Wrong bridge lemma I(T) ≥ c₀T ⟹ L(½) > 0 (v2 fatal error)
+- Wrong bridge lemma I(T) >= c_0 T implies L(1/2) > 0
 - Hecke eigenvalue orthogonality (wrong object)
 - Squarefree approximation lemma (algebraically vacuous)
-- Wrong main term scale (T·log T for mollified moment)
+- Wrong main term scale (T*log T for mollified moment)
+- Old FE factor normalization (missing root number, conductor)
+- Wrong gamma phase description (I_{--} has oscillation)
 """
 import sys
 import os
@@ -22,21 +24,19 @@ REQUIRED_FILES = [
     "novelty.md",
 ]
 
-# Mathematical concepts that MUST appear in proof.md
 REQUIRED_CONCEPTS = [
     "n/m",           # The (n/m)^{it} phase factor
     "mollifier",     # The mollifier definition
     "afe",           # Approximate functional equation
 ]
 
-# Concepts that indicate old or new errors
 FORBIDDEN_PATTERNS = [
-    "hecke eigenvalue orthogonality",  # Misapplied (fixed Π, no family)
-    "gl3 spectral large sieve",        # Wrong object (family, not fixed Π)
-    "i(t) >= c_0 t",                   # Wrong bridge: I(T)≥c₀T ⟹ L(½)>0
-    "i(t)≥c_0t",                       # Same, no spaces
-    "deduce l(½",                       # Wrong: cannot deduce central value
-    "hence l(1,",                       # Wrong: normalization gap
+    "hecke eigenvalue orthogonality",
+    "gl3 spectral large sieve",
+    "i(t) >= c_0 t",
+    "i(t)>=c_0t",
+    "deduce l(1/2",
+    "hence l(1,",
 ]
 
 

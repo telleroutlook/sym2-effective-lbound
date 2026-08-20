@@ -1,4 +1,4 @@
-# M-1: Mollifier Construction — Proof v3
+# M-1: Mollifier Construction — Proof v4
 
 ## Step A: Canonical exact-reciprocal mollifier
 
@@ -20,33 +20,8 @@ Set:
 
 where P is a smooth cutoff with P(1) = 1, P(u) = 0 for u < 0, and X = T^θ.
 
-**Why the exact reciprocal (canonical choice)**: The original used μ(n)a_Π(n)
-as mollifier coefficients. This is wrong because:
-
-    Σ_{p² | m} μ(m) a_Π(m) m^{-s} L(s,Π) ≡ 0
-
-since μ(m) = 0 whenever p² | m. So the "squarefree approximation error"
-is IDENTICALLY ZERO — it measures nothing.
-
-The true difference between exact reciprocal and squarefree proxy is:
-
-    D_X(s) = Σ_{n≤X} (ρ_Π(n) - μ(n)a_Π(n)) P(...) n^{-s}
-
-This measures the coefficient-level difference between the two — it is
-NONZERO precisely for n with p² | n (but NOT every such n: the reciprocal
-local polynomial terminates at p³, so p⁴ terms may vanish on both sides,
-and certain A_Π(p) values may cause additional cancellation). A genuine
-approximation lemma must bound this D_X(s).
-
-**Note:** The exact reciprocal mollifier is a canonical natural choice, but
-NOT the only possible mollifier. Squarefree mollifiers, optimized Dirichlet
-polynomials, and Selberg/Levinson type mollifiers are also legitimate
-research objects. The original v2 error was the algebraically vacuous
-"squarefree approximation" sum, not the choice of mollifier type itself.
-
-**Status**: The true reciprocal coefficients ρ_Π(n) are computable
-[THM]. The truncated mollifier M_X(s) is well-defined [THM].
-The approximation lemma bounding D_X is [OBL].
+**Status**: The true reciprocal coefficients ρ_Π(n) are computable [THM].
+The truncated mollifier M_X(s) is well-defined [THM].
 
 ## Step B: Exact mollified moment identity
 
@@ -84,14 +59,25 @@ Insert the approximate functional equation for L(½+it, Π):
 
     L(½+it, Π) = A(½+it) + X_Π(½+it) · B(½+it)
 
-where:
+where (sum variable is r, NOT s — to avoid collision with the complex variable):
 
     A(s) = Σ_{r ≤ T^{3/2}} a_Π(r) r^{-s} V_t(r/T^{3/2})
-    B(s) = Σ_{s ≤ T^{3/2}} ā_Π(s) s^{s-1} V_t^*(s/T^{3/2})
+    B(s) = Σ_{r ≤ T^{3/2}} ā_Π(r) r^{s-1} V_t^*(r/T^{3/2})
 
-with V_t, V_t^* t-dependent smooth cut-offs (NOT fixed constants),
-and X_Π(s) = N^{1-2s} · L_∞(Π, 1-s) / L_∞(Π, s) is the t-dependent
-functional-equation factor (NOT a constant root number).
+with V_t, V_t^* t-dependent smooth cut-offs.
+
+**Functional-equation factor (corrected normalization):**
+
+With arithmetic conductor q_Π and standard completed L-function
+Λ(s, Π) = q_Π^{s/2} L_∞(s, Π) L(s, Π):
+
+    X_Π(s) = ε_Π · q_Π^{1/2-s} · L_∞(1-s, π̃) / L_∞(s, Π)
+
+where ε_Π is the root number (|ε_Π| = 1). For level one (q_Π = 1):
+
+    X_Π(s) = ε_Π · L_∞(1-s, π̃) / L_∞(s, Π)
+
+**On the critical line** s = ½+it: |X_Π(½+it)| = 1 (unitary functional equation).
 
 Then |M · L|² = |M · (A + X·B)|² expands into FOUR blocks:
 
@@ -101,17 +87,31 @@ Then |M · L|² = |M · (A + X·B)|² expands into FOUR blocks:
 
 Each block has:
 - Different weight functions (V_t from A, V_t^* from B, none from M)
-- The t-dependent gamma phase X_Π(t) appears in I_{+-}, I_{-+} and I_{--}
-- The convolution structure is ns ≈ mr (4 variables), not r ≈ s (2 variables)
+- The convolution structure is 4-variable: ns ≈ mr
+
+**Gamma-phase analysis (corrected per reviewer verdict 2026-08-20):**
+
+Since |X_Π(½+it)| = 1 on the critical line:
+
+- **I_{++}** = |M·A|²: no gamma phase at all
+- **I_{--}** = |M·X·B|² = |M|²·|B|²: the phase |X|² = 1 cancels; NO gamma oscillation
+- **I_{+-}** = M·A·X̄·B̄: gamma phase X̄(t) present → oscillatory
+- **I_{-+}** = M̄·Ā·X·B: gamma phase X(t) present → oscillatory
+
+Therefore **the t-dependent gamma oscillation is concentrated in the TWO
+CROSS BLOCKS I_{+-} and I_{-+}**, not in all three non-diagonal blocks.
+The reviewer correctly identified that I_{--} has no gamma phase.
 
 The single-sum "c_X(q) c̄_X(q')" formula in v2 described at most ONE of
 these blocks (approximately I_{++}), NOT the complete I(T). The cross
-terms I_{+-}, I_{-+} and the dual block I_{--} each have different
-convolution structures and weight functions.
+terms I_{+-}, I_{-+} each have different convolution structures, weight
+functions, and gamma-phase oscillation.
 
 **This is the core reason D is [OBL]:** the 4-block decomposition with
 weights, gamma phases, and distinct convolution structures must ALL be
-analyzed simultaneously. The v2 single-formula reduction was incomplete.
+analyzed simultaneously. In particular, the two cross blocks require
+gamma-phase stationary-phase analysis that determines the stationary
+locus — this is different from the near-diagonal geometry of I_{++}.
 
 ## Step E: What must be proved [OBL]
 
@@ -147,10 +147,16 @@ Mollification expands the shifted-convolution geometry, not just adds
 short coefficients to an unmollified moment.
 
 **This is at the GL₃ second-moment research frontier.** Current best
-results (DLY 2024: T^{4/3+ε} upper bound for unmollified; Pal IMRN 2025:
-T^{3/2-3/32+ε}) do not achieve the power-saving asymptotic needed here.
-The CKLT2026 result (PGL₃ Dirichlet-twist family) does not specialize
-to fixed Π, t-aspect.
+upper bounds (DLY 2024: T^{4/3+ε}; Pal IMRN 2025: T^{3/2-3/32+ε})
+do not achieve the power-saving asymptotic needed here. These are
+UPPER BOUND results for related (but not identical) problems — they
+do not directly solve the fixed-Π t-aspect mollified moment.
+
+### Cross-block gamma-phase analysis [OBL]
+
+The two cross blocks I_{+-}, I_{-+} involve the gamma oscillation of
+X_Π(t). The stationary-phase geometry of these blocks is DIFFERENT from
+the near-diagonal geometry of I_{++}. This is [OBL].
 
 ## Step F: Explicit constants (last step, after analytic proof)
 

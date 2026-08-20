@@ -1,4 +1,4 @@
-# M-1 Dependencies — Rewritten v3
+# M-1 Dependencies — v4
 
 # Required assumptions
 assumptions:
@@ -23,10 +23,10 @@ ingredients:
     status: "[THM]"
 
   - id: FE-FACTOR
-    description: "Dual AFE factor X_Π(s) = N^{1-2s} L_∞(1-s)/L_∞(s), NOT constant root number"
-    source: "Standard functional equation"
+    description: "X_Π(s) = ε_Π q_Π^{1/2-s} L_∞(1-s,π̃)/L_∞(s,Π); |X_Π(½+it)|=1"
+    source: "Standard functional equation for GL₃"
     evidence: "textbook"
-    status: "[THM]"
+    status: "[THM] — normalization corrected v4"
 
   - id: RECIPROCAL-COEFFICIENTS
     description: "True reciprocal Euler coefficients ρ_Π(n) with (p,p²,p³) three-term structure"
@@ -36,41 +36,53 @@ ingredients:
 
   - id: GL3-TWISTED-MOMENT
     description: "Mollified twisted GL₃ moment: I(T) = C_{Π,θ}T + O(T^{1-δ}), C > 0"
-    source: "Dasgupta–Leung–Young (2024), Pal (IMRN 2025)"
-    evidence: "preprint / refereed"
-    status: "[OBL] — research frontier; upper bounds known, not asymptotics"
+    evidence: "none"
+    status: "[OBL] — research frontier"
 
   - id: CONVOLUTION-COEFFICIENTS
     description: "Weighted bound Σ_{q≈Q} |c_X(q)|²/q ≪ Q^ε for convolution c_X(q) = Σ_{mr=q, m≤X} b_m a_Π(r)"
-    source: "Must be proved for the specific mollifier"
     evidence: "none"
     status: "[OBL] — note: UNWEIGHTED Σ|c_X(q)|² grows like Q^{1+ε}, not Q^ε"
 
   - id: FOUR-BLOCK-AFE
-    description: "Complete 4-block decomposition |M·(A+XB)|² = I_{++}+I_{--}+I_{+-}+I_{-+} with weights and gamma phases"
-    source: "Standard AFE expansion; v2 only described I_{++}"
+    description: "4-block decomposition |M·(A+XB)|² = I_{++}+I_{--}+I_{+-}+I_{-+}"
     evidence: "textbook"
     status: "[OBL] — blocks not individually analyzed"
 
+  - id: CROSS-BLOCK-GAMMA
+    description: "Gamma-phase stationary-phase analysis for cross blocks I_{+-}, I_{-+}"
+    evidence: "none"
+    status: "[OBL] — stationary locus differs from near-diagonal geometry"
+
+# Context (NOT direct dependencies)
+context:
+  - id: DLY-2024
+    description: "Dasgupta–Leung–Young (2024): upper bound T^{4/3+ε} for unmollified GL₃ second moment"
+    source: "arXiv:2407.06962"
+    evidence: "preprint"
+    status: "Upper bound context; NOT a solved asymptotic; NOT identical to fixed-Π t-aspect"
+
+  - id: PAL-2025
+    description: "Pal (IMRN 2025): upper bound T^{3/2-3/32+ε} for Hecke–Maaß SL(3,Z) second moment"
+    source: "IMRN 2025, doi:10.1093/imrn/rnaf234"
+    evidence: "refereed"
+    status: "Upper bound context; for Maaß forms, not holomorphic; NOT identical to target problem"
+
   - id: CKLT2026
-    description: "Conrey–Kwan–Lin–Turnage-Butterbaugh (2026): PGL₃ Dirichlet-twist family mean square (arXiv:2607.00282)"
+    description: "Conrey–Kwan–Lin–Turnage-Butterbaugh (2026): PGL₃ Dirichlet-twist family (arXiv:2607.00282)"
     source: "arXiv:2607.00282"
     evidence: "preprint"
-    status: "Adjacent work; does NOT specialize to fixed Π, t-aspect"
+    status: "Adjacent work; averages over character twists, NOT fixed Π t-aspect"
 
-# What is NOT a dependency (corrected from original)
+# What is NOT a dependency
 not_dependencies:
   - id: SQUAREFREE-APPROX
-    description: "Squarefree approximation lemma (μ(m)=0 when p²|m → trivially zero)"
-    reason: "Algebraically vacuous; the sum Σ_{p²|m} μ(m)... ≡ 0"
-
-  - id: LRS-1995
-    description: "Luo–Rudnick–Sarnak 1995 is about Selberg eigenvalue conjecture"
-    reason: "Wrong attribution in original package"
+    description: "Squarefree approximation lemma"
+    reason: "Algebraically vacuous in v1; D_X coefficient difference moved to aside in v4"
 
   - id: GL3-LARGE-SIEVE
-    description: "GL₃ spectral large sieve applies to families, NOT fixed Π"
-    reason: "Wrong object; large sieve is for Σ_φ |Σ_n a_n λ_φ(n)|², not ∫|L|²"
+    description: "GL₃ spectral large sieve"
+    reason: "Applies to families, NOT fixed Π"
 
   - id: BRIDGE-LEMMA
     description: "Bridge I(T) ≥ c₀T ⟹ L(½,Π) > 0"
